@@ -7,22 +7,9 @@
     <meta name="author" content="{{ site.author.name }}" />
 
     <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.0/css/bootstrap-combined.min.css" rel="stylesheet" type="text/css" />
-
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js" defer></script>
-
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js" defer></script>
-
-    <script type="text/javascript" src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.0/js/bootstrap.min.js" defer></script>
-
-
   </head>
 
   <body>
-
     <div class="navbar">
       <div class="navbar-inner">
         <div class="container">
@@ -44,6 +31,23 @@
       </footer>
 
     </div> <!-- /container -->
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script type="text/javascript" src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.0/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+        !function (angular, document, $, undefined) {
+            angular.module('kstep', ['ng'])
+            ;
+
+            angular.bootstrap(document, ['kstep']);
+        }(window.angular, window.document, window.jQuery);
+    </script>
 
   </body>
 </html>
