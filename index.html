@@ -45,6 +45,7 @@
     .config(['$routeProvider', '$locationProvider', function ($route, $location) {
         $route
         .when('/', {})
+        .when('/page/:pagename', { controller: 'PageCtl', templateUrl: ':pagename.html' })
         .otherwise({ redirectTo: '/' });
 
         $location.html5Mode(true).hashPrefix('!');
@@ -52,6 +53,10 @@
     .controller('RootCtl', ['$scope', function ($scope) {
         $scope.page = {
             title: 'Home sweet home'
+        };
+    }])
+    .controller('PageCtl', ['$scope', '$routeParams', function ($scope, $params) {
+        $scope.page = {
         };
     }])
     ;
