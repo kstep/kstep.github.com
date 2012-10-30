@@ -1,53 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>{{ page.title }}</title>
-    {% if page.description %}<meta name="description" content="{{ page.description }}">{% endif %}
-    <meta name="author" content="{{ site.author.name }}" />
+    <head>
+        <meta charset="utf-8">
+        <title>{{ page.title }}</title>
+        {% if page.description %}<meta name="description" content="{{ page.description }}">{% endif %}
+        <meta name="author" content="{{ site.author.name }}" />
 
-    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.0/css/bootstrap-combined.min.css" rel="stylesheet" type="text/css" />
-  </head>
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.0/css/bootstrap-combined.min.css" rel="stylesheet" type="text/css" />
+    </head>
 
-  <body>
-    <div class="navbar">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="brand" href="{{ HOME_PATH }}">{{ site.title }}</a>
-          <ul class="nav">
-          </ul>
+    <body style="margin-top: 60px;">
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="brand" href="{{ HOME_PATH }}">{{ site.title }}</a>
+                    <ul class="nav">
+                    </ul>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <div class="container">
+        <div class="container">
 
-      <div class="content">
-        {{ content }}
-      </div>
+            <div class="content">
+                {{ content }}
+            </div>
 
-      <footer>
-        <p>&copy; {{ site.author.name }} 2012</p>
-      </footer>
+            <footer>
+            <p>&copy; {{ site.author.name }} 2012</p>
+            </footer>
 
-    </div> <!-- /container -->
+        </div> <!-- /container -->
 
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+        <!--[if lt IE 9]>
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
 
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-    <script type="text/javascript" src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.0/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script type="text/javascript" src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.0/js/bootstrap.min.js"></script>
 
-    <script type="text/javascript">
-        !function (angular, document, $, undefined) {
-            angular.module('kstep', ['ng'])
-            ;
+<script type="text/javascript">
+!function (angular, document, $, undefined) {
+    angular.module('kstep', ['ng'])
+        ;
 
-            angular.bootstrap(document, ['kstep']);
-        }(window.angular, window.document, window.jQuery);
-    </script>
+    angular.bootstrap(document, ['kstep']);
+}(window.angular, window.document, window.jQuery);
+</script>
 
   </body>
 </html>
