@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="kstep" ng-controller="RootCtl">
+    <head>
+        <meta charset="utf-8">
+        <title ng-bind="page.title"></title>
+        <meta name="description" content="{{ page.description }}">
+        <meta name="author" content="Konstantin Stepanov" />
+
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.0/css/bootstrap-combined.min.css" rel="stylesheet" type="text/css" />
+    </head>
+
+    <body style="margin-top: 60px;">
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="brand" href="/">//kstep</a>
+                    <ul class="nav">
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+
+            <div class="content" ng-view>
+            </div>
+
+            <footer>
+            <p>&copy; Konstantin Stepanov 2012</p>
+            </footer>
+
+        </div> <!-- /container -->
+
+        <!--[if lt IE 9]>
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script type="text/javascript" src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.0/js/bootstrap.min.js"></script>
+
+<script type="text/javascript">
+!function (angular, document, $, undefined) {
+    angular.module('kstep', ['ng'])
+    .config(['$routeProvider', '$locationProvider', function ($route, $location) {
+        $route
+        .when('/', {})
+        .when('/page/:pagename', { controller: 'PageCtl', templateUrl: ':pagename.html' })
+        .otherwise({ redirectTo: '/' });
+
+        $location.html5Mode(true).hashPrefix('!');
+    }])
+    .controller('RootCtl', ['$scope', function ($scope) {
+        $scope.page = {
+            title: 'Home sweet home'
+        };
+    }])
+    .controller('PageCtl', ['$scope', '$routeParams', function ($scope, $params) {
+        $scope.page = {
+        };
+    }])
+    ;
+}(window.angular, window.document, window.jQuery);
+</script>
+
+  </body>
+</html>
+
