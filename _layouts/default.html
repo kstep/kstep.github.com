@@ -57,7 +57,7 @@
     }])
     .controller('PageCtl', ['$scope', '$routeParams', function ($scope, $params) {
         $scope.page = {
-            name: '/pages/' + $params.pagename
+            name: $params.pagename
         };
     }])
     ;
