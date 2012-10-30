@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="kstep">
     <head>
         <meta charset="utf-8">
-        <title>{{ page.title }}</title>
-        {% if page.description %}<meta name="description" content="{{ page.description }}">{% endif %}
+        <title ng-bind="page.title"></title>
+        <meta name="description" content="{{ page.description }}">
         <meta name="author" content="{{ site.author.name }}" />
 
         <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.0/css/bootstrap-combined.min.css" rel="stylesheet" type="text/css" />
@@ -13,7 +13,7 @@
         <div class="navbar navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container">
-                    <a class="brand" href="{{ HOME_PATH }}">{{ site.title }}</a>
+                    <a class="brand" href="/">{{ site.title }}</a>
                     <ul class="nav">
                     </ul>
                 </div>
@@ -22,8 +22,7 @@
 
         <div class="container">
 
-            <div class="content">
-                {{ content }}
+            <div class="content" ng-view>
             </div>
 
             <footer>
@@ -44,8 +43,6 @@
 !function (angular, document, $, undefined) {
     angular.module('kstep', ['ng'])
         ;
-
-    angular.bootstrap(document, ['kstep']);
 }(window.angular, window.document, window.jQuery);
 </script>
 
