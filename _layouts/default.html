@@ -45,7 +45,7 @@
     .config(['$routeProvider', '$locationProvider', function ($route, $location) {
         $route
         .when('/', {})
-        .when('/page/:pagename', { controller: 'PageCtl', template: '<div ng-include="page.name"></div>' })
+        .when('/pages/:pagename', { controller: 'PageCtl', template: '<div ng-include="page.name"></div>' })
         .otherwise({ redirectTo: '/' });
 
         $location.html5Mode(true).hashPrefix('!');
@@ -57,7 +57,7 @@
     }])
     .controller('PageCtl', ['$scope', '$routeParams', function ($scope, $params) {
         $scope.page = {
-            name: $params.pagename
+            name: '/pages/' + $params.pagename
         };
     }])
     ;
