@@ -46,7 +46,7 @@
     function ($route, $location, $interpolate) {
         $route
         .when('/', {})
-        .when('/pages/:pagename.html', { controller: 'PageCtl', template: '<div ng-include="page.name"></div>' })
+        .when('/pages/:pagename.html', { controller: 'PageCtl', template: '<div ng-include="page.url"></div>' })
         .otherwise({ redirectTo: '/' });
 
         $location.html5Mode(false).hashPrefix('!');
@@ -60,7 +60,7 @@
         $scope.pages = $http.get('/pages/list.json');
     }])
     .controller('PageCtl', ['$scope', '$routeParams', function ($scope, $params) {
-        $scope.page.name = '/pages/' + $params.pagename;
+        $scope.page.url = '/pages/' + $params.pagename + '.html';
     }])
     ;
 }(window.angular, window.document, window.jQuery);
