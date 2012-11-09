@@ -46,8 +46,9 @@
     function ($route, $location, $interpolate) {
         $route
         .when('/', { controller: 'IndexCtl', template: '' })
+        .when('/blog', { controller: 'BlogCtl', templateUrl: '/posts/list.html' })
         .when('/pages/:pagename.html', { controller: 'PageCtl', template: '<div ng-include="page.url"></div>' })
-        .when('/blog/:postname.html', { controller: 'BlogCtl', template: '<div ng-include="page.url"></div>' })
+        .when('/blog/:postname.html', { controller: 'PostCtl', template: '<div ng-include="page.url"></div>' })
         .otherwise({ redirectTo: '/' });
 
         $location.html5Mode(false).hashPrefix('!');
@@ -66,9 +67,15 @@
         $scope.page.title = '';
         $scope.page.url = '/pages/' + $params.pagename + '.html';
     }])
-    .controller('BlogCtl', ['$scope', '$routeParams', function ($scope, $params) {
+    .controller('PostCtl', ['$scope', '$routeParams', function ($scope, $params) {
         $scope.page.title = '';
-        $scope.page.url = '/blog/' + $params.postname + '.html';
+        $scope.page.url = '/blog';
+    }])
+    .controller('BlogCtl', ['$scope', '$routeParams', '$http', function ($scope, $params, $http) {
+        $scope.page.title = '';
+        $scope.page.url = '/blog';
+
+        $scope.posts = $http.get('/posts/list.json');
     }])
     ;
 }(window.angular, window.document, window.jQuery);
