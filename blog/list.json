@@ -1,0 +1,3 @@
+---
+---
+[{% for node in site.pages %}{% if node.group == 'blog' %}{"url":"{{ node.url }}","title":"{{ node.title }}"},{% endif %}{% endfor %}null]

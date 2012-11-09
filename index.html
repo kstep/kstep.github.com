@@ -15,7 +15,7 @@
                 <div class="container">
                     <a class="brand" href="/#!/">//kstep</a>
                     <ul class="nav">
-                        <li ng-repeat="p in pages.data" ng-class="{ active: p.url == page.url }"><a href="/#!{: p.url :}" ng-bind="p.title"></a></li>
+                        <li ng-class="{ active: page.group == 'blog' }"><a href="/#!/blog">Blog</a></li>
                     </ul>
                 </div>
             </div>
@@ -47,6 +47,7 @@
         $route
         .when('/', { controller: 'IndexCtl', template: '' })
         .when('/pages/:pagename.html', { controller: 'PageCtl', template: '<div ng-include="page.url"></div>' })
+        .when('/blog/:postname.html', { controller: 'BlogCtl', template: '<div ng-include="page.url"></div>' })
         .otherwise({ redirectTo: '/' });
 
         $location.html5Mode(false).hashPrefix('!');
@@ -64,6 +65,10 @@
     .controller('PageCtl', ['$scope', '$routeParams', function ($scope, $params) {
         $scope.page.title = '';
         $scope.page.url = '/pages/' + $params.pagename + '.html';
+    }])
+    .controller('BlogCtl', ['$scope', '$routeParams', function ($scope, $params) {
+        $scope.page.title = '';
+        $scope.page.url = '/blog/' + $params.postname + '.html';
     }])
     ;
 }(window.angular, window.document, window.jQuery);
