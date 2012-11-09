@@ -56,9 +56,7 @@
         };
     }])
     .controller('PageCtl', ['$scope', '$routeParams', function ($scope, $params) {
-        $scope.page = {
-            name: '/pages/' + $params.pagename
-        };
+        $scope.page.name = '/pages/' + $params.pagename;
     }])
     ;
 }(window.angular, window.document, window.jQuery);

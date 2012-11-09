@@ -1,5 +1,6 @@
 ---
 layout: page
+title: The Test Page
 ---
 # Test page
 
