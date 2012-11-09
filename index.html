@@ -45,10 +45,10 @@
     .config(['$routeProvider', '$locationProvider', function ($route, $location) {
         $route
         .when('/', {})
-        .when('/pages/:pagename', { controller: 'PageCtl', template: '<div ng-include="page.name"></div>' })
+        .when('/pages/:pagename.html', { controller: 'PageCtl', template: '<div ng-include="page.name"></div>' })
         .otherwise({ redirectTo: '/' });
 
-        $location.html5Mode(true).hashPrefix('!');
+        $location.html5Mode(false).hashPrefix('!');
     }])
     .controller('RootCtl', ['$scope', function ($scope) {
         $scope.page = {
