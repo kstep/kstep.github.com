@@ -1,0 +1,3 @@
+---
+---
+[{% for node in site.posts %}{"url":"{{ node.url }}","title":"{{ node.title }}","tags":"{{ node.tags }}","date":"{{ node.date }}"},{% endfor %}null]

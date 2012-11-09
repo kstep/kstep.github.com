@@ -1,3 +1,0 @@
----
----
-[{% for node in site.tags.blog %}{"url":"{{ node.url }}","title":"{{ node.title }}","tags":"{{ node.tags }}"},{% endfor %}null]
