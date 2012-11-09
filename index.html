@@ -42,13 +42,16 @@
 <script type="text/javascript">
 !function (angular, document, $, undefined) {
     angular.module('kstep', ['ng'])
-    .config(['$routeProvider', '$locationProvider', function ($route, $location) {
+    .config(['$routeProvider', '$locationProvider', '$interpolateProvider',
+    function ($route, $location, $interpolate) {
         $route
         .when('/', {})
         .when('/pages/:pagename.html', { controller: 'PageCtl', template: '<div ng-include="page.name"></div>' })
         .otherwise({ redirectTo: '/' });
 
         $location.html5Mode(false).hashPrefix('!');
+
+        $interpolate.startSymbol('{:').endSymbol(':}');
     }])
     .controller('RootCtl', ['$scope', function ($scope) {
         $scope.page = {
