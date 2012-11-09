@@ -1,0 +1,1 @@
+[{% for node in site.pages %}{"url":"{{ node.url }}","title":"{{ node.title }}"},{% endfor %}]
