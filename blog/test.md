@@ -1,7 +1,7 @@
 ---
-group: blog
 layout: page
 title: Мой первый пост
+tags: blog
 ---
 # Мой первый пост!
 
