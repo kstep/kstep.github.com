@@ -15,13 +15,13 @@
                 <div class="container">
                     <a class="brand" href="/">//kstep</a>
                     <ul class="nav">
+                        <li ng-repeat="p in pages.data" ng-class="{ active: p.url == page.url }"><a href="/#!{: p.url :}" ng-bind="p.title"></a></li>
                     </ul>
                 </div>
             </div>
         </div>
 
         <div class="container">
-
             <div class="content" ng-view>
             </div>
 
@@ -53,10 +53,11 @@
 
         $interpolate.startSymbol('{:').endSymbol(':}');
     }])
-    .controller('RootCtl', ['$scope', function ($scope) {
+    .controller('RootCtl', ['$scope', '$http', function ($scope, $http) {
         $scope.page = {
             title: 'Home sweet home'
         };
+        $scope.pages = $http.get('/pages/list.json');
     }])
     .controller('PageCtl', ['$scope', '$routeParams', function ($scope, $params) {
         $scope.page.name = '/pages/' + $params.pagename;
