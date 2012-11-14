@@ -45,7 +45,7 @@
     .config(['$routeProvider', '$locationProvider', '$interpolateProvider',
     function ($route, $location, $interpolate) {
         $route
-        .when('', { controller: 'HomeCtl', template: '' })
+        .when('/', { controller: 'HomeCtl' })
         .when('/blog', { controller: 'BlogCtl', templateUrl: '/posts/list.html' })
         .when('/pages/:name.html', { controller: 'PageCtl', template: '<div ng-include="page.url"></div>' })
         .when('/:year/:month/:day/:name.html', { controller: 'PostCtl', template: '<div ng-include="page.url"></div>' })
