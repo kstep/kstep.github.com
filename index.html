@@ -10,7 +10,7 @@
     </head>
 
     <body style="margin-top: 60px;">
-        <div class="navbar navbar-fixed-top">
+        <header class="navbar navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container">
                     <a class="brand" href="/#!/">//kstep</a>
@@ -19,7 +19,7 @@
                     </ul>
                 </div>
             </div>
-        </div>
+        </header>
 
         <div class="container">
             <div class="content" ng-view>
@@ -27,9 +27,13 @@
 
         </div> <!-- /container -->
 
-        <footer class="form-actions" style="left: 0; right: 0; bottom: 0; position: fixed; margin-bottom: 0;">
-            <div class="container">
-                <p>&copy; Konstantin Stepanov 2012</p>
+        <footer class="navbar navbar-fixed-bottom">
+            <div class="navbar-inner">
+                <div class="container">
+                    <ul class="nav">
+                        <li><span class="navbar-text">&copy; Konstantin Stepanov 2012</span></li>
+                    </ul>
+                </div>
             </div>
         </footer>
 
