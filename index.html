@@ -45,10 +45,10 @@
     .config(['$routeProvider', '$locationProvider', '$interpolateProvider',
     function ($route, $location, $interpolate) {
         $route
-        .when('/', { controller: 'IndexCtl', template: '' })
+        .when('/', { controller: 'HomeCtl', template: '' })
         .when('/blog', { controller: 'BlogCtl', templateUrl: '/posts/list.html' })
-        .when('/pages/:pagename.html', { controller: 'PageCtl', template: '<div ng-include="page.url"></div>' })
-        .when('/blog/:postname.html', { controller: 'PostCtl', template: '<div ng-include="page.url"></div>' })
+        .when('/pages/:name.html', { controller: 'PageCtl', template: '<div ng-include="page.url"></div>' })
+        .when('/blog/:year/:month/:day/:name.html', { controller: 'PostCtl', template: '<div ng-include="page.url"></div>' })
         .otherwise({ redirectTo: '/' });
 
         $location.html5Mode(false).hashPrefix('!');
@@ -59,22 +59,22 @@
         $scope.page = {};
         $scope.pages = $http.get('/pages/list.json');
     }])
-    .controller('IndexCtl', ['$scope', function ($scope) {
+    .controller('HomeCtl', ['$scope', function ($scope) {
         $scope.page.title = 'Home sweep home';
         $scope.page.url = '/';
+        $scope.page.group = 'home';
     }])
     .controller('PageCtl', ['$scope', '$routeParams', function ($scope, $params) {
-        $scope.page.title = '';
-        $scope.page.url = '/pages/' + $params.pagename + '.html';
+        $scope.page.url = '/pages/' + $params.name + '.html';
+        $scope.page.group = 'pages';
     }])
     .controller('PostCtl', ['$scope', '$routeParams', function ($scope, $params) {
-        $scope.page.title = '';
-        $scope.page.url = '/blog';
+        $scope.page.url = '/' + $params.year + '/' + $params.month + '/' + $params.day + '/' + $params.name + '.html';
+        $scope.page.group = 'blog';
     }])
     .controller('BlogCtl', ['$scope', '$routeParams', '$http', function ($scope, $params, $http) {
-        $scope.page.title = '';
         $scope.page.url = '/blog';
-
+        $scope.page.group = 'blog';
         $scope.posts = $http.get('/posts/list.json');
     }])
     ;
