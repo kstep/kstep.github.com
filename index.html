@@ -54,7 +54,7 @@
         .when('/', { controller: 'HomeCtl' })
         .when('/blog', { controller: 'BlogCtl', templateUrl: '/posts/list.html' })
         .when('/pages/:name.html', { controller: 'PageCtl', template: '<div ng-include="page.url"></div>' })
-        .when('/:year/:month/:day/:name.html', { controller: 'PostCtl', template: '<div ng-include="page.url"></div>' })
+        .when('/:year/:month/:day/:name.html', { controller: 'PostCtl', template: '<h1 ng-bind="page.title"></h1><div ng-include="page.url"></div>' })
         .otherwise({ redirectTo: '/' });
 
         $location.html5Mode(false).hashPrefix('!');
