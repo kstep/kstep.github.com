@@ -4,15 +4,15 @@ layout: page
 ---
 Во-первых нам потребуется библиотека posix, т.к. иначе не проверить существования файла и его тип:
     
-```lua
+{% highlight lua %}
     assert(package.loadlib("/usr/lib/lua/5.1/posix.so", "luaopen_posix"))()
-```
+{% endhighlight %}
 
 Ставиться она из пакета liblua5.1-posix1.
 
 Дальше описываем такую функцию:
     
-```lua
+{% highlight lua %}
     function mounts_menu()
         local Automisc = '/etc/auto.misc'
         local Mounts = '/proc/mounts'
@@ -61,19 +61,19 @@ layout: page
         local menu = awful.menu.new({ items = items, width = 300 })
         return menu
     end
-```
+{% endhighlight %}
 
 Возвращает она объект меню со списком доступных через autofs устройст, смонтированные устройства будут помечены звёздочкой. Использование:
     
-```lua
+{% highlight lua %}
     mounts_menu():show()
-```
+{% endhighlight %}
 
 Работает с awesome v3.3.1-2-gd61ca1b (Bionic).
 
 Тот же список, полученный с помощью perl:
 
-```perl
+{% highlight perl %}
     #!/usr/bin/perl
     
     use strict;
@@ -115,4 +115,4 @@ layout: page
         my $ismounted = exists $mounts{$dev};
         printf "%s\	%s/%s\	%s\\n", $ismounted? "*": " ", $autofsdir, $autofs{$dev}, $dev;
     }
-```
+{% endhighlight %}
