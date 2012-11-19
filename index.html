@@ -15,7 +15,6 @@
                 <div class="container">
                     <a class="brand" href="/#!/">//kstep</a>
                     <ul class="nav">
-                        <li ng-class="{ active: page.group == 'blog' }"><a href="/#!/blog">Blog</a></li>
                     </ul>
                 </div>
             </div>
@@ -51,9 +50,7 @@
     .config(['$routeProvider', '$locationProvider', '$interpolateProvider',
     function ($route, $location, $interpolate) {
         $route
-        .when('/', { controller: 'HomeCtl' })
-        .when('/blog', { controller: 'BlogCtl', templateUrl: '/posts/list.html' })
-        .when('/pages/:name.html', { controller: 'PageCtl', template: '<div ng-include="page.url"></div>' })
+        .when('/', { controller: 'BlogCtl', templateUrl: '/posts/list.html' })
         .when('/:year/:month/:day/:name.html', { controller: 'PostCtl', template: '<h1 ng-bind="page.title"></h1><div ng-include="page.url"></div>' })
         .otherwise({ redirectTo: '/' });
 
@@ -63,16 +60,11 @@
     }])
     .controller('RootCtl', ['$scope', '$http', function ($scope, $http) {
         $scope.page = {};
-        $scope.pages = $http.get('/pages/list.json');
     }])
     .controller('HomeCtl', ['$scope', function ($scope) {
         $scope.page.title = 'Home sweep home';
         $scope.page.url = '/';
         $scope.page.group = 'home';
-    }])
-    .controller('PageCtl', ['$scope', '$routeParams', function ($scope, $params) {
-        $scope.page.url = '/pages/' + $params.name + '.html';
-        $scope.page.group = 'pages';
     }])
     .controller('PostCtl', ['$scope', '$routeParams', function ($scope, $params) {
         $scope.page.url = '/' + $params.year + '/' + $params.month + '/' + $params.day + '/' + $params.name + '.html';
