@@ -1,5 +1,5 @@
 ---
-title: Как использовать emacs
+title: "Как использовать emacs"
 layout: page 
 ---
 First, you need to remember where emacs is, using the rm (remember) command:

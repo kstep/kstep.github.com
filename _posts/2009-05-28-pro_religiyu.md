@@ -1,5 +1,5 @@
 ---
-title: Про религию
+title: "Про религию"
 layout: page 
 ---
 ![](http://www.giantitp.com/comics/images/oots0081.gif)

@@ -1,5 +1,5 @@
 ---
-title: Автомонтирование sshfs/curlftpfs с помощью autofs в Debian'е
+title: "Автомонтирование sshfs/curlftpfs с помощью autofs в Debian'е"
 layout: page 
 ---
 Решил настроить автомонтирование удалённых серверов. Начал с sshfs, с ним оказалось всё до обидного просто: буквально по третей ссылке в гугле по запросу «[sshfs autofs](http://www.google.com.by/search?hl=ru&safe=off&client=firefox-a&rls=org.mozilla%3Aen-US%3Aofficial&hs=k5M&q=sshfs+autofs&btnG=%D0%9F%D0%BE%D0%B8%D1%81%D0%BA&meta=)» была найдена [замечательная статья](http://www.tjansson.dk/?p=84), по которой всё работает. Заодно решил наладить и curlftpfs. В том же гугле была найдена [другая статья](http://lukaszproszek.blogspot.com/2008/05/automounting-ftpfs-using-curlftpfs-and.html), но предлагаемое решение мне категорически не понравилось: оно строиться на скриптах-обёртках вокруг curlftpfs, что очень, на мой взгляд, некузяво.

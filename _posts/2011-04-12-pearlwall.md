@@ -1,5 +1,5 @@
 ---
-title: Pearlwall
+title: "Pearlwall"
 layout: page 
 ---
 use strict;

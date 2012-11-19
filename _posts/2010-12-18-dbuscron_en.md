@@ -1,5 +1,5 @@
 ---
-title: Dbuscron
+title: "Dbuscron"
 layout: page 
 ---
 **Upd:** I've just release version 1.3. You can download [deb-package for Maemo 5](../../../download/71). The build includes one new feature and some improvements in log messages and error handling:
