@@ -4,4 +4,4 @@ layout: page
 ---
 Часть острова в Нарвском водохранилище похоже решила, что ловить в России ей нечего...
 
-Source: http://top.rbc.ru/incidents/22/06/2009/311117.shtml 
+Source: <http://top.rbc.ru/incidents/22/06/2009/311117.shtml>

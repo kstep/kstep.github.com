@@ -6,4 +6,4 @@ layout: page
 
 Соорудил для этого сервиса короткую ссылку: [http://tinyurl.com/ytc-avia/](http://tinyurl.com/ytc-avia/). Полная ссылка внизу.
 
-Source: https://wftc2.e-travel.com/plnext/AIEBDDMBDDM/CleanUpSessionPui.action?LANGUAGE=RU&SITE;=BDDMBDDM 
+Source: <https://wftc2.e-travel.com/plnext/AIEBDDMBDDM/CleanUpSessionPui.action?LANGUAGE=RU&SITE;=BDDMBDDM>

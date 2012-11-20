@@ -20,4 +20,4 @@ Brave Canadian developer will rush in, trying to fix everything, but everything 
   
 Fortunately, it doesn't bother company's profit, because the product is sold well anyway. That's why managers are so content and don't stop telling developers, they are chosen as they are the best of the best. And they have already proven this fact, as they release their product at least sometimes.
 
-Source: http://sokol-egor.blogspot.com/ 
+Source: <http://sokol-egor.blogspot.com/>

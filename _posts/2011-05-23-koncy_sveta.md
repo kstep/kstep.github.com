@@ -15,4 +15,4 @@ layout: page
   
 Так что всё правильно предсказывают, так и будет, ага.
 
-Source: http://www.rian.ru/infografika/20110520/377383682.html 
+Source: <http://www.rian.ru/infografika/20110520/377383682.html>

@@ -6,4 +6,4 @@ layout: page
 
 Данные берутся из яндексовского [расписания рейсов](http://rasp.yandex.ru/).
 
-Source: http://rasp.yandex.ru/map.html 
+Source: <http://rasp.yandex.ru/map.html>

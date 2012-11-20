@@ -10,4 +10,4 @@ layout: page
   
 В общем я остался доволен аки слон :)
 
-Source: http://afishing.ru/moscow/%D0%A0%D0%B5%D1%81%D1%82%D0%BE%D1%80%D0%B0%D0%BD%D1%8B:%D0%9A%D0%B0%D1%84%D0%B5/Lavka_i_kafe_Artemiya_Lebedeva/310/review357 
+Source: <http://afishing.ru/moscow/%D0%A0%D0%B5%D1%81%D1%82%D0%BE%D1%80%D0%B0%D0%BD%D1%8B:%D0%9A%D0%B0%D1%84%D0%B5/Lavka_i_kafe_Artemiya_Lebedeva/310/review357>
