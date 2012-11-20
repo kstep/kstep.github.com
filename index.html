@@ -65,6 +65,13 @@
 
         $interpolate.startSymbol('{:').endSymbol(':}');
     }])
+
+    .filter('asdate', ['$filter', function ($filter) {
+        return function (value, pattern) {
+            return $filter('date')(new Date(value), pattern);
+        };
+    }])
+
     .controller('RootCtl', ['$scope', '$http', function ($scope, $http) {
         $scope.page = {};
     }])
