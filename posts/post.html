@@ -1,3 +1,11 @@
+<ul class="breadcrumb">
+    <li>
+        <a href="/#!/">//kstep</a>
+        <span class="divider">→</span>
+    </li>
+    <li class="active" ng-bind-html="page.title"></li>
+</ul>
+
 <h1><span ng-bind-html="page.title"></span> <small ng-bind="page.date | asdate:locale.date_format"></small></h1>
 
 <div ng-include="page.url"></div>
