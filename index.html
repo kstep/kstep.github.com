@@ -20,6 +20,8 @@
                 <div class="container">
                     <a class="brand" href="/#!/">//kstep</a>
                     <ul class="nav">
+                        <li ng-class="{ active: lang == 'en' }"><a ng-click="lang = 'en'">English</a></li>
+                        <li ng-class="{ active: lang == 'ru' }"><a ng-click="lang = 'ru'">Russian</a></li>
                     </ul>
                 </div>
             </div>
@@ -57,7 +59,7 @@
     .config(['$routeProvider', '$locationProvider', '$interpolateProvider',
     function ($route, $location, $interpolate) {
         $route
-        .when('/', { controller: 'BlogCtl', templateUrl: '/posts/list.html' })
+        .when('/:lang', { controller: 'BlogCtl', templateUrl: '/posts/list.html' })
         .when('/:year/:month/:day/:name.html', { controller: 'PostCtl', template: '<h1 ng-bind-html="page.title"></h1><div ng-include="page.url"></div>' })
         .otherwise({ redirectTo: '/' });
 
@@ -72,8 +74,26 @@
         };
     }])
 
-    .controller('RootCtl', ['$scope', '$http', function ($scope, $http) {
+    .value('locales', {
+        'en': {
+            lang: 'en',
+            index_title: 'My little cosy blog',
+            date_format: 'M/d/yyyy'
+        },
+        'ru': {
+            lang: 'ru',
+            index_title: 'Мой уютненький бложек',
+            date_format: 'dd.MM.yyyy'
+        }
+    })
+
+    .controller('RootCtl', ['$scope', '$http', 'locales', function ($scope, $http, locales) {
         $scope.page = {};
+        $scope.lang = 'en';
+
+        $scope.$watch('lang', function (lang) {
+            $scope.locale = locales[lang] || locales.en;
+        });
     }])
 
     .controller('PostCtl', ['$scope', '$routeParams', function ($scope, $params) {
@@ -82,9 +102,11 @@
             group: 'blog'
         });
     }])
-    .controller('BlogCtl', ['$scope', '$routeParams', '$http', function ($scope, $params, $http) {
+    .controller('BlogCtl', ['$scope', '$routeParams', '$http', 'locales', function ($scope, $params, $http, locales) {
+        $scope.lang = $params.lang;
+
         angular.extend($scope.page, {
-            title: 'Мой уютненький бложек // My cosy little blog',
+            title: $scope.locale.index_title,
             url:   '/',
             group: 'blog'
         });
