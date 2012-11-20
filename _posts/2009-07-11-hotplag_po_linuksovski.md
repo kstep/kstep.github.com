@@ -10,7 +10,6 @@ layout: page
 
   2. Настроить иксы в /etc/X11/xorg.conf: 
     
-{% highlight xorg %}
     Section "ServerLayout"
         Identifier     "Layout0"
         Screen      0  "Screen0"
@@ -47,7 +46,6 @@ layout: page
     	Option "Mode" "relative"
     	Option "USB" "on"
     EndSection
-{% endhighlight %}
 
   3. Настроить GIMP в Правка > Параметры > Устройтва ввода > Настроить дополнительные устройства ввода...
 

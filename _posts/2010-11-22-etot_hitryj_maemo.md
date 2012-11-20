@@ -21,25 +21,25 @@ layout: page
 
 > I found the reason. At least on my device pulseaudio application depends on the library libFLAC.  
   
-On device start the system starts the pulseaudio daemon.  
+> On device start the system starts the pulseaudio daemon.  
 As it needs libFLAC the system tries to load this library.  
 The library is at  
 /opt/maemo/usr/lib/libFLAC.so.8.2.0  
-  
-So the application pulseaudio fails to load  
+>  
+> So the application pulseaudio fails to load  
 (cannot load library libFLAC.so, no such file)  
 Because all this happens before the internal mmc is mounted :-)  
-  
-After failing to start the daemon the system tries this again and again.  
+>  
+> After failing to start the daemon the system tries this again and again.  
 It may work at some point when the internal mmc is mounted.  
 But sometimes the restart (respawn) happens to often and  
 the system stops this process.  
-  
-I don't know why pulseaudio needs this lib, it has something to  
+> 
+> I don't know why pulseaudio needs this lib, it has something to  
 do with the package decoders-support. But it seems this only  
 happens if you **upgraded** to PR1.3.   
-  
-I did a reflash now and installed decoders-support.  
+> 
+> I did a reflash now and installed decoders-support.  
 The libFLAC library is on /opt/maemo ....  
 But pulseaudio starts without an error.   
 (And it does not depend on this library anymore,   

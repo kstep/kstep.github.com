@@ -2,7 +2,8 @@
 title: "Pearlwall"
 layout: page 
 ---
-use strict;
+{% highlight perl %}
+    use strict;
     
     package Pearlwall;
     use base 'Exporter';
@@ -302,4 +303,4 @@ use strict;
     }
     
     1;
-    
+{% endhighlight %}
