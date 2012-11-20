@@ -56,7 +56,7 @@
     function ($route, $location, $interpolate) {
         $route
         .when('/', { controller: 'BlogCtl', templateUrl: '/posts/list.html' })
-        .when('/:year/:month/:day/:name.html', { controller: 'PostCtl', template: '<h1 ng-bind="page.title"></h1><div ng-include="page.url"></div>' })
+        .when('/:year/:month/:day/:name.html', { controller: 'PostCtl', template: '<h1 ng-bind-html="page.title"></h1><div ng-include="page.url"></div>' })
         .otherwise({ redirectTo: '/' });
 
         $location.html5Mode(false).hashPrefix('!');
@@ -66,18 +66,20 @@
     .controller('RootCtl', ['$scope', '$http', function ($scope, $http) {
         $scope.page = {};
     }])
-    .controller('HomeCtl', ['$scope', function ($scope) {
-        $scope.page.title = 'Home sweep home';
-        $scope.page.url = '/';
-        $scope.page.group = 'home';
-    }])
+
     .controller('PostCtl', ['$scope', '$routeParams', function ($scope, $params) {
-        $scope.page.url = '/' + $params.year + '/' + $params.month + '/' + $params.day + '/' + $params.name + '.html';
-        $scope.page.group = 'blog';
+        angular.extend($scope.page, {
+            url:   '/' + $params.year + '/' + $params.month + '/' + $params.day + '/' + $params.name + '.html',
+            group: 'blog'
+        });
     }])
     .controller('BlogCtl', ['$scope', '$routeParams', '$http', function ($scope, $params, $http) {
-        $scope.page.url = '/blog';
-        $scope.page.group = 'blog';
+        angular.extend($scope.page, {
+            title: 'Мой уютненький бложек // My cosy little blog',
+            url:   '/',
+            group: 'blog'
+        });
+
         $scope.posts = $http.get('/posts/list.json');
     }])
     ;
