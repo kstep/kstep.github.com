@@ -9,80 +9,80 @@ layout: page
 Суть системы учёта времени, если опускаться до уровня программной реализации, сводиться к посылке одного POST-запроса к серверу для логина, если юзер ещё не залогинился, либо к посылке одного GET-запроса в противном случае, при этом авторизация проходит по кукисам. Перл в помощь:
     
 {% highlight perl %}
-    #!/usr/bin/perl  
-      
-    use strict;  
-    use utf8;  
-    use LWP::UserAgent;  
-      
-    our $host = "http://www.intranet.com";  
-    our $ua   = LWP::UserAgent->new;  
-      
-    my $login    = 'user.login';  
-    my $password = 'domain_password';  
-      
-    my $response;  
-    my $exit_code = 0;  
-      
-    init_ua();  
-      
-    print "I'm here!\\n";  
-    $response = i_am_here();  
-      
-    unless (is_logged_in($response))  
-    {  
-    	print "Not logged in, trying to login...\\n";  
-    	login($login, $password, 1);  
-    	$response = i_am_here();  
-      
-    	if (is_logged_in($response))  
-    	{  
-    		print "Login successful.\\n";  
-    	}  
-    	else  
-    	{  
-    		$exit_code = 1;  
-    		print "Login failed!\\n";  
-    	}  
-    }  
-      
-    exit $exit_code;  
-      
-    sub init_ua()  
-    {  
-    	$ua->agent("Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.7) Gecko/2009030814 Iceweasel/3.0.9 (Debian-3.0.9-1)");  
-    	$ua->cookie_jar({ file => "/tmp/intra.cookies", autosave => 1 });  
-    }  
-      
-    sub login($$;$)  
-    {  
-    	my ( $login, $password, $remember ) = @_;  
-    	my %params;  
-      
-    	$params{'login'}    = $login;  
-    	$params{'password'} = $password;  
-    	$params{'member'}   = 'on' if $remember;  
-    	my $response = $ua->post("$host/login/", \\%params);  
-      
-    	die('Can\\'t connect to server.') unless ($response->code == 301);  
-    	return $response;  
-    }  
-      
-    sub i_am_here()  
-    {  
-    	my $response = $ua->get("$host/?alert=tut");  
-      
-    	die('Can\\'t connect to server.') unless ($response->code == 200);  
-    	return $response;  
-    }  
-      
-    sub is_logged_in($)  
-    {  
-    	my $response = shift;  
-    	  
-    	my $content = $response->decoded_content;  
-    	return $content =~ m#var dialog = new Boxy\\('<h1>Введите ваше имя и пароль для входа в систему</h1>', {title: 'Вы не авторизированы', modal: true}\\);#? 0: 1;  
-    }  
+#!/usr/bin/perl
+
+use strict;
+use utf8;
+use LWP::UserAgent;
+
+our $host = "http://www.intranet.com";
+our $ua   = LWP::UserAgent->new;
+
+my $login    = 'user.login';
+my $password = 'domain_password';
+
+my $response;
+my $exit_code = 0;
+
+init_ua();
+
+print "I'm here!\\n";
+$response = i_am_here();
+
+unless (is_logged_in($response))
+{
+	print "Not logged in, trying to login...\\n";
+	login($login, $password, 1);
+	$response = i_am_here();
+
+	if (is_logged_in($response))
+	{
+		print "Login successful.\\n";
+	}
+	else
+	{
+		$exit_code = 1;
+		print "Login failed!\\n";
+	}
+}
+
+exit $exit_code;
+
+sub init_ua()
+{
+	$ua->agent("Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.7) Gecko/2009030814 Iceweasel/3.0.9 (Debian-3.0.9-1)");
+	$ua->cookie_jar({ file => "/tmp/intra.cookies", autosave => 1 });
+}
+
+sub login($$;$)
+{
+	my ( $login, $password, $remember ) = @_;
+	my %params;
+
+	$params{'login'}    = $login;
+	$params{'password'} = $password;
+	$params{'member'}   = 'on' if $remember;
+	my $response = $ua->post("$host/login/", \\%params);
+
+	die('Can\\'t connect to server.') unless ($response->code == 301);
+	return $response;
+}
+
+sub i_am_here()
+{
+	my $response = $ua->get("$host/?alert=tut");
+
+	die('Can\\'t connect to server.') unless ($response->code == 200);
+	return $response;
+}
+
+sub is_logged_in($)
+{
+	my $response = shift;
+
+	my $content = $response->decoded_content;
+	return $content =~ m#var dialog = new Boxy\\('<h1>Введите ваше имя и пароль для входа в систему</h1>', {title: 'Вы не авторизированы', modal: true}\\);#? 0: 1;
+}
 {% endhighlight %}
 
 Скрипт был оттестирован и признан вполне рабочим. Осталась ещё одна задача: запускать его по расписанию каждое утро, чтобы он сам меня логинил. Конечно, можно было бы использовать его и честно, поставив в автозапуск при загрузке компа/входе в систему, но меня на момент написания этих скриптов достало мозгоёбство с политикой фирмы, так что я пошёл по другому пути: рисование красивого графика посещаемости рабочего места, раз уж им так этого хотелось. Вполне себе стандартная задача для крона, но осложняется она тем, что для избежания слишком явного палева требовалось несколько рандомизировать время прихода, а то как-то странно выглядело бы, если бы на графике посещения у сотрудника было выставлено 9:00 за весь месяц.
@@ -90,21 +90,21 @@ layout: page
 Для решения этой задачи был на коленке писан простой shell-скрипт-обёртка для этого перлового скрипта:
     
 {% highlight bash %}
-    #!/bin/sh  
-      
-    FIND=/usr/bin/find  
-    GREP=/bin/grep  
-    TEST=/usr/bin/test  
-    LOGIN=/home/kstep/bin/login.pl  
-    TOUCH=/bin/touch  
-      
-    LOCKFILE=/tmp/last.login  
-      
-    if $TEST x$1 = xrandom; then  
-    	$TEST $RANDOM -lt 22000 && exit 0  
-    fi  
-      
-    $FIND $LOCKFILE -mmin -1440 2> /dev/null | $GREP -q $LOCKFILE || $LOGIN && $TOUCH $LOCKFILE  
+#!/bin/sh
+
+FIND=/usr/bin/find
+GREP=/bin/grep
+TEST=/usr/bin/test
+LOGIN=/home/kstep/bin/login.pl
+TOUCH=/bin/touch
+
+LOCKFILE=/tmp/last.login
+
+if $TEST x$1 = xrandom; then
+	$TEST $RANDOM -lt 22000 && exit 0
+fi
+
+$FIND $LOCKFILE -mmin -1440 2> /dev/null | $GREP -q $LOCKFILE || $LOGIN && $TOUCH $LOCKFILE
 {% endhighlight %}
  
 

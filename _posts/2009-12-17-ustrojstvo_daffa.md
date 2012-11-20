@@ -9,23 +9,23 @@ layout: page
 Если кратко: устройство Даффа — это обобщение оптимизации циклов путём их развёртки. Проблема развёртки цикла с неизвестным числом повторов n в том, что при заданной глубине развёртки m существует n mod m «остаточных» итераций, которые надо обработать как особый случай. Дафф нашёл очень [элегантное решение](http://www.lysator.liu.se/c/duffs-device.html) этой задачи на C:
  
 {% highlight c %}
-    send(to, from, count)
-    	register short *to, *from;
-    	register count;
-    	{
-    		register n=(count+7)/8;
-    		switch(count%8){
-    		case 0:	do{	*to = *from++;
-    		case 7:		*to = *from++;
-    		case 6:		*to = *from++;
-    		case 5:		*to = *from++;
-    		case 4:		*to = *from++;
-    		case 3:		*to = *from++;
-    		case 2:		*to = *from++;
-    		case 1:		*to = *from++;
-    			}while(--n>0);
-    		}
-    	}
+send(to, from, count)
+	register short *to, *from;
+	register count;
+	{
+		register n=(count+7)/8;
+		switch(count%8){
+		case 0:	do{	*to = *from++;
+		case 7:		*to = *from++;
+		case 6:		*to = *from++;
+		case 5:		*to = *from++;
+		case 4:		*to = *from++;
+		case 3:		*to = *from++;
+		case 2:		*to = *from++;
+		case 1:		*to = *from++;
+			}while(--n>0);
+		}
+	}
 {% endhighlight %}
 
 Как это работает: цикл из count повторов разворачивается на n равных кусков по 8 операций в каждом, а остаток операций в n mod 8 штук выполняется через switch: при первой проходе мы попадаем на один из case'ов в зависимости от этого остатка и сразу выполняем нужное остаточное число операций, а потом цикл while() работает своим обычным образом, пропуская все куски, на которые разбит исходный цикл.

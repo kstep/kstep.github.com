@@ -9,7 +9,7 @@ layout: page
 Дебиановского пакета навскидку не нашёл, потому собрал свой. LD_PRELOAD, впрочем, придётся ставить самому, например в ~/.profile:
     
 {% highlight bash %}
-    export LD_PRELOAD=/usr/lib/libetc.so.0
+export LD_PRELOAD=/usr/lib/libetc.so.0
 {% endhighlight %}
 
 В /etc/profile (или куда-то туда) не рекомендуется, т.к. хрен его знает, как себя может повести какой-нить демон с этой либой при прелоаде.

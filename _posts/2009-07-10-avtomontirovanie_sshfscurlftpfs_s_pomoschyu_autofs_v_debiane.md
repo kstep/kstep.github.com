@@ -21,25 +21,25 @@ layout: page
 Чтобы не плодить сущностей был создан один единственный унверсальный скрипт /etc/auto.remote:
     
 {% highlight bash %}
-    #!/bin/sh
-    
-    key="$1"
-    opts="-fstype=fuse,rw,nodev,nosuid,nonempty,noatime,allow_other"
-    
-    case $0 in
-    *.ssh) proto="sshfs"; key="$key\\\\:" ;;
-    *.ftp) proto="curlftpfs" ;;
-    *) exit 1 ;;
-    esac
-    
-    echo "$opts" ":$proto\\\\#$key"
+#!/bin/sh
+
+key="$1"
+opts="-fstype=fuse,rw,nodev,nosuid,nonempty,noatime,allow_other"
+
+case $0 in
+*.ssh) proto="sshfs"; key="$key\\\\:" ;;
+*.ftp) proto="curlftpfs" ;;
+*) exit 1 ;;
+esac
+
+echo "$opts" ":$proto\\\\#$key"
 {% endhighlight %}
 
 После чего на этот скрипт были проброшены линки:
     
 {% highlight bash %}
-    ln -s /etc/auto.remote /etc/auto.ssh
-    ln -s /etc/auto.remote /etc/auto.ftp
+ln -s /etc/auto.remote /etc/auto.ssh
+ln -s /etc/auto.remote /etc/auto.ftp
 {% endhighlight %}
 
 Этот скрипт позволяет автоматически монтировать ssh и ftp хосты (в зависимости от того, под каким именем он был вызван). Единственное, о чём не стоит забывать, что выполняется монтирование autofs'ом от имени рута, так что все ftp-пароли в ~/.netrc, настройки коннекта ssh в ~/.ssh/config и соответствующие ssh-ключики должны быть продублированы в доме рута (по умолчанию /root) со всеми вытекающими... За то в результате мы получаем прозрачное монтирование-размонтирование удалённых ftp и ssh хостов: просто нужно зайти в соответствующий каталог и оно само автомагически подключится (или не подключится :), а после некоторого времени без доступа к этому каталогу (в примере указано 30 секунд, см. параметр --timeout), оно само же и отключится. Пользуйтесь на здоровье!

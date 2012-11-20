@@ -9,31 +9,31 @@ layout: page
 Собственно она:
     
 {% highlight python %}
-    def curry(n):
-        def realcurry(func):
-            if n < 2:
-                return func
-            else:
-                return lambda a: curry(n-1)(lambda *args: func(a, *args))
-        return realcurry
+def curry(n):
+    def realcurry(func):
+        if n < 2:
+            return func
+        else:
+            return lambda a: curry(n-1)(lambda *args: func(a, *args))
+    return realcurry
 {% endhighlight %}
 
 Использование:
 
 {% highlight python %}
-    @curry(5)
-    def calc(a, b, c, d, e):
-    	return a+b*c+d-e
-    
-    print calc(2)(2)(2)(2)(2)
-    
-    class TestClass(object):
-    	@curry(6)
-    	def calc(self, a, b, c, d, e):
-    		return a+b*c+d-e
-    
-    obj = TestClass()
-    print obj.calc()(2)(2)(2)(2)(2)
+@curry(5)
+def calc(a, b, c, d, e):
+	return a+b*c+d-e
+
+print calc(2)(2)(2)(2)(2)
+
+class TestClass(object):
+	@curry(6)
+	def calc(self, a, b, c, d, e):
+		return a+b*c+d-e
+
+obj = TestClass()
+print obj.calc()(2)(2)(2)(2)(2)
 {% endhighlight %}
 
 Кратко как оно работает: функция `curry()` рекурсивно создаёт цепочку λ-функций одного аргумента, которые последовательно вызывают друг друга вплоть до момента, когда число аргументов достигает одного. Работает это благодаря счётчику глубины развёртки n, который попадает в замыкание в функции `realcurry()`.

@@ -21,46 +21,46 @@ layout: page
   1. если поднять значение в монаду (и получить монадический инстанс), а затем применить стратегию связывания полученного инстанса с заданной функцией, то получим результат, эквивалентный вызову заданной функции с заданным значением в качестве параметра: 
     
 {% highlight ruby %}
-    m = MonadContainer.mreturn(123)
-    n1 = m.mbind do |x|
-        x*2
-    end
-    
-    n2 = MonadContainer.mreturn(123 * 2)
-    
-    assert n1 == n2
+m = MonadContainer.mreturn(123)
+n1 = m.mbind do |x|
+    x*2
+end
+
+n2 = MonadContainer.mreturn(123 * 2)
+
+assert n1 == n2
 {% endhighlight %}
 
   2. если взять инстанс монадического тип (класс) и применить к нему стратегию связывания с конструктором класса, то получим этот же инстанс: 
     
 {% highlight ruby %}
-    m = MonadContainer.mreturn(123)
-    
-    n = m.mbind do |x|
-        MonadContainer.mreturn(x)
-    end
-    
-    assert m == n
+m = MonadContainer.mreturn(123)
+
+n = m.mbind do |x|
+    MonadContainer.mreturn(x)
+end
+
+assert m == n
 {% endhighlight %}
 
   3. если взять монадический инстанс и применить к нему стратегию свзязываения с заданной функцией, а затем к результату ещё раз применить стратегию связывания с иной функцией, то результат будет эквивалентен вычислению первой заданной функции от изначально поднятого в монаду значения и применения к результату стратегии связывания с иной функцией: 
     
 {% highlight ruby %}
-    m = MonadContainer.mreturn(123)
-    
-    n1 = m.mbind do |x|
-        x*2
-    end.mbind do |x|
+m = MonadContainer.mreturn(123)
+
+n1 = m.mbind do |x|
+    x*2
+end.mbind do |x|
+    x*3
+end
+
+n2 = m.mbind do |x|
+    MonadContainer.mreturn(x*2).mbind do |x|
         x*3
     end
-    
-    n2 = m.mbind do |x|
-        MonadContainer.mreturn(x*2).mbind do |x|
-            x*3
-        end
-    end
-    
-    assert n1 == n2
+end
+
+assert n1 == n2
 {% endhighlight %}
 
 С точки зрения простого программиста монада — это такой абстрактный тип данных (или класс в терминах ООП) с определённым интерфейсом, соответствующим вышеприведённым тест-кейсам.
@@ -70,20 +70,20 @@ layout: page
 Понятие монадического нуля аналогично понятию нуля в алгебре при условии что стратегия связывания аналогична умножению, то есть попытка связать монадический ноль с любой функцией приводит к получению монадического нуля. С точки зрения программиста монадический ноль — это просто пустое значение, т.е. 0 для чисел, пустая "" строка для строк или пустой массив [] для массивов.
     
 {% highlight ruby %}
-    mz = MonadContainer.mzero
-    n = mz.mbind do |x|
-        x*2
-    end
-    
-    assert n == mz
+mz = MonadContainer.mzero
+n = mz.mbind do |x|
+    x*2
+end
+
+assert n == mz
 {% endhighlight %}
 
 Аддитивная монада определяет такое поле, над которым определена операция сложения, при этом любое сложение монады с монадическим нулём даёт в итоге эту монаду. Математики тут говорят о моноидах.
     
 {% highlight ruby %}
-    mz = MonadContainer.mzero
-    m = MonadContainer.mreturn(123)
-    n = mz.mplus(m)
-    
-    assert n == m
+mz = MonadContainer.mzero
+m = MonadContainer.mreturn(123)
+n = mz.mplus(m)
+
+assert n == m
 {% endhighlight %}

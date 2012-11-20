@@ -16,8 +16,8 @@ layout: page
 Но это ещё не всё! Есть такой замечательный специальный метод `__call__(self, *args, **kwds)`. Если он определён для объекта, то при попытке вызвать объект вызывается именно он, то есть:
     
 {% highlight python %}
-    obj = SomeClass()
-    obj("Hello!")
+obj = SomeClass()
+obj("Hello!")
 {% endhighlight %}
 
 На самом деле неявно вызывает метод инстанса `obj.__call__("Hello!")`
@@ -25,7 +25,7 @@ layout: page
 Добавляем ещё один питонофакт: оператор создания класса в Питоне по сути является оператором вызова функции. То есть когда мы делаем:
     
 {% highlight python %}
-    obj = SomeClass()
+obj = SomeClass()
 {% endhighlight %}
 
 Мы на самом деле вызываем метод `SomeClass.__call__()`, который вызывает `SomeClass.__new__(SomeClass)`, а потом `SomeClass.__init__(inst)`, где inst — результат выполнения `SomeClass.__new__()`. Это означает, что:
@@ -38,8 +38,8 @@ layout: page
 Следующий вопрос, который возникает, это откуда берётся `SomeClass.__call__()`? Ведь это метод инстанса, то есть если определить его вот так:
     
 {% highlight python %}
-    class SomeClass(object):
-    	def __call__(self):
+class SomeClass(object):
+	def __call__(self):
 {% endhighlight %}
 
 то мы сможем перехватить вызов инстанса этого класса — `obj()` — но не самого `SomeClass()`. То есть чтобы перехватить вызов класса как функции, надо объявить метод `__call__()` в классе класса... В метаклассе.
@@ -47,37 +47,37 @@ layout: page
 Дальше привожу пример тестовой программки, которую я написал как раз для выяснения (и прояснения) этой всей крышесносящей байды:
     
 {% highlight python %}
-    #!/usr/bin/python
-    
-    class MetaClass(type):
-    	def __new__(cls, name, bases, dicts):
-    		print "meta __new__"
-    		return super(MetaClass, cls).__new__(cls, name, bases, dicts)
-    	def __init__(cls, name, bases, dicts):
-    		print "meta __init__ called"
-    		super(MetaClass, cls).__init__(name, bases, dicts)
-    	def __call__(self):
-    		print "meta __call__ called"
-    		return super(MetaClass, self).__call__()
-    
-    class TestClass(object):
-    	__metaclass__ = MetaClass
-    
-    	def __new__(cls):
-    		print "__new__ called"
-    		return super(TestClass, cls).__new__(cls)
-    	def __init__(self):
-    		print "__init__ called"
-    		super(TestClass, self).__init__()
-    	def __call__(self):
-    		print "__call__ called"
-    
-    print "Program start..."
-    print "Instantiating TestClass..."
-    tclass = TestClass()
-    print "TestClass instantiated."
-    print tclass
-    print "Finishing program..."
+#!/usr/bin/python
+
+class MetaClass(type):
+	def __new__(cls, name, bases, dicts):
+		print "meta __new__"
+		return super(MetaClass, cls).__new__(cls, name, bases, dicts)
+	def __init__(cls, name, bases, dicts):
+		print "meta __init__ called"
+		super(MetaClass, cls).__init__(name, bases, dicts)
+	def __call__(self):
+		print "meta __call__ called"
+		return super(MetaClass, self).__call__()
+
+class TestClass(object):
+	__metaclass__ = MetaClass
+
+	def __new__(cls):
+		print "__new__ called"
+		return super(TestClass, cls).__new__(cls)
+	def __init__(self):
+		print "__init__ called"
+		super(TestClass, self).__init__()
+	def __call__(self):
+		print "__call__ called"
+
+print "Program start..."
+print "Instantiating TestClass..."
+tclass = TestClass()
+print "TestClass instantiated."
+print tclass
+print "Finishing program..."
 {% endhighlight %}
 
 На выходе она выдаёт следующее:
