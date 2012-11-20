@@ -49,17 +49,18 @@
 
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular-sanitize.min.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular-cookies.min.js"></script>
 
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
         <script type="text/javascript" src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.0/js/bootstrap.min.js"></script>
 
 <script type="text/javascript">
 !function (angular, document, $, undefined) {
-    angular.module('kstep', ['ng', 'ngSanitize'])
+    angular.module('kstep', ['ng', 'ngSanitize', 'ngCookies'])
     .config(['$routeProvider', '$locationProvider', '$interpolateProvider',
     function ($route, $location, $interpolate) {
         $route
-        .when('/:lang', { controller: 'BlogCtl', templateUrl: '/posts/list.html' })
+        .when('/', { controller: 'BlogCtl', templateUrl: '/posts/list.html' })
         .when('/:year/:month/:day/:name.html', { controller: 'PostCtl', templateUrl: '/posts/post.html' })
         .otherwise({ redirectTo: '/' });
 
@@ -87,12 +88,13 @@
         }
     })
 
-    .controller('RootCtl', ['$scope', '$http', 'locales', function ($scope, $http, locales) {
+    .controller('RootCtl', ['$scope', '$http', 'locales', '$cookies', function ($scope, $http, locales, $cookies) {
         $scope.page = {};
-        $scope.lang = 'en';
+        $scope.lang = $cookies.lang || 'en';
 
         $scope.$watch('lang', function (lang) {
             $scope.locale = locales[lang] || locales.en;
+            $cookies.lang = lang;
         });
     }])
 
@@ -102,8 +104,10 @@
             group: 'blog'
         });
     }])
-    .controller('BlogCtl', ['$scope', '$routeParams', '$http', 'locales', function ($scope, $params, $http, locales) {
-        $scope.lang = $params.lang;
+    .controller('BlogCtl', ['$scope', '$routeParams', '$http', function ($scope, $params, $http) {
+        $scope.$watch('locale.index_title', function (locale_title) {
+            $scope.page.title = locale_title;
+        });
 
         angular.extend($scope.page, {
             title: $scope.locale.index_title,
