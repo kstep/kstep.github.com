@@ -60,7 +60,7 @@
     function ($route, $location, $interpolate) {
         $route
         .when('/:lang', { controller: 'BlogCtl', templateUrl: '/posts/list.html' })
-        .when('/:year/:month/:day/:name.html', { controller: 'PostCtl', template: '<h1 ng-bind-html="page.title"></h1><div ng-include="page.url"></div>' })
+        .when('/:year/:month/:day/:name.html', { controller: 'PostCtl', templateUrl: '/posts/post.html' })
         .otherwise({ redirectTo: '/' });
 
         $location.html5Mode(false).hashPrefix('!');
