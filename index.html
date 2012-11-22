@@ -171,6 +171,87 @@ function valueFn(value) {
         };
     }])
 
+    .factory('$jsload', ['$timeout', '$q', '$document', '$rootScope', function ($timeout, $q, $document, $root) {
+        var cache = {},
+            queue = {};
+
+        return function (src) {
+            if (queue[src]) {
+                return queue[src];
+            }
+
+            var deferred = $q.defer();
+
+            if (cache[src]) {
+                deferred.resolve(cache[src]);
+
+            } else {
+                queue[src] = deferred.promise;
+
+                $timeout(function () {
+                    var script = $document[0].createElement('script');
+                    script.type = 'text/javascript';
+                    script.async = true;
+                    script.src = src;
+
+                    script.onerror = function (ev) {
+                        delete queue[src];
+                        deferred.reject(script);
+                        $root.$digest();
+                    };
+                    script.onreadystatechange = script.onload = function (ev) {
+                        delete queue[src];
+                        if (!ev.readyState || ev.readyState === 'loaded') {
+                            cache[src] = script;
+                            deferred.resolve(script);
+                            $root.$digest();
+                        }
+                    };
+
+                    $document[0].getElementsByTagName('head')[0].appendChild(script);
+                });
+            }
+
+            return deferred.promise;
+        };
+    }])
+
+    .factory('Disqus', ['$window', '$jsload', function ($window, $jsload) {
+        return function (shortname) {
+            return $jsload('http://' + shortname + '.disqus.com/embed.js').then(function () {
+                return $window.DISQUS;
+            });
+        }
+    }])
+
+    .directive('disqus', ['$location', 'Disqus', '$parse', function ($location, Disqus, $parse) {
+        return {
+            restrict: 'AC',
+            template: '<div id="disqus_thread"></div><a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>',
+            compile: function (elem, attrs) {
+                var shortname = attrs.disqus || attrs.shortname;
+                if (!shortname) { return; }
+
+                var configExpr = $parse(attrs.config);
+
+                return function (scope, elem, attrs) {
+                    config = configExpr(scope) || angular.noop;
+
+                    Disqus(shortname).then(function (disqus) {
+                        disqus.reset({
+                            reload: true,
+                            config: function () {
+                                this.page.identifier = $location.hash();
+                                this.page.url = $location.absUrl();
+                                config(this.page);
+                            }
+                        });
+                    });
+                }
+            }
+        };
+    }])
+
     .controller('RootCtl', ['$scope', '$http', 'locales', '$cookies', function ($scope, $http, locales, $cookies) {
         $scope.page = {};
         $scope.lang = $cookies.lang || 'en';
