@@ -1,5 +1,5 @@
 <ol>
     <li ng-repeat="post in posts.data">
-        <a href="/#!{: post.url :}" ng-bind="post.title"></a> <small class="muted" ng-bind="post.date | asdate:locale.date_format"></small>
+        <a href="/#!{: post.url :}" ng-bind-html="post.title"></a> <small class="muted" ng-bind="post.date | asdate:locale.date_format"></small>
     </li>
 </ol>
