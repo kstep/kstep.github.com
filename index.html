@@ -42,6 +42,10 @@
                     margin-top: 0;
                 }
             }
+
+            .loading {
+                text-decoration: blink;
+            }
         </style>
     </head>
 
@@ -55,7 +59,7 @@
                         <span class="icon-bar"></span>
                     </a>
 
-                    <a class="brand" href="/#!/">//kstep</a>
+                    <a class="brand" href="/#!/" ng-class="{ loading: $loading }">//kstep</a>
 
                     <div class="nav-collapse collapse">
                         <ul class="nav pull-right">
@@ -165,6 +169,16 @@ function valueFn(value) {
     .controller('RootCtl', ['$scope', '$http', 'locales', '$cookies', function ($scope, $http, locales, $cookies) {
         $scope.page = {};
         $scope.lang = $cookies.lang || 'en';
+
+        $scope.$on('$routeChangeStart', function () {
+            $scope.$loading = true;
+        });
+        $scope.$on('$routeChangeSuccess', function () {
+            $scope.$loading = false;
+        });
+        $scope.$on('$routeChangeError', function () {
+            $scope.$loading = false;
+        });
 
         $scope.$watch('lang', function (lang) {
             $scope.locale = locales[lang] || locales.en;
