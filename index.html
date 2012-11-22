@@ -49,11 +49,20 @@
         <header class="navbar navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+
                     <a class="brand" href="/#!/">//kstep</a>
-                    <ul class="nav pull-right">
-                        <li ng-class="{ active: lang == 'en' }"><a ng-click="lang = 'en'">English</a></li>
-                        <li ng-class="{ active: lang == 'ru' }"><a ng-click="lang = 'ru'">Russian</a></li>
-                    </ul>
+
+                    <div class="nav-collapse collapse">
+                        <ul class="nav pull-right">
+                            <li ng-class="{ active: lang == 'en' }"><a ng-click="lang = 'en'">English</a></li>
+                            <li ng-class="{ active: lang == 'ru' }"><a ng-click="lang = 'ru'">Russian</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </header>
