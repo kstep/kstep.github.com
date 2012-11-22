@@ -2,7 +2,7 @@
 <html lang="en" ng-app="kstep" ng-controller="RootCtl">
     <head>
         <meta charset="utf-8">
-        <title ng-bind="page.title"></title>
+        <title ng-bind="page.title | strip_tags"></title>
         <meta name="description" content="{: page.description :}">
         <meta name="author" content="Konstantin Stepanov" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -69,6 +69,12 @@
         $interpolate.startSymbol('{:').endSymbol(':}');
     }])
 
+    .filter('strip_tags', [function () {
+        var tag_re = /<\/[a-zA-Z][a-zA-Z0-9]*>|<[a-zA-Z][a-zA-Z0-9]*(\s+[^>]*?)?>/g;
+        return function (value) {
+            return (value || '').toString().replace(tag_re, '');
+        };
+    }])
     .filter('asdate', ['$filter', function ($filter) {
         return function (value, pattern) {
             return $filter('date')(new Date(value), pattern);
