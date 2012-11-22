@@ -43,6 +43,8 @@
             </div>
         </footer>
 
+        <a class="totop">↑</a>
+
         <!--[if lt IE 9]>
         <script src="http:http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
@@ -55,6 +57,10 @@
         <script type="text/javascript" src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.0/js/bootstrap.min.js"></script>
 
 <script type="text/javascript">
+function valueFn(value) {
+    return function () { return value; };
+}
+
 !function (angular, document, $, undefined) {
     angular.module('kstep', ['ng', 'ngSanitize', 'ngCookies'])
     .config(['$routeProvider', '$locationProvider', '$interpolateProvider',
@@ -93,6 +99,28 @@
             date_format: 'dd.MM.yyyy'
         }
     })
+
+    .directive('totop', ['$window', function ($window) {
+        return {
+            restrict: 'AC',
+            compile: function (elem, attrs) {
+                var win = $($window);
+
+                win.bind('scroll', function (ev) {
+                    elem.css('display', win.scrollTop() > win.height() / 3? '': 'none');
+                });
+
+                elem.css('display', 'none');
+
+                return function (scope, elem, attrs) {
+                    elem.bind('click', function () {
+                        win.scrollTop(0);
+                        elem.css('display', 'none');
+                    });
+                };
+            }
+        };
+    }])
 
     .controller('RootCtl', ['$scope', '$http', 'locales', '$cookies', function ($scope, $http, locales, $cookies) {
         $scope.page = {};
