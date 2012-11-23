@@ -99,11 +99,7 @@
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">{: locale.in_social_networks :} <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
-                                    <li><a target="_blank" href="https://twitter.com/kstepme"><img class="favicon" src="http://twitter.com/favicon.ico" /> Twitter</a></li>
-                                    <li><a target="_blank" href="http://www.linkedin.com/pub/konstantin-stepanov/54/47/450"><img class="favicon" src="http://www.linkedin.com/favicon.ico" /> LinkedIn</a></li>
-                                    <li><a target="_blank" href="http://kstepme.moikrug.ru/"><img class="favicon" src="http://moikrug.ru/favicon.ico" /> Мой Круг</a></li>
-                                    <li><a target="_blank" href="http://welinux.ru/user/kstep/"><img class="favicon" src="http://welinux.ru/favicon.ico" /> WeLinux</a></li>
-                                    <li><a target="_blank" href="https://github.com/kstep"><img class="favicon" src="http://github.com/favicon.ico" /> Github</a></li>
+                                    <li ng-repeat="acc in social_accounts"><a target="_blank" ng-href="{: acc.url :}"><img class="favicon" ng-src="{: acc.icon :}" /> {: acc.name :}</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -128,11 +124,7 @@
                         <li><span class="navbar-text">{: locale.signature :} 2012</span></li>
                     </ul>
                     <ul class="nav pull-right">
-                        <li><a target="_blank" href="https://twitter.com/kstepme" title="Twitter"><img class="favicon" src="http://twitter.com/favicon.ico" alt="Twitter" /></a></li>
-                        <li><a target="_blank" href="http://www.linkedin.com/pub/konstantin-stepanov/54/47/450" title="LinkedIn"><img class="favicon" src="http://www.linkedin.com/favicon.ico" alt="LinkedIn" /></a></li>
-                        <li><a target="_blank" href="http://kstepme.moikrug.ru/" title="Мой Круг"><img class="favicon" src="http://moikrug.ru/favicon.ico" alt="Мой Круг" /></a></li>
-                        <li><a target="_blank" href="http://welinux.ru/user/kstep/" title="WeLinux"><img class="favicon" src="http://welinux.ru/favicon.ico" alt="WeLinux" /></a></li>
-                        <li><a target="_blank" href="https://github.com/kstep" title="Github"><img class="favicon" src="http://github.com/favicon.ico" alt="Github "/></a></li>
+                        <li ng-repeat="acc in social_accounts"><a target="_blank" ng-href="{: acc.url :}" title="{: acc.name :}"><img class="favicon" ng-src="{: acc.icon :}" alt="{: acc.name :}" /></a></li>
                     </ul>
                 </div>
             </div>
@@ -364,6 +356,14 @@ function valueFn(value) {
             $scope.locale = locales[lang] || locales.en;
             $cookies.lang = lang;
         });
+
+        $scope.social_accounts = [
+            { url: "https://twitter.com/kstepme", icon: "http://twitter.com/favicon.ico", name: "Twitter" },
+            { url: "http://www.linkedin.com/pub/konstantin-stepanov/54/47/450", icon: "http://www.linkedin.com/favicon.ico", name: "LinkedIn" },
+            { url: "http://kstepme.moikrug.ru/", icon: "http://moikrug.ru/favicon.ico", name: "Мой Круг" },
+            { url: "http://welinux.ru/user/kstep/", icon: "http://welinux.ru/favicon.ico", name: "WeLinux" },
+            { url: "https://github.com/kstep", icon: "http://github.com/favicon.ico", name: "Github" }
+        ];
     }])
 
     .controller('PostCtl', ['$scope', '$routeParams', function ($scope, $params) {
