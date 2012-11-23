@@ -312,7 +312,7 @@ function valueFn(value) {
             restrict: 'AC',
             template: '<div id="disqus_thread"></div><a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>',
             compile: function (elem, attrs) {
-                var shortname = attrs.disqus || attrs.shortname;
+                var shortname = attrs.disqus || attrs.name;
                 if (!shortname) { return; }
 
                 var configExpr = $parse(attrs.config);
