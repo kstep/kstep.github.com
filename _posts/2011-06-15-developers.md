@@ -22,5 +22,5 @@ Fortunately, it doesn't bother company's profit, because the product is sold wel
 
 Source: <http://sokol-egor.blogspot.com/>
 
-<div data-disqus="kstep"></div>
+<disqus name="kstep" />
 
