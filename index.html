@@ -74,6 +74,11 @@
                 color: #333333;
                 box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.1);
             }
+
+            .navbar .nav.social-icons > li > a {
+                padding-left: 8px;
+                padding-right: 8px;
+            }
         </style>
     </head>
 
@@ -123,7 +128,7 @@
                     <ul class="nav">
                         <li><span class="navbar-text">{: locale.signature :} 2012</span></li>
                     </ul>
-                    <ul class="nav pull-right">
+                    <ul class="nav pull-right social-icons">
                         <li ng-repeat="acc in social_accounts"><a target="_blank" ng-href="{: acc.url :}" title="{: acc.name :}"><img class="favicon" ng-src="{: acc.icon :}" alt="{: acc.name :}" /></a></li>
                     </ul>
                 </div>
