@@ -61,6 +61,11 @@
 
                     <a class="brand" href="/#!/" ng-class="{ loading: $loading }">//kstep</a>
 
+                    <div class="btn-group pull-right">
+                        <button ng-click="lang = 'en'" ng-class="{ active: lang == 'en' }" class="btn">en</button>
+                        <button ng-click="lang = 'ru'" ng-class="{ active: lang == 'ru' }" class="btn">ru</button>
+                    </div>
+
                     <div class="nav-collapse collapse">
                         <ul class="nav">
                             <li class="dropdown">
@@ -71,15 +76,6 @@
                                     <li><a target="_blank" href="http://kstepme.moikrug.ru/"><img src="http://moikrug.ru/favicon.ico" /> Мой Круг</a></li>
                                     <li><a target="_blank" href="http://welinux.ru/user/kstep/"><img src="http://welinux.ru/favicon.ico" /> WeLinux</a></li>
                                     <li><a target="_blank" href="https://github.com/kstep"><img src="http://github.com/favicon.ico" /> Github</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <ul class="nav pull-right">
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{: lang :} <b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li ng-class="{ active: lang == 'en' }"><a ng-click="lang = 'en'">en</a></li>
-                                    <li ng-class="{ active: lang == 'ru' }"><a ng-click="lang = 'ru'">ru</a></li>
                                 </ul>
                             </li>
                         </ul>
