@@ -1,0 +1,3 @@
+User-agent: Yandex
+Allow: /
+Sitemap: http://kstep.me/sitemap.xml
