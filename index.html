@@ -244,14 +244,14 @@ function valueFn(value) {
         var cache = {},
             queue = {};
 
-        return function (src) {
+        return function (src, force) {
             if (queue[src]) {
                 return queue[src];
             }
 
             var deferred = $q.defer();
 
-            if (cache[src]) {
+            if (!force && cache[src]) {
                 deferred.resolve(cache[src]);
 
             } else {
@@ -323,36 +323,35 @@ function valueFn(value) {
 
     .factory('Disqus', ['$window', '$jsload', function ($window, $jsload) {
         return function (shortname) {
-            return $jsload('http://' + shortname + '.disqus.com/embed.js').then(function () {
+            return $jsload('http://' + shortname + '.disqus.com/embed.js', true).then(function () {
                 return $window.DISQUS;
             });
         }
     }])
 
-    .directive('disqus', ['$location', 'Disqus', '$parse', function ($location, Disqus, $parse) {
+    .directive('disqus', ['$location', '$window', 'Disqus', '$parse', function ($location, $window, Disqus, $parse) {
+        var id_seq = 0;
+
         return {
             restrict: 'ACE',
-            template: '<div id="disqus_thread"><'+'/div><a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus<'+'/span><'+'/a>',
+            terminal: true,
             compile: function (elem, attrs) {
-                var shortname = attrs.disqus || attrs.name;
-                if (!shortname) { return; }
+                var shortname = attrs.disqus || attrs.name,
+                    id = attrs.id;
 
-                //var configExpr = $parse(attrs.config);
+                if (!shortname) { return; }
+                if (!id) {
+                    id = 'disqus_thread' + (id_seq++);
+                    elem.attr('id', id);
+                }
 
                 return function (scope, elem, attrs) {
-                    //var config = configExpr(scope) || angular.noop;
+                    $window.disqus_identifier = $location.path();
+                    $window.disqus_url = $location.absUrl();
+                    $window.disqus_container_id = id;
 
-                    Disqus(shortname).then(function (disqus) {
-                        disqus.reset({
-                            reload: true,
-                            config: function () {
-                                this.page.identifier = $location.path();
-                                this.page.url = $location.absUrl();
-                                console.log(this.page);
-                                //config(this.page);
-                            }
-                        });
-                    });
+                    Disqus(shortname);
+                    elem.html('');
                 }
             }
         };
