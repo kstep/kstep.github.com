@@ -107,6 +107,7 @@
                                     <li ng-repeat="acc in social_accounts"><a target="_blank" ng-href="{: acc.url :}"><img class="favicon" ng-src="{: acc.icon :}" /> {: acc.name :}</a></li>
                                 </ul>
                             </li>
+                            <li><a ng-href="{: 'znvygb:zr@xfgrc.zr' | rot13 :}" title="{: locale.no_spam_please :}">{: locale.email_me :}</a></li>
                         </ul>
                     </div>
                 </div>
@@ -178,6 +179,16 @@ function valueFn(value) {
             return (value || '').toString().replace(tag_re, '');
         };
     }])
+    .filter('rot13', [function () {
+        var latin_re = /[a-zA-Z]/g,
+            decode = function (c) {
+                return String.fromCharCode((c <= "Z"? 90: 122) >= (c = c.charCodeAt(0) + 13)? c: c - 26);
+            };
+
+        return function (value) {
+            return (value || '').toString().replace(latin_re, decode);
+        };
+    }])
     .filter('asdate', ['$filter', function ($filter) {
         return function (value, pattern) {
             return $filter('date')(new Date(value), pattern);
@@ -189,6 +200,8 @@ function valueFn(value) {
             lang: 'en',
             index_title: 'My little cosy blog',
             in_social_networks: '…in social networks',
+            email_me: 'email me',
+            no_spam_please: 'No spam, please!',
             signature: '© Konstantin Stepanov',
             date_format: 'M/d/yyyy'
         },
@@ -196,6 +209,8 @@ function valueFn(value) {
             lang: 'ru',
             index_title: 'Мой уютненький бложек',
             in_social_networks: '…в соцсетях',
+            email_me: 'напишите мне',
+            no_spam_please: 'Только без спама, пожалуйста!',
             signature: '© Константин Степанов',
             date_format: 'dd.MM.yyyy'
         }
