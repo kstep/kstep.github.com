@@ -337,18 +337,19 @@ function valueFn(value) {
                 var shortname = attrs.disqus || attrs.name;
                 if (!shortname) { return; }
 
-                var configExpr = $parse(attrs.config);
+                //var configExpr = $parse(attrs.config);
 
                 return function (scope, elem, attrs) {
-                    var config = configExpr(scope) || angular.noop;
+                    //var config = configExpr(scope) || angular.noop;
 
                     Disqus(shortname).then(function (disqus) {
                         disqus.reset({
                             reload: true,
                             config: function () {
-                                this.page.identifier = $location.hash();
+                                this.page.identifier = $location.path();
                                 this.page.url = $location.absUrl();
-                                config(this.page);
+                                console.log(this.page);
+                                //config(this.page);
                             }
                         });
                     });
