@@ -117,7 +117,12 @@
         <div ng-show="$loading" id="loading-indicator">Loading…</div>
 
         <div class="container" id="content">
-            <div class="content" ng-view>
+            <div class="row">
+                <div class="content span9" ng-view></div>
+                <div class="span3">
+                    <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/kstepme" data-widget-id="272776746049339393">Tweets by @kstepme</a>
+                    <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+                </div>
             </div>
 
         </div> <!-- /container -->
