@@ -115,7 +115,7 @@
         </header>
 
         <div class="modal-backdrop" ng-show="$loading"></div>
-        <div ng-show="$loading" id="loading-indicator">Loading…</div>
+        <div ng-show="$loading" id="loading-indicator" ng-bind="locale.loading"></div>
 
         <div class="container" id="content">
             <div class="row">
@@ -202,6 +202,7 @@ function valueFn(value) {
             in_social_networks: '…in social networks',
             email_me: 'email me',
             no_spam_please: 'No spam, please!',
+            loading: 'Loading…',
             signature: '© Konstantin Stepanov',
             date_format: 'M/d/yyyy'
         },
@@ -211,6 +212,7 @@ function valueFn(value) {
             in_social_networks: '…в соцсетях',
             email_me: 'напишите мне',
             no_spam_please: 'Только без спама, пожалуйста!',
+            loading: 'Загрузка…',
             signature: '© Константин Степанов',
             date_format: 'dd.MM.yyyy'
         }
