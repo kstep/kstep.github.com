@@ -332,7 +332,7 @@ function valueFn(value) {
     .directive('disqus', ['$location', 'Disqus', '$parse', function ($location, Disqus, $parse) {
         return {
             restrict: 'ACE',
-            template: '<div id="disqus_thread"></div><a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>',
+            template: '<div id="disqus_thread"><'+'/div><a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus<'+'/span><'+'/a>',
             compile: function (elem, attrs) {
                 var shortname = attrs.disqus || attrs.name;
                 if (!shortname) { return; }
@@ -340,7 +340,7 @@ function valueFn(value) {
                 var configExpr = $parse(attrs.config);
 
                 return function (scope, elem, attrs) {
-                    config = configExpr(scope) || angular.noop;
+                    var config = configExpr(scope) || angular.noop;
 
                     Disqus(shortname).then(function (disqus) {
                         disqus.reset({
