@@ -1,3 +1,11 @@
-<div>
-    <span ng-repeat="(name, tag) in tags" ng-style="{ 'font-size': tag.size + 'em' }" ng-bind="name" class="tag badge"></span>
+<ul class="breadcrumb">
+    <li>
+        <a href="/#!/">//kstep</a>
+        <span class="divider">→</span>
+    </li>
+    <li ng-bind="locale.tags"></li>
+</ul>
+
+<div style="line-height: normal;">
+    <span ng-repeat="(name, tag) in tags"><a ng-style="{ 'font-size': tag.size + 'em' }" ng-href="/#!/tag/{: name :}" ng-bind="name"></a> </span>
 </div>

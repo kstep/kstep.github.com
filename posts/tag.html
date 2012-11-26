@@ -1,5 +1,17 @@
+<ul class="breadcrumb">
+    <li>
+        <a href="/#!/">//kstep</a>
+        <span class="divider">→</span>
+    </li>
+    <li>
+        <a href="/#!/tags" ng-bind="locale.tags"></a>
+        <span class="divider">→</span>
+    </li>
+    <li class="active" ng-bind="tag.name"></li>
+</ul>
+
 <div>
     <ol>
-        <li ng-repeat="post in tag.posts"><a ng-href="/#!{: post.url :}" ng-bind="post.title"></a></li>
+        <li ng-repeat="post in tag.posts"><a ng-href="/#!{: post.url :}" ng-bind="post.title"></a> <small><nobr class="muted" ng-bind="post.date | asdate:locale.date_format"></nobr></small></li>
     </ol>
 </div>

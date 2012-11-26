@@ -226,6 +226,7 @@ function valueFn(value) {
             email_me: 'email me',
             no_spam_please: 'No spam, please!',
             loading: 'Loading…',
+            tags: 'Tags',
             signature: '© Konstantin Stepanov',
             date_format: 'M/d/yyyy'
         },
@@ -236,6 +237,7 @@ function valueFn(value) {
             email_me: 'напишите мне',
             no_spam_please: 'Только без спама, пожалуйста!',
             loading: 'Загрузка…',
+            tags: 'Теги',
             signature: '© Константин Степанов',
             date_format: 'dd.MM.yyyy'
         }
@@ -444,6 +446,7 @@ function valueFn(value) {
     .controller('TagCtrl', ['$scope', '$http', '$routeParams', function ($scope, $http, $params) {
         $http.get('/posts/tags.json').then(function (result) {
             $scope.tag = result.data[$params.tag];
+            $scope.tag.name = $params.tag;
         });
     }])
     .controller('TagsCtrl', ['$scope', '$http', function ($scope, $http) {
