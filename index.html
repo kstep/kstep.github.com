@@ -227,6 +227,8 @@ function valueFn(value) {
             no_spam_please: 'No spam, please!',
             loading: 'Loading…',
             tags: 'Tags',
+            tag: 'Tag',
+            tag_cloud: 'Tag cloud',
             signature: '© Konstantin Stepanov',
             date_format: 'M/d/yyyy'
         },
@@ -238,6 +240,8 @@ function valueFn(value) {
             no_spam_please: 'Только без спама, пожалуйста!',
             loading: 'Загрузка…',
             tags: 'Теги',
+            tag: 'Тег',
+            tag_cloud: 'Облако тегов',
             signature: '© Константин Степанов',
             date_format: 'dd.MM.yyyy'
         }
@@ -469,12 +473,20 @@ function valueFn(value) {
         );
     }])
     .controller('TagCtrl', ['$scope', '$http', '$routeParams', function ($scope, $http, $params) {
+        $scope.$watch('locale.tag', function (locale_title) {
+            $scope.page.title = locale_title + ' — ' + $params.tag;
+        });
+
         $http.get('/data/tags.json').then(function (result) {
             $scope.tag = result.data[$params.tag];
             $scope.tag.name = $params.tag;
         });
     }])
     .controller('TagsCtrl', ['$scope', '$http', function ($scope, $http) {
+        $scope.$watch('locale.tag_cloud', function (locale_title) {
+            $scope.page.title = locale_title;
+        });
+
         $http.get('/data/tags.json').then(function (result) {
             $scope.tags = result.data;
         });
