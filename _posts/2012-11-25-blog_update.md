@@ -16,3 +16,6 @@ layout: page
 [ng]: http://angularjs.org/
 
 Собственно на этом всё.
+
+<disqus name="kstep" />
+
