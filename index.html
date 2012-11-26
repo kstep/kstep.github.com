@@ -420,6 +420,31 @@ function valueFn(value) {
         ];
     }])
 
+    .directive('ngMeta', ['$parse', function ($parse) {
+        return {
+            restrict: 'E',
+            terminal: true,
+            compile: function (elem, attrs) {
+                if (!attrs.value && !attrs.update) {
+                    return;
+                }
+
+                var nameExpr = $parse(attrs.name),
+                    valueExpr = attrs.value? $parse(attrs.value): null,
+                    updateExpr = attrs.update? $parse(attrs.update): null;
+
+                return function (scope, elem, attrs) {
+                    if (valueExpr) {
+                        nameExpr.assign(scope, valueExpr(scope));
+                    }
+                    if (updateExpr) {
+                        angular.extend(nameExpr(scope), updateExpr(scope));
+                    }
+                };
+            }
+        };
+    }])
+
     .controller('PostCtl', ['$scope', '$routeParams', function ($scope, $params) {
         angular.extend($scope.page, {
             url:   '/' + $params.year + '/' + $params.month + '/' + $params.day + '/' + $params.name + '.html',
