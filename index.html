@@ -107,8 +107,8 @@
                     <a class="brand" href="/#!/" ng-class="{ loading: $loading }">//kstep</a>
 
                     <div class="btn-group pull-right">
-                        <button ng-click="lang = 'en'" ng-class="{ active: lang == 'en' }" class="btn">en</button>
-                        <button ng-click="lang = 'ru'" ng-class="{ active: lang == 'ru' }" class="btn">ru</button>
+                        <button ng-click="locales('en')" ng-class="{ active: locale.lang == 'en' }" class="btn">en</button>
+                        <button ng-click="locales('ru')" ng-class="{ active: locale.lang == 'ru' }" class="btn">ru</button>
                     </div>
 
                     <div class="nav-collapse collapse">
@@ -229,34 +229,16 @@ function valueFn(value) {
         }
     }])
 
-    .value('locales', {
-        'en': {
-            lang: 'en',
-            index_title: 'My little cosy blog',
-            in_social_networks: '…in social networks',
-            email_me: 'email me',
-            no_spam_please: 'No spam, please!',
-            loading: 'Loading…',
-            tags: 'Tags',
-            tag: 'Tag',
-            tag_cloud: 'Tag cloud',
-            signature: '© Konstantin Stepanov',
-            date_format: 'M/d/yyyy'
-        },
-        'ru': {
-            lang: 'ru',
-            index_title: 'Мой уютненький бложек',
-            in_social_networks: '…в соцсетях',
-            email_me: 'напишите мне',
-            no_spam_please: 'Только без спама, пожалуйста!',
-            loading: 'Загрузка…',
-            tags: 'Теги',
-            tag: 'Тег',
-            tag_cloud: 'Облако тегов',
-            signature: '© Константин Степанов',
-            date_format: 'dd.MM.yyyy'
-        }
-    })
+    .factory('locales', ['$http', '$rootScope', function ($http, $root) {
+        return function (lang) {
+            return $root.locale = $http.get('/i18n/' + lang + '.json').then(
+                function (result) {
+                    result.data.lang = lang;
+                    return result.data;
+                }
+            );
+        };
+    }])
 
     .directive('totop', ['$window', function ($window) {
         return {
@@ -423,12 +405,8 @@ function valueFn(value) {
 
     .controller('RootCtl', ['$scope', '$http', 'locales', '$cookies', function ($scope, $http, locales, $cookies) {
         $scope.page = {};
-        $scope.lang = $cookies.lang || 'en';
-
-        $scope.$watch('lang', function (lang) {
-            $scope.locale = locales[lang] || locales.en;
-            $cookies.lang = lang;
-        });
+        $scope.locales = locales;
+        locales($cookies.lang || 'en');
 
         $scope.social_accounts = [
             { url: "https://twitter.com/kstepme", icon: "http://twitter.com/favicon.ico", name: "Twitter" },
