@@ -1,0 +1,24 @@
+---
+---
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>//kstep</title>
+    <link href="http://kstep.me/" />
+    <link rel="self" href="http://kstep.me/feed.xml" />
+    <id>http://kstep.me/</id>
+    <updated>{{ site.posts[0].date | date:"%Y-%m-%dT%H:%M:%SZ" }}</updated>
+    <author>
+        <name>Konstantin Stepanov</name>
+    </author>
+    {% for node in site.posts %}
+    <entry>
+        <title>{{ node.title }}</title>
+        <link href="http://kstep.me{{ node.url }}" />
+        <id>http://kstep.me{{ node.url }}</id>
+        <updated>{{ node.date | date:"%Y-%m-%dT%H:%M:%SZ" }}</updated>
+        <summary>{{ node.description }}</summary>
+        {% for tag in node.tags %}<category term="{{ tag }}" />
+        {% endfor %}
+    </entry>
+    {% endfor %}
+</feed>
