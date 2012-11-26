@@ -297,6 +297,11 @@ function valueFn(value) {
             } else {
                 queue[src] = deferred.promise;
 
+                if (cache[src]) {
+                    cache[src].parentNode.removeChild(cache[src]);
+                    delete cache[src];
+                }
+
                 $timeout(function () {
                     var script = $document[0].createElement('script');
                     script.type = 'text/javascript';
@@ -389,9 +394,10 @@ function valueFn(value) {
                     $window.disqus_identifier = $location.path();
                     $window.disqus_url = $location.absUrl();
                     $window.disqus_container_id = id;
+                    $window.DISQUS = undefined;
+                    elem.html('');
 
                     Disqus(shortname);
-                    elem.html('');
                 }
             }
         };
