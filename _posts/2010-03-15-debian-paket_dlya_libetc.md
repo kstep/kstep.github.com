@@ -1,6 +1,13 @@
 ---
 title: "Дебиан-пакет для libetc"
 layout: page 
+tags:
+  - "lib"
+  - "debian"
+  - "package"
+  - "libetc"
+  - "xdg"
+  - "preload"
 ---
 Вот прочител про замечательную либу [libetc](http://ordiluc.net/fs/libetc/) на [welinux-е](http://welinux.ru/post/2534/). Смысл её в том, что она, будучи запрелоадена внесением пути к ней в LD_PRELOAD, редиректит запросы к каталогофайлам ~/.* (где обычно конфиги) в $XDG_CONFIG_HOME/*, таким образом обеспечивая совместимость старых прог со стандартом XDG.
 
