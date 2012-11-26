@@ -185,10 +185,10 @@ function valueFn(value) {
     .config(['$routeProvider', '$locationProvider', '$interpolateProvider',
     function ($route, $location, $interpolate) {
         $route
-        .when('/', { controller: 'BlogCtl', templateUrl: '/posts/list.html' })
-        .when('/:year/:month/:day/:name.html', { controller: 'PostCtl', templateUrl: '/posts/post.html' })
-        .when('/tags', { controller: 'TagsCtrl', templateUrl: '/posts/tags.html' })
-        .when('/tag/:tag', { controller: 'TagCtrl', templateUrl: '/posts/tag.html' })
+        .when('/', { controller: 'BlogCtl', templateUrl: '/partials/list.html' })
+        .when('/:year/:month/:day/:name.html', { controller: 'PostCtl', templateUrl: '/partials/post.html' })
+        .when('/tags', { controller: 'TagsCtrl', templateUrl: '/partials/tags.html' })
+        .when('/tag/:tag', { controller: 'TagCtrl', templateUrl: '/partials/tag.html' })
         .otherwise({ redirectTo: '/' });
 
         $location.html5Mode(false).hashPrefix('!');
@@ -437,20 +437,20 @@ function valueFn(value) {
             group: 'blog'
         });
 
-        $scope.pager = $http.get('/posts/list.json').then(
+        $scope.pager = $http.get('/data/list.json').then(
             function (result) {
                 return new Pager(result.data, 40, 1);
             }
         );
     }])
     .controller('TagCtrl', ['$scope', '$http', '$routeParams', function ($scope, $http, $params) {
-        $http.get('/posts/tags.json').then(function (result) {
+        $http.get('/data/tags.json').then(function (result) {
             $scope.tag = result.data[$params.tag];
             $scope.tag.name = $params.tag;
         });
     }])
     .controller('TagsCtrl', ['$scope', '$http', function ($scope, $http) {
-        $http.get('/posts/tags.json').then(function (result) {
+        $http.get('/data/tags.json').then(function (result) {
             $scope.tags = result.data;
         });
     }])
