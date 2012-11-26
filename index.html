@@ -119,6 +119,7 @@
                                     <li ng-repeat="acc in social_accounts"><a target="_blank" ng-href="{: acc.url :}"><img class="favicon" ng-src="{: acc.icon :}" /> {: acc.name :}</a></li>
                                 </ul>
                             </li>
+                            <li ng-class="{ active: page.group == 'tags' }"><a href="/#!/tags" ng-bind="locale.tag_cloud | lower"></a></li>
                             <li><a ng-href="{: 'znvygb:zr@xfgrc.zr' | rot13 :}" title="{: locale.no_spam_please :}">{: locale.email_me :}</a></li>
                         </ul>
                     </div>
@@ -187,8 +188,8 @@ function valueFn(value) {
         $route
         .when('/', { controller: 'BlogCtl', templateUrl: '/partials/list.html' })
         .when('/:year/:month/:day/:name.html', { controller: 'PostCtl', templateUrl: '/partials/post.html' })
-        .when('/tags', { controller: 'TagsCtrl', templateUrl: '/partials/tags.html' })
-        .when('/tag/:tag', { controller: 'TagCtrl', templateUrl: '/partials/tag.html' })
+        .when('/tags', { controller: 'TagsCtl', templateUrl: '/partials/tags.html' })
+        .when('/tag/:tag', { controller: 'TagCtl', templateUrl: '/partials/tag.html' })
         .otherwise({ redirectTo: '/' });
 
         $location.html5Mode(false).hashPrefix('!');
@@ -216,6 +217,16 @@ function valueFn(value) {
         return function (value, pattern) {
             return $filter('date')(new Date(value), pattern);
         };
+    }])
+    .filter('lower', [function () {
+        return function (value) {
+            return (value || '').toString().toLowerCase();
+        }
+    }])
+    .filter('upper', [function () {
+        return function (value) {
+            return (value || '').toString().toUpperCase();
+        }
     }])
 
     .value('locales', {
@@ -472,9 +483,14 @@ function valueFn(value) {
             }
         );
     }])
-    .controller('TagCtrl', ['$scope', '$http', '$routeParams', function ($scope, $http, $params) {
+    .controller('TagCtl', ['$scope', '$http', '$routeParams', function ($scope, $http, $params) {
         $scope.$watch('locale.tag', function (locale_title) {
             $scope.page.title = locale_title + ' — ' + $params.tag;
+        });
+
+        angular.extend($scope.page, {
+            url:   '/tag/' + $params.tag,
+            group: 'tags'
         });
 
         $http.get('/data/tags.json').then(function (result) {
@@ -482,9 +498,14 @@ function valueFn(value) {
             $scope.tag.name = $params.tag;
         });
     }])
-    .controller('TagsCtrl', ['$scope', '$http', function ($scope, $http) {
+    .controller('TagsCtl', ['$scope', '$http', function ($scope, $http) {
         $scope.$watch('locale.tag_cloud', function (locale_title) {
             $scope.page.title = locale_title;
+        });
+
+        angular.extend($scope.page, {
+            url:   '/tags',
+            group: 'tags'
         });
 
         $http.get('/data/tags.json').then(function (result) {
