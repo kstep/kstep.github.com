@@ -215,7 +215,7 @@ angular.module('kstep', ['ng', 'ngSanitize', 'ngCookies'])
     }])
 
     .config(['$httpProvider', function ($http) {
-        $http.responseInterceptors.push(function ($rootScope, $q) {
+        $http.responseInterceptors.push(['$rootScope', '$q', function ($rootScope, $q) {
             return function (promise) {
                 $rootScope.$loading = true;
 
@@ -229,7 +229,7 @@ angular.module('kstep', ['ng', 'ngSanitize', 'ngCookies'])
                     return $q.reject(response);
                 });
             };
-        });
+        }]);
     }])
 
     .controller('RootCtl', ['$scope', '$http', 'locales', '$cookies', function ($scope, $http, locales, $cookies) {
