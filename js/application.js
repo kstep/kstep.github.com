@@ -25,7 +25,7 @@ angular.module('kstep', ['ng', 'ngSanitize', 'ngCookies'])
     }])
 
     .filter('strip_tags', [function () {
-        var tag_re = /<\/[a-zA-Z][a-zA-Z0-9]*>|<[a-zA-Z][a-zA-Z0-9]*(\s+[^>]*?)?>/g;
+        var tag_re = /<\/[a-zA-Z][a-zA-Z0-9]*>|<[a-zA-Z][a-zA-Z0-9]*(\s+[^>]*?)?\/?>/g;
         return function (value) {
             return (value || '').toString().replace(tag_re, '');
         };
