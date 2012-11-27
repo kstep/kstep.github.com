@@ -7,5 +7,5 @@
 </ul>
 
 <div style="line-height: normal;">
-    <span ng-repeat="(name, tag) in tags"><a ng-style="{ 'font-size': tag.size + 'em' }" ng-href="/#!/tag/{: name :}" ng-bind="name"></a> </span>
+    <span ng-repeat="(name, tag) in tags"><a ng-style="{ 'font-size': (5 * tag.size + 1) + 'em' }" ng-href="/#!/tag/{: name :}" ng-bind="name"></a> </span>
 </div>

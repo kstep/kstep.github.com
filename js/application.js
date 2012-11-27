@@ -4,6 +4,9 @@
 function valueFn(value) {
     return function () { return value; };
 }
+function attr(name) {
+    return function (obj) { return obj[name]; };
+}
 
 (function (angular, $, _, undefined) {
 angular.module('kstep', ['ng', 'ngSanitize', 'ngCookies'])
@@ -319,7 +322,16 @@ angular.module('kstep', ['ng', 'ngSanitize', 'ngCookies'])
         });
 
         $http.get('/data/tags.json').then(function (result) {
-            $scope.tags = result.data;
+            var tags = result.data,
+                sizes = _.pluck(tags, 'size'),
+                max_size = _.max(sizes),
+                min_size = _.min(sizes);
+
+            _.each(tags, function (tag) {
+                tag.size = (tag.size - min_size) / max_size;
+            });
+
+            $scope.tags = tags;
         });
     }])
 ;
