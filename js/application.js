@@ -5,8 +5,8 @@ function valueFn(value) {
     return function () { return value; };
 }
 
-(function (angular, document, $, undefined) {
-    angular.module('kstep', ['ng', 'ngSanitize', 'ngCookies'])
+(function (angular, $, _, undefined) {
+angular.module('kstep', ['ng', 'ngSanitize', 'ngCookies'])
     .config(['$routeProvider', '$locationProvider', '$interpolateProvider',
     function ($route, $location, $interpolate) {
         $route
@@ -322,6 +322,6 @@ function valueFn(value) {
             $scope.tags = result.data;
         });
     }])
-    ;
-}(window.angular, document, window.jQuery));
+;
+}(window.angular, window.jQuery, window._));
 
