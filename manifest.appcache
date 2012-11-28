@@ -1,0 +1,44 @@
+CACHE MANIFEST
+
+# VERSION 1
+
+CACHE:
+
+# Entry point
+/index.html
+
+# AngularJS
+http://ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js
+http://ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular-sanitize.min.js
+http://ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular-cookies.min.js
+
+# jQuery
+http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js
+
+# Bootstrap
+http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.0/css/bootstrap-combined.min.css
+http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.0/js/bootstrap.min.js
+
+# Underscore
+/js/underscore-min.js
+
+# Main application
+/js/application-min.js
+
+# Styles
+/css/pygmentize-default.css
+/css/style.css
+
+# i18n
+/i18n/en.json
+/i18n/ru.json
+
+# Partial templates
+/partials/list.html
+/partials/post.html
+/partials/tags.html
+/partials/tag.html
+
+NETWORK:
+*
+
