@@ -324,11 +324,11 @@ angular.module('kstep', ['ng', 'ngSanitize', 'ngCookies'])
         $http.get('/data/tags.json').then(function (result) {
             var tags = result.data,
                 sizes = _.pluck(tags, 'size'),
-                max_size = _.max(sizes),
-                min_size = _.min(sizes);
+                min_size = _.min(sizes),
+                delta = _.max(sizes) - min_size;
 
             _.each(tags, function (tag) {
-                tag.size = (tag.size - min_size) / max_size;
+                tag.size = (tag.size - min_size) / delta;
             });
 
             $scope.tags = tags;
