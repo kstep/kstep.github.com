@@ -1,0 +1,5 @@
+#!/bin/sh
+
+YUIC=/usr/bin/yuicompressor
+$YUIC js/application.js > js/application-min.js
+git commit -m "Update minimized application" -- js/application-min.js
