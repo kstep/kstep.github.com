@@ -42,6 +42,10 @@
                             <li ng-class="{ active: page.group == 'tags' }"><a href="/#!/tags" ng-bind="locale.tag_cloud | lower"></a></li>
                             <li><a ng-href="{: 'znvygb:zr@xfgrc.zr' | rot13 :}" title="{: locale.no_spam_please :}">{: locale.email_me :}</a></li>
                         </ul>
+                        <ul class="nav pull-right">
+                            <li><a target="_blank" href="/tests" title="{: locale.tests_hint :}" rel="nofollow" ng-bind="locale.tests"></a></li>
+                            <li class="divider-vertical"></li>
+                        </ul>
                     </div>
                 </div>
             </div>

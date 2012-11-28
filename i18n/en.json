@@ -8,5 +8,7 @@
     "tag": "Tag",
     "tag_cloud": "Tag cloud",
     "signature": "© Konstantin Stepanov",
-    "date_format": "M/d/yyyy"
+    "date_format": "M/d/yyyy",
+    "tests_hint": "Yes, my site works correctly, and I have tests to prove it!",
+    "tests": "tests"
 }
