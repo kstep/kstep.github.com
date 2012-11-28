@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>//kstep tests</title>
+
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]><script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script><![endif]-->
+
+        <!-- Application with dependecies -->
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular-sanitize.min.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular-cookies.min.js"></script>
+
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <!--<script type="text/javascript" src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.0/js/bootstrap.min.js"></script>-->
+
+        <script type="text/javascript" src="/js/underscore-min.js"></script>
+        <script type="text/javascript" src="/js/application-min.js"></script>
+
+        <!-- Jasmine -->
+        <link rel="stylesheet" type="text/css" href="/tests/libs/jasmine/jasmine.css" />
+        <script type="text/javascript" src="/tests/libs/jasmine/jasmine.js"></script>
+        <script type="text/javascript" src="/tests/libs/jasmine/jasmine-html.js"></script>
+
+        <!-- Test libs -->
+        <script type="text/javascript" src="/tests/libs/angular-mocks.js"></script>
+
+        <!-- Specs -->
+        <script type="text/coffeescript" src="/tests/unit/filtersSpec.coffee"></script>
+
+        <!-- Runner -->
+        <script type="text/coffeescript">
+            jasmineEnv = jasmine.getEnv()
+            jasmineEnv.updateInterval = 1000
+
+            htmlReporter = new jasmine.HtmlReporter()
+
+            jasmineEnv.addReporter(htmlReporter)
+
+            jasmineEnv.specFilter = (spec) ->
+                htmlReporter.specFilter(spec)
+
+            jasmineEnv.execute()
+        </script>
+
+        <script type="text/javascript" src="/tests/libs/coffee-script.js"></script>
+    </head>
+
+    <body></body>
+</html>
+
