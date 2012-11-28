@@ -56,16 +56,19 @@ angular.module('kstep', ['ng', 'ngSanitize', 'ngCookies'])
         };
     }])
 
-    .factory('locales', ['$http', '$rootScope', function ($http, $root) {
-        return function (lang) {
+    .factory('locales', ['$http', '$rootScope', '$cookies', function ($http, $root, $cookies) {
+        var locales = function (lang) {
             $root.locale = $http.get('/i18n/' + lang + '.json').then(
                 function (result) {
                     result.data.lang = lang;
+                    $cookies.lang = lang;
                     return result.data;
                 }
             );
             return $root.locale;
         };
+        locales($cookies.lang || 'en');
+        return locales;
     }])
 
     .directive('totop', ['$window', function ($window) {
@@ -232,10 +235,9 @@ angular.module('kstep', ['ng', 'ngSanitize', 'ngCookies'])
         }]);
     }])
 
-    .controller('RootCtl', ['$scope', '$http', 'locales', '$cookies', function ($scope, $http, locales, $cookies) {
+    .controller('RootCtl', ['$scope', '$http', 'locales', function ($scope, $http, locales) {
         $scope.page = {};
         $scope.locales = locales;
-        locales($cookies.lang || 'en');
 
         $scope.social_accounts = [
             { url: "https://twitter.com/kstepme", icon: "http://twitter.com/favicon.ico", name: "Twitter" },
