@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="kstep" ng-controller="RootCtl" manifest="/manifest.appcache">
+<html lang="en" ng-app="kstep" ng-controller="RootCtl" manifest="/manifest.appcache?{{ site.time | date:"%Y%m%d%H%M%S" }}">
     <head>
         <meta charset="utf-8" />
         <title ng-bind="page.title | strip_tags">//kstep blog</title>
