@@ -77,6 +77,26 @@ angular.module('kstep', ['ng', 'ngSanitize', 'ngCookies'])
         return locales;
     }])
 
+    .directive('youtube', [function () {
+        return {
+            restrict: 'AE',
+            scope: true,
+            replace: true,
+            template: '<iframe ng-src="http://www.youtube.com/embed/{: id :}" width="{: width :}" height="{: height :}" frameborder="0" allowfullscreen></iframe>',
+            compile: function (elem, attrs) {
+                var youtube_id = attrs.youtube || attrs.id,
+                    width = parseInt(attrs.width, 10) || 560,
+                    height = parseInt(attrs.height, 10) || 315;
+
+                return function (scope, elem, attrs) {
+                    scope.id = youtube_id;
+                    scope.width = width;
+                    scope.height = height;
+                };
+            }
+        };
+    }])
+
     .directive('totop', ['$window', function ($window) {
         return {
             restrict: 'AC',
