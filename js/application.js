@@ -302,6 +302,7 @@ angular.module('kstep', ['ng', 'ngSanitize', 'ngCookies'])
     .controller('RootCtl', ['$scope', '$http', 'locales', 'appcache', '$window', function ($scope, $http, locales, appcache, $window) {
         appcache.bind('updateready', function () {
             $scope.update_available = true;
+            appcache.swapCache();
         });
 
         $scope.page = {};
