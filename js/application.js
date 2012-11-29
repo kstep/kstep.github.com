@@ -119,6 +119,36 @@ angular.module('kstep', ['ng', 'ngSanitize', 'ngCookies'])
         };
     }])
 
+    .factory('appcache', ['$window', function ($window) {
+        var appcache = $window.applicationCache || {  // Return stub if no applicationCache is available
+            fakeAppCache        : true,
+            UNCACHED            : 0,
+            IDLE                : 1,
+            CHECKING            : 2,
+            DOWNLOADING         : 3,
+            UPDATEREADY         : 4,
+            OBSOLETE            : 5,
+            oncached            : null,
+            onchecking          : null,
+            ondownloading       : null,
+            onnoupdate          : null,
+            onobsolete          : null,
+            onupdateready       : null,
+            status              : 1,
+            addEventListener    : angular.noop,
+            dispatchEvent       : angular.noop,
+            removeEventListener : angular.noop,
+            swapCache           : angular.noop,
+            update              : angular.noop
+        };
+
+        // Normalized shortcuts
+        appcache.bind = appcache.addEventListener;
+        appcache.unbind = appcache.removeEventListener;
+
+        return appcache;
+    }])
+
     .factory('$jsload', ['$timeout', '$q', '$document', '$rootScope', function ($timeout, $q, $document, $root) {
         var cache = {},
             queue = {};
@@ -261,9 +291,17 @@ angular.module('kstep', ['ng', 'ngSanitize', 'ngCookies'])
         }]);
     }])
 
-    .controller('RootCtl', ['$scope', '$http', 'locales', function ($scope, $http, locales) {
+    .controller('RootCtl', ['$scope', '$http', 'locales', 'appcache', '$window', function ($scope, $http, locales, appcache, $window) {
+        appcache.bind('updateready', function () {
+            $scope.update_available = true;
+        });
+
         $scope.page = {};
         $scope.locales = locales;
+
+        $scope.reload_site = function () {
+            $window.location.reload();
+        };
 
         $scope.social_accounts = [
             { url: "https://twitter.com/kstepme", icon: "http://twitter.com/favicon.ico", name: "Twitter" },

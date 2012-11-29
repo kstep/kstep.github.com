@@ -65,6 +65,15 @@
         </noscript>
 
         <div class="container ng-cloak" id="content">
+	    <div class="alert alert-info" ng-show="update_available">
+		<button ng-click="update_available = false" class="class">&times;</button>
+		<p>{: locale.update_available :}</p>
+		<p>
+		    <button ng-click="reload_site()" class="btn btn-primary" ng-bind="locale.reload"></button>
+		    <button ng-click="update_available = false" class="btn btn-link" ng-bind="locale.cancel"></button>
+		</p>
+	    </div>
+
             <div class="row">
                 <div class="content span9" ng-view></div>
                 <div class="span3">
