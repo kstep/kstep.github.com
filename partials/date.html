@@ -1,0 +1,40 @@
+<ul class="breadcrumb">
+    <li>
+        <a href="/#!/">//kstep</a>
+        <span class="divider">→</span>
+    </li>
+
+    <li ng-show="date.month">
+        <a href="/#!/{: date.year :}" ng-bind="date.year"></a>
+        <span class="divider">/</span>
+    </li>
+    <li ng-hide="date.month" ng-bind="date.year" class="active"></li>
+
+    <li ng-show="date.day && date.month">
+        <a href="/#!/{: date.year :}/{: date.month :}" ng-bind="date.month"></a>
+        <span class="divider">/</span>
+    </li>
+    <li ng-hide="date.day || !date.month" ng-bind="date.month" class="active"></li>
+
+    <li ng-show="date.day" class="active" ng-bind="date.day"></li>
+</ul>
+
+<script type="text/ng-template" id="/partials/pager.html">
+<div class="pagination">
+    <ul>
+        <li ng-class="{ disabled: pager.page < 2 }"><a ng-click="pager.set_page(pager.page - 1)">←</a></li>
+        <li ng-repeat="page in pager.pages" ng-class="{ active: page == pager.page }"><a ng-click="pager.set_page(page)" ng-bind="page"></a></li>
+        <li ng-class="{ disabled: pager.page >= pager.total_pages }"><a ng-click="pager.set_page(pager.page + 1)">→</a></li>
+    </ul>
+</div>
+</script>
+
+<div ng-include="'/partials/pager.html'"></div>
+
+<ol>
+    <li ng-repeat="post in pager.slice">
+        <a href="/#!{: post.url :}" ng-bind-html="post.title"></a> <small><nobr class="muted" ng-bind="post.date | asdate:locale.date_format"></nobr></small>
+    </li>
+</ol>
+
+<div ng-include="'/partials/pager.html'"></div>

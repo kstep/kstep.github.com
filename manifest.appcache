@@ -37,6 +37,7 @@ http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.0/js/bootstrap.min.js
 
 # Partial templates
 /partials/list.html
+/partials/date.html
 /partials/post.html
 /partials/tags.html
 /partials/tag.html

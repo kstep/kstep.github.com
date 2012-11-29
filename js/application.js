@@ -14,9 +14,15 @@ angular.module('kstep', ['ng', 'ngSanitize', 'ngCookies'])
     function ($route, $location, $interpolate) {
         $route
         .when('/', { controller: 'BlogCtl', templateUrl: '/partials/list.html' })
-        .when('/:year/:month/:day/:name.html', { controller: 'PostCtl', templateUrl: '/partials/post.html' })
         .when('/tags', { controller: 'TagsCtl', templateUrl: '/partials/tags.html' })
         .when('/tag/:tag', { controller: 'TagCtl', templateUrl: '/partials/tag.html' })
+
+        .when('/:year/:month/:day/:name.html', { controller: 'PostCtl', templateUrl: '/partials/post.html' })
+
+        .when('/:year/:month/:day', { controller: 'BlogCtl', templateUrl: '/partials/date.html' })
+        .when('/:year/:month', { controller: 'BlogCtl', templateUrl: '/partials/date.html' })
+        .when('/:year', { controller: 'BlogCtl', templateUrl: '/partials/date.html' })
+
         .otherwise({ redirectTo: '/' });
 
         $location.html5Mode(false).hashPrefix('!');
@@ -292,9 +298,24 @@ angular.module('kstep', ['ng', 'ngSanitize', 'ngCookies'])
             group: 'blog'
         });
 
+        var date = (($params.year || '') + "-" + ($params.month || '') + "-" + ($params.day || '')).replace(/-+$/g, '');
+
+        $scope.date = {
+            year: $params.year,
+            month: $params.month,
+            day: $params.day
+        };
+
         $scope.pager = $http.get('/data/list.json').then(
             function (result) {
-                return new Pager(result.data, 40, 1);
+                var posts = result.data;
+                if (date) {
+                    posts = _.filter(posts,
+                        function (post) { return post.date.indexOf(date) !== -1; }
+                    );
+                }
+
+                return new Pager(posts, 40, 1);
             }
         );
     }])
