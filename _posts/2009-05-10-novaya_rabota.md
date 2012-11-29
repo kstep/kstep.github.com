@@ -1,6 +1,6 @@
 ---
 title: "Новая работа"
-layout: page 
+layout: default 
 tags:
   - "о жизни"
   - "p-nut"

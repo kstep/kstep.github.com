@@ -1,6 +1,6 @@
 ---
 title: "Дебиан-пакет для libetc"
-layout: page 
+layout: default 
 tags:
   - "lib"
   - "debian"

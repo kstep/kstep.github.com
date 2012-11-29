@@ -1,6 +1,6 @@
 ---
 title: "Схема линий пути к себе"
-layout: page 
+layout: default 
 tags:
   - "схемы"
   - "весёлости"

@@ -1,6 +1,6 @@
 ---
 title: "Совещание"
-layout: page 
+layout: default 
 tags:
   - "рабочее"
   - "совещание"

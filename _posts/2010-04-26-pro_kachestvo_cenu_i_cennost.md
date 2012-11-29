@@ -1,6 +1,6 @@
 ---
 title: "Про качество, цену и ценность"
-layout: page 
+layout: default 
 tags:
   - "философское"
   - "мысли"

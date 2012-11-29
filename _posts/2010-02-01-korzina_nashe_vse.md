@@ -1,6 +1,6 @@
 ---
 title: "Корзина наше всё"
-layout: page 
+layout: default 
 tags:
   - "жизненное"
   - "pnut"

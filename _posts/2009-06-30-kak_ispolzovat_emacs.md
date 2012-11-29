@@ -1,6 +1,6 @@
 ---
 title: "Как использовать emacs"
-layout: page 
+layout: default 
 ---
 First, you need to remember where emacs is, using the rm (remember) command:
     

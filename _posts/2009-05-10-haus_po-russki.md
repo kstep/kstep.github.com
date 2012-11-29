@@ -1,6 +1,6 @@
 ---
 title: "Хаус по-русски"
-layout: page 
+layout: default 
 tags:
   - "весёлости"
   - "сцылко"

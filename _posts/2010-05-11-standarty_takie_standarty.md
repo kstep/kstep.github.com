@@ -1,6 +1,6 @@
 ---
 title: "Стандарты такие стандарты"
-layout: page 
+layout: default 
 tags:
   - "рабочее"
   - "стандарты"

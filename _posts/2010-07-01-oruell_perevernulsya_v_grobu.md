@@ -1,6 +1,6 @@
 ---
 title: "Оруелл перевернулся в гробу"
-layout: page 
+layout: default 
 tags:
   - "интернет"
   - "беларусь"

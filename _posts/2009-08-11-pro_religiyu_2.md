@@ -1,6 +1,6 @@
 ---
 title: "Про религию 2"
-layout: page 
+layout: default 
 tags:
   - "картинки"
   - "религия"

@@ -1,6 +1,6 @@
 ---
 title: "Мои git-алиасы"
-layout: page 
+layout: default 
 ---
 Очень помогают :)
     

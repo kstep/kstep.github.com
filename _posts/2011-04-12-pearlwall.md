@@ -1,6 +1,6 @@
 ---
 title: "Pearlwall"
-layout: page 
+layout: default 
 tags:
   - "perl"
   - "firewall"

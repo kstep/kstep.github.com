@@ -1,6 +1,6 @@
 ---
 title: "Я в Краснодаре"
-layout: page 
+layout: default 
 ---
 Внимание!
 

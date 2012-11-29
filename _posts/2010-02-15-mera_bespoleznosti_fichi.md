@@ -1,6 +1,6 @@
 ---
 title: "Мера бесполезности фичи"
-layout: page 
+layout: default 
 tags:
   - "весёлости"
   - "формула"

@@ -1,6 +1,6 @@
 ---
 title: "Этот хитрый маемо"
-layout: page 
+layout: default 
 tags:
   - "pulseaudio"
   - "глюки"

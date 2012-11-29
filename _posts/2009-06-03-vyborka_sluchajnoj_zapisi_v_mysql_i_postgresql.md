@@ -1,6 +1,6 @@
 ---
 title: "Выборка случайной записи в MySQL и PostgreSQL"
-layout: page 
+layout: default 
 tags:
   - "базы данных"
   - "постгря"

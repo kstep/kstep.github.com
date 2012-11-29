@@ -1,6 +1,6 @@
 ---
 title: "Стадии развития программиста"
-layout: page 
+layout: default 
 tags:
   - "весёлости"
   - "цитаты"

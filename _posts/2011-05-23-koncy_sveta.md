@@ -1,6 +1,6 @@
 ---
 title: "Концы света"
-layout: page 
+layout: default 
 tags:
   - "конец света"
   - "стёб"
