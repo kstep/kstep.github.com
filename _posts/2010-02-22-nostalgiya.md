@@ -1,6 +1,6 @@
 ---
 title: "Ностальгия"
-layout: default 
+layout: default
 ---
 Вчера наступила ностальгия. Напился пива, отыскал на [IsoHunt](http://isohunt.com/) образ Windows 3.1 для VirtualBox, запустил её и вспомнил молодость...
 

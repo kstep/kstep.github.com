@@ -1,6 +1,6 @@
 ---
 title: "Полезные лекарства"
-layout: default 
+layout: default
 ---
 Чтоб не забыть.
 

@@ -1,6 +1,6 @@
 ---
 title: "Этот хитрый маемо"
-layout: default 
+layout: default
 tags:
   - "pulseaudio"
   - "глюки"
@@ -9,7 +9,7 @@ tags:
 ---
 Относительно недавно я стал счастливым владельцем [Nokia N900](http://maemo.nokia.com/n900/). Телефоном этот волшебный девайс язык назвать не поворачивается, это действительно «мобильный компьютер», который ко всему прочему может звонить. При этом при звонке запускаяется отдельное приложение «Телефон» со всеми вытекающими.
 
-  
+
 Девайс этот работает на [Maemo 5](http://maemo.nokia.com/), которая суть Дебиан допиленный усилиями Нокии, со всеми вытекающими плюшками, включая обширные дебиановские репы софта. Рассказывать про этот девайс ещё смысла нет, т.к. в гуглонете про него инфы до фига и трошки, а вот про недавнее приключение рассказать стоит.
 
 Относительно, опять же, недавно, [вышла свежая прошивка](http://welinux.ru/post/4380/) PR1.3. Как истинный дебианщик вместо перепрошивки я сделал просто «aptitude update && aptitude safe-upgrade -y» и успешно скачал 80 с лишним метров апдейтов. Всё было вроде неплохо, хотя иногда после перезагрузке перестал работать звук в телефоне, то есть телефон при звонке запускался, но слышать не мог ни я собеседника, ни мой собеседник меня. Перезагрузка как правило всё чинила, потому за неимением времени я на это забил. Недавно же выяснилось ещё несколько неприятных моментов. Сам я последнее время плеером не пользовался, да и звук держал выключенным, но вот выпросила у меня малая мультик на «асё» (то есть телефоне на её детском языке). Включил плеер и подивился нескольким интересным симптомам, как то:
@@ -24,33 +24,33 @@ tags:
 
 Недавно вот решиль всё же [погуглить](http://www.google.com/search?q=maemo+pulseaudio+fails+to+start) мою проблему и нашёл такое [решение](http://talk.maemo.org/showpost.php?p=873186&postcount=24):
 
-> I found the reason. At least on my device pulseaudio application depends on the library libFLAC.  
-  
-> On device start the system starts the pulseaudio daemon.  
-As it needs libFLAC the system tries to load this library.  
-The library is at  
-/opt/maemo/usr/lib/libFLAC.so.8.2.0  
->  
-> So the application pulseaudio fails to load  
-(cannot load library libFLAC.so, no such file)  
-Because all this happens before the internal mmc is mounted :-)  
->  
-> After failing to start the daemon the system tries this again and again.  
-It may work at some point when the internal mmc is mounted.  
-But sometimes the restart (respawn) happens to often and  
-the system stops this process.  
-> 
-> I don't know why pulseaudio needs this lib, it has something to  
-do with the package decoders-support. But it seems this only  
-happens if you **upgraded** to PR1.3.   
-> 
-> I did a reflash now and installed decoders-support.  
-The libFLAC library is on /opt/maemo ....  
-But pulseaudio starts without an error.   
-(And it does not depend on this library anymore,   
-ldd /usr/bin/pulseaudio shows which librarys are needed  
+> I found the reason. At least on my device pulseaudio application depends on the library libFLAC.
+
+> On device start the system starts the pulseaudio daemon.
+As it needs libFLAC the system tries to load this library.
+The library is at
+/opt/maemo/usr/lib/libFLAC.so.8.2.0
+>
+> So the application pulseaudio fails to load
+(cannot load library libFLAC.so, no such file)
+Because all this happens before the internal mmc is mounted :-)
+>
+> After failing to start the daemon the system tries this again and again.
+It may work at some point when the internal mmc is mounted.
+But sometimes the restart (respawn) happens to often and
+the system stops this process.
+>
+> I don't know why pulseaudio needs this lib, it has something to
+do with the package decoders-support. But it seems this only
+happens if you **upgraded** to PR1.3.
+>
+> I did a reflash now and installed decoders-support.
+The libFLAC library is on /opt/maemo ....
+But pulseaudio starts without an error.
+(And it does not depend on this library anymore,
+ldd /usr/bin/pulseaudio shows which librarys are needed
 by an executable/library).
-> 
+>
 > Nicolai
 
 В общем смысл бага такой: при прямой прошивки все либы кладутся прямо туда, куда надо (т.к. всё прописано в образе), так что libFLAC оказывается в /usr/lib напрямую, поэтому никаких глюков нет. Но при апдейте через репозитории после разворачивания пакетов запускается замечательный хук optify, который часть установленного пакета (вроде либ) перемещает в /opt/maemo, который смонтирован на другой раздел большего размера, чтобы сэкономить лишние пару килобайт в маленьком рутфс. Всё бы хорошо, но пульс зависит от libflac8, который в образе для прошивки напрямую устанавливает свои либы в /usr/lib, а при апдейте менеджером пакетов запускается optify, которые эти либы успешно перемещает в /opt/maemo/usr/lib и оставляет в /usr/lib симлинки.

@@ -1,6 +1,6 @@
 ---
 title: "НеРабочая неделя"
-layout: default 
+layout: default
 tags:
   - "рабочее"
 ---

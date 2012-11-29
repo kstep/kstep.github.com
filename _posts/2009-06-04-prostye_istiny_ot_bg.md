@@ -1,6 +1,6 @@
 ---
 title: "Простые истины от БГ"
-layout: default 
+layout: default
 tags:
   - "Бог"
   - "Гребенщиков"

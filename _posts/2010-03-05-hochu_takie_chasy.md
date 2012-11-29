@@ -1,6 +1,6 @@
 ---
 title: "Хочу такие часы!"
-layout: default 
+layout: default
 tags:
   - "design"
   - "clock"

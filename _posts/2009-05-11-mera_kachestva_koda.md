@@ -1,6 +1,6 @@
 ---
 title: "Мера качества кода"
-layout: default 
+layout: default
 tags:
   - "весёлости"
   - "сцылко"

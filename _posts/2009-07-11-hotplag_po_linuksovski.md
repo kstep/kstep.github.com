@@ -1,26 +1,26 @@
 ---
 title: "Хотплаг по линуксовски"
-layout: default 
+layout: default
 ---
 Купил [Wacom Bamboo](http://www.wacom.eu/index2.asp?lang=ru&pid=220) (всегда мечтал о маленьком планшетике чтоб можно было быстро набросать заметку-рисунок и наконец-то избавиться от стопки бумаги на столе). Установка на мою Дебиань была очень проста:
 
-  1. Поставить пару пакетов: 
-    
+  1. Поставить пару пакетов:
+
     $ sudo apt-get install wacom-tools xserver-xorg-input-wacom
 
-  2. Настроить иксы в /etc/X11/xorg.conf: 
-    
+  2. Настроить иксы в /etc/X11/xorg.conf:
+
     Section "ServerLayout"
         Identifier     "Layout0"
         Screen      0  "Screen0"
         InputDevice    "Keyboard0" "CoreKeyboard"
         InputDevice    "Mouse0" "CorePointer"
-    
+
     	InputDevice "stylus" "SendCoreEvents"
     	InputDevice "eraser" "SendCoreEvents"
     	InputDevice "pad" "SendCoreEvents"
     EndSection
-    
+
     Section "InputDevice"
     	Driver "wacom"
     	Identifier "stylus"
@@ -29,7 +29,7 @@ layout: default
     	Option "USB" "on"
     	Option "PressCurve" "0,0,100,100"
     EndSection
-    
+
     Section "InputDevice"
     	Driver "wacom"
     	Identifier "eraser"
@@ -37,7 +37,7 @@ layout: default
     	Option "Type" "eraser"
     	Option "USB" "on"
     EndSection
-    
+
     Section "InputDevice"
     	Driver "wacom"
     	Identifier "pad"

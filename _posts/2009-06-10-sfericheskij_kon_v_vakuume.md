@@ -1,5 +1,5 @@
 ---
 title: "Сферический конь в вакууме"
-layout: default 
+layout: default
 ---
 ![](../../../view/30)

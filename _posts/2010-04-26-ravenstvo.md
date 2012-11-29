@@ -1,6 +1,6 @@
 ---
 title: "Равенство"
-layout: default 
+layout: default
 tags:
   - "философское"
   - "мысли"

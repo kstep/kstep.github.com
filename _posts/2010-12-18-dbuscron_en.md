@@ -1,6 +1,6 @@
 ---
 title: "Dbuscron"
-layout: default 
+layout: default
 ---
 **Upd:** I've just release version 1.3. You can download [deb-package for Maemo 5](../../../download/71). The build includes one new feature and some improvements in log messages and error handling:
 
@@ -76,24 +76,24 @@ Besides that these environment variables are set by dbuscron for commands run on
 Empty lines and lines starting with “#” are ignored as always =)
 
 I can tell you about abilities of the daemon for many hours, but example of my own config is more useful in this case:
-    
-    # Stop player on headphones plug out  
+
+    # Stop player on headphones plug out
     S signal * org.freedesktop.Hal.Device /org/freedesktop/Hal/devices/platform_headphone Condition * ButtonPressed;connection grep -q disconnected /sys/devices/platform/gpio-switch/headphone/state && run-standalone.sh /opt/userscripts/mpcontrol.sh stop
-    # Say incoming number with espeak  
-    S signal * com.nokia.csd.Call /com/nokia/csd/call Coming * * run-standalone.sh /opt/userscripts/tasks/speak-caller.sh  
-    # Connect to ISP via PPTP on home WiFi network connection  
-    S signal * com.nokia.wlancond.signal /com/nokia/wlancond/signal connected * wlan0 run-standalone.sh /opt/userscripts/tasks/connect-pptp.sh  
-    # Disconnect PPTP  
-    S signal * com.nokia.wlancond.signal /com/nokia/wlancond/signal disconnected * wlan0 run-standalone.sh /opt/userscripts/tasks/disconnect-pptp.sh  
-    # Switch to 3G mode on GPRS connected to make it faster  
-    S signal * com.nokia.csd.GPRS.Context /com/nokia/csd/gprs/0 Connected * * /opt/userscripts/radiomode.sh both  
-    # Switch back to GSM mode only on GPRS disconnected to save battery  
-    S signal * com.nokia.csd.GPRS.Context /com/nokia/csd/gprs/0 Disconnected * * /opt/userscripts/radiomode.sh gsm  
-    # This message comes on cell changed:  
-    #S signal * Phone.Net /com/nokia/phone/net cell_info_change * status;lac;cid;mnc;mcc;services;userdata command  
-    # This message comes on operator name changed:  
-    #S signal * Phone.Net /com/nokia/phone/net operator_name_change * status;opname;unk;mnc;mcc command  
-    # Show notification message on operator name changed:  
+    # Say incoming number with espeak
+    S signal * com.nokia.csd.Call /com/nokia/csd/call Coming * * run-standalone.sh /opt/userscripts/tasks/speak-caller.sh
+    # Connect to ISP via PPTP on home WiFi network connection
+    S signal * com.nokia.wlancond.signal /com/nokia/wlancond/signal connected * wlan0 run-standalone.sh /opt/userscripts/tasks/connect-pptp.sh
+    # Disconnect PPTP
+    S signal * com.nokia.wlancond.signal /com/nokia/wlancond/signal disconnected * wlan0 run-standalone.sh /opt/userscripts/tasks/disconnect-pptp.sh
+    # Switch to 3G mode on GPRS connected to make it faster
+    S signal * com.nokia.csd.GPRS.Context /com/nokia/csd/gprs/0 Connected * * /opt/userscripts/radiomode.sh both
+    # Switch back to GSM mode only on GPRS disconnected to save battery
+    S signal * com.nokia.csd.GPRS.Context /com/nokia/csd/gprs/0 Disconnected * * /opt/userscripts/radiomode.sh gsm
+    # This message comes on cell changed:
+    #S signal * Phone.Net /com/nokia/phone/net cell_info_change * status;lac;cid;mnc;mcc;services;userdata command
+    # This message comes on operator name changed:
+    #S signal * Phone.Net /com/nokia/phone/net operator_name_change * status;opname;unk;mnc;mcc command
+    # Show notification message on operator name changed:
     S signal * Phone.Net /com/nokia/phone/net operator_name_change * * run-standalone.sh /opt/userscripts/tasks/show-opname.sh
 
 That's it, there're really many possibilities as you can see =)

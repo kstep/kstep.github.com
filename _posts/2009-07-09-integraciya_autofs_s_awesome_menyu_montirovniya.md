@@ -1,9 +1,9 @@
 ---
 title: "Интеграция autofs с awesome: меню монтировния"
-layout: default 
+layout: default
 ---
 Во-первых нам потребуется библиотека posix, т.к. иначе не проверить существования файла и его тип:
-    
+
 {% highlight lua %}
 assert(package.loadlib("/usr/lib/lua/5.1/posix.so", "luaopen_posix"))()
 {% endhighlight %}
@@ -11,7 +11,7 @@ assert(package.loadlib("/usr/lib/lua/5.1/posix.so", "luaopen_posix"))()
 Ставиться она из пакета liblua5.1-posix1.
 
 Дальше описываем такую функцию:
-    
+
 {% highlight lua %}
 function mounts_menu()
     local Automisc = '/etc/auto.misc'
@@ -64,7 +64,7 @@ end
 {% endhighlight %}
 
 Возвращает она объект меню со списком доступных через autofs устройст, смонтированные устройства будут помечены звёздочкой. Использование:
-    
+
 {% highlight lua %}
 mounts_menu():show()
 {% endhighlight %}

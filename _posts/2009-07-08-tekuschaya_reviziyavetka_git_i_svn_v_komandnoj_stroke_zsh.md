@@ -1,6 +1,6 @@
 ---
 title: "Текущая ревизия/ветка git и svn в командной строке zsh"
-layout: default 
+layout: default
 ---
 {% highlight bash %}
 function vcs_head()

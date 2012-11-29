@@ -1,6 +1,6 @@
 ---
 title: "Windows 7 vs Ubuntu Karmic Koala"
-layout: default 
+layout: default
 ---
 На прошедший жёнин день рождения подарил ей нетбук Lenovo S10-2:
 

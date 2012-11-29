@@ -1,6 +1,6 @@
 ---
 title: "Про религию"
-layout: default 
+layout: default
 tags:
   - "комиксы"
   - "весёлости"

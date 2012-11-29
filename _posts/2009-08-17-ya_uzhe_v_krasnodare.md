@@ -1,6 +1,6 @@
 ---
 title: "Я уже в Краснодаре"
-layout: default 
+layout: default
 ---
 Я не надолго, просто сообщение.
 
