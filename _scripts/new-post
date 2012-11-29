@@ -1,0 +1,24 @@
+#!/bin/sh
+
+if [ -z "$1" ]; then
+    echo "Post name missing."
+    exit 1
+fi
+
+EDITOR=${EDITOR:-/usr/bin/vim}
+DATE=$(date +%Y-%m-%d)
+TITLE="$1"
+NAME=$DATE-$(echo "$TITLE" | sed -e 's/[яЯ]/ya/g' -e 's/[ёЁ]/yo/g' -e 's/[жЖ]/zh/g' -e 's/[чЧ]/ch/g' -e 's/[шШ]/sh/g' -e 's/[шЩ]/sch/g' -e 's/[юЮ]/yu/g' -e 'y/абвгдезийклмнопрстуфхцыэАБВГДЕЗИЙКЛМНОПРСТУФХЦЫЭ/abvgdezijklmnoprstufhcyeabvgdezijklmnoprstufhcye/' -e 'y/[:upper:]/[:lower:]/' -e 's/[_ -]\+/_/g' -e 's/[^a-zA-Z_]//g').md
+POSTDIR="$(dirname $0)/../_posts"
+FULLNAME="$POSTDIR/$NAME"
+
+mkdir -p "$POSTDIR"
+
+if [ -e "$FULLNAME" ]; then
+    echo "Warning: file $NAME already exists, will not commit."
+    $EDITOR +2 +/^---$ "$FULLNAME"
+else
+    echo -e "---\nlayout: default\ntitle: $TITLE\n---\n" > "$FULLNAME"
+    $EDITOR + "$FULLNAME" && git add "$FULLNAME" && git commit -m "Add post $DATE \"$TITLE\""
+fi
+
