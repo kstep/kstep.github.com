@@ -119,7 +119,7 @@ angular.module('kstep', ['ng', 'ngSanitize', 'ngCookies'])
         };
     }])
 
-    .factory('appcache', ['$window', function ($window) {
+    .factory('appcache', ['$window', '$rootScope', function ($window, $root) {
         var appcache = $window.applicationCache || {  // Return stub if no applicationCache is available
             fakeAppCache        : true,
             UNCACHED            : 0,
@@ -143,8 +143,16 @@ angular.module('kstep', ['ng', 'ngSanitize', 'ngCookies'])
         };
 
         // Normalized shortcuts
-        appcache.bind = appcache.addEventListener;
-        appcache.unbind = appcache.removeEventListener;
+        var callbacks = {};
+        appcache.bind = function (evname, callback) {
+            appcache.addEventListener(evname, callbacks[callback] = function (ev) {
+                callback.call(this, ev);
+                $root.$apply();
+            }, false);
+        };
+        appcache.unbind = function (evname, callback) {
+            appcache.removeEventListener(evname, callbacks[callback] || callback, false);
+        };
 
         return appcache;
     }])
