@@ -275,7 +275,7 @@ app.provider 'GA', ->
 
 app.config ['GAProvider', (GA) -> GA.setAccount 'kstep.me', 'UA-23938138-1']
 
-app.controller 'RootCtl', ['$scope', '$http', 'locales', 'appcache', '$window', 'GA', ($scope, $http, locales, appcache, $window, GA) ->
+app.controller 'RootCtl', ['$scope', '$http', 'locales', 'appcache', '$window', 'GA', '$location', ($scope, $http, locales, appcache, $window, GA, $location) ->
     appcache.bind 'updateready', ->
         $scope.update_available = true
         appcache.swapCache()
@@ -322,8 +322,8 @@ app.controller 'RootCtl', ['$scope', '$http', 'locales', 'appcache', '$window', 
             name: "CPAN"
         }
 
-        #$scope.$on '$routeChangeSuccess', ->
-            #GA '_trackPageview'
+        $scope.$on '$routeChangeSuccess', ->
+            GA '_trackPageview', $location.path()
     ]
 ]
 
