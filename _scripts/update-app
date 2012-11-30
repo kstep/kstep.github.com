@@ -1,5 +1,13 @@
 #!/bin/sh
 
 YUIC=/usr/bin/yuicompressor
-$YUIC js/application.js > js/application-min.js
-git commit -m "Update minimized application" -- js/application-min.js
+COFFEE=/usr/bin/coffee
+
+if [ x$1 = xdebug ]; then
+    $COFFEE -p js/application.coffee > js/application-min.js
+else
+    $COFFEE -p js/application.coffee | $YUIC --type js > js/application-min.js
+    git add js/application-min.js
+fi
+
+#git commit -m "Update minimized application" -- js/application-min.js
