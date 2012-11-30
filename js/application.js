@@ -76,7 +76,6 @@ angular.module('kstep', ['ng', 'ngSanitize', 'ngCookies'])
         locales($cookies.lang || 'en');
         return locales;
     }])
-
     .directive('youtube', [function () {
         return {
             restrict: 'AE',
@@ -207,6 +206,32 @@ angular.module('kstep', ['ng', 'ngSanitize', 'ngCookies'])
         };
     }])
 
+    .provider('GA', function () {
+        var _gaq = [];
+
+        this.setAccount = function (id) {
+            _gaq.push(['_setAccount', id]);
+            return this;
+        };
+
+        this.$get = ['$window', '$location', '$jsload', '$timeout', function ($window, $location, $jsload, $timeout) {
+            var prefix = $location.protocol() === 'https'? 'https://ssl': 'http://www';
+            $window._gaq = _gaq;
+
+            $jsload(prefix + '.google-analytics.com/ga.js');
+            return function () {
+                var args = _.toArray(arguments);
+                //$timeout(function () {
+                    $window._gaq.push(args);
+                //});
+            };
+        }];
+    })
+
+    .config(['GAProvider', function (GA) {
+        GA.setAccount('UA-23938138-1');
+    }])
+
     .factory('Pager', [function () {
         return function (list, items_per_page, current_page) {
 
@@ -299,7 +324,7 @@ angular.module('kstep', ['ng', 'ngSanitize', 'ngCookies'])
         }]);
     }])
 
-    .controller('RootCtl', ['$scope', '$http', 'locales', 'appcache', '$window', function ($scope, $http, locales, appcache, $window) {
+    .controller('RootCtl', ['$scope', '$http', 'locales', 'appcache', '$window', 'GA', function ($scope, $http, locales, appcache, $window, GA) {
         appcache.bind('updateready', function () {
             $scope.update_available = true;
             appcache.swapCache();
@@ -321,6 +346,10 @@ angular.module('kstep', ['ng', 'ngSanitize', 'ngCookies'])
             { url: "http://www.ohloh.net/accounts/kstep", icon: "http://www.ohloh.net/favicon.ico", name: "Ohloh" },
             { url: "http://search.cpan.org/~kstepme/", icon: "http://search.cpan.org/favicon.ico", name: "CPAN" }
         ];
+
+        $scope.$on('$routeChangeSuccess', function () {
+            GA('_trackPageview');
+        });
     }])
 
     .directive('ngMeta', ['$parse', function ($parse) {
