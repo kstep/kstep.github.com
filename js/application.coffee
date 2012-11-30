@@ -257,8 +257,11 @@ app.provider 'GA', ->
     _gaq = []
 
     {
-        setAccount: (id) ->
-            _gaq.push ['_setAccount', id]
+        setAccount: (domain, account) ->
+            [account, domain] = [domain, account] unless account
+
+            _gaq.push ['_setAccount', account]
+            _gaq.push ['_setDomainName', domain] if domain
             this
 
         $get: ['$window', '$location', '$jsload', '$timeout', ($window, $location, $jsload, $timeout) ->
@@ -270,7 +273,7 @@ app.provider 'GA', ->
         ]
     }
 
-app.config ['GAProvider', (GA) -> GA.setAccount 'UA-23938138-1']
+app.config ['GAProvider', (GA) -> GA.setAccount 'kstep.me', 'UA-23938138-1']
 
 app.controller 'RootCtl', ['$scope', '$http', 'locales', 'appcache', '$window', 'GA', ($scope, $http, locales, appcache, $window, GA) ->
     appcache.bind 'updateready', ->
