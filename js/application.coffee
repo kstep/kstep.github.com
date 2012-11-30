@@ -74,6 +74,14 @@ app.factory 'locales', ['$http', '$rootScope', '$cookies', ($http, $root, $cooki
     locales
 ]
 
+app.directive 'ggSearch', ($jsload) -> {
+    restrict: 'AE'
+    template: '<gcse:search></gcse:search>'
+    replace: yes
+    compile: (elem, attrs) ->
+        $jsload "//www.google.com/cse.js?cx=#{attrs.ggSearch or id}"
+}
+
 app.directive 'youtube', -> {
     restrict: 'AE'
     scope: yes
