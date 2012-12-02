@@ -390,14 +390,17 @@ app
         $http.get('/data/tags.json').success (tags) ->
             min = Infinity
             max = -Infinity
+            tags_list = []
 
             for name, tag of tags
                 min = tag.size if tag.size < min
                 max = tag.size if tag.size > max
+                tag.name = name
+                tags_list.push tag
 
             delta = max - min
-            for name, tag of tags
-                tag.size = (tag.size - min) / delta
+            for tag in tags_list
+                tag.weight = (tag.size - min) / delta
 
-            $scope.tags = tags
+            $scope.tags = tags_list
     ]

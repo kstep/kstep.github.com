@@ -41,7 +41,7 @@
                                     <li ng-repeat="acc in social_accounts"><a target="_blank" ng-href="{: acc.url :}"><img class="favicon" ng-src="{: acc.icon :}" /> {: acc.name :}</a></li>
                                 </ul>
                             </li>
-                            <li ng-class="{ active: page.group == 'tags' }"><a href="/#!/tags" ng-bind="locale.tag_cloud | lower"></a></li>
+                            <li ng-class="{ active: page.group == 'tags' }"><a href="/#!/tags" ng-bind="locale.tags | lower"></a></li>
                             <li><a ng-href="{: 'znvygb:zr@xfgrc.zr' | rot13 :}" title="{: locale.no_spam_please :}">{: locale.email_me :}</a></li>
                         </ul>
                         <ul class="nav pull-right">

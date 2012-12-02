@@ -6,12 +6,15 @@
     "loading": "Loading…",
     "tags": "Tags",
     "tag": "Tag",
-    "tag_cloud": "Tag cloud",
+    "tag_cloud": "Cloud",
+    "tag_list": "List",
     "signature": "© Konstantin Stepanov",
     "date_format": "M/d/yyyy",
     "tests_hint": "Yes, my site works correctly, and I have tests to prove it!",
     "tests": "tests",
     "update_available": "An update for the site is available. Do you want to reload page now?",
     "reload": "Reload",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "sort_by_name": "by name",
+    "sort_by_size": "by size"
 }
