@@ -6,10 +6,5 @@
     <li class="active" ng-bind-html="page.title"></li>
 </ul>
 
-<h1>
-    <span ng-bind-html="page.title"></span> <small><nobr ng-bind="page.date | asdate:locale.date_format"></nobr></small>
-    <span class="pull-right" ng-show="page.tags.length"><a ng-href="/#!/tag/{: tag :}" class="tag badge" ng-repeat="tag in page.tags" ng-bind="tag"></a></span>
-</h1>
-
 <div ng-include="page.url"></div>
 
