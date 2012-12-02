@@ -48,23 +48,52 @@ describe 'Controllers', ->
     describe 'BlogCtl', ->
 
         controller = undefined
+        posts = [
+            {"title": "Post1", "date": "2012-10-12", "tags": []}
+            {"title": "Post2", "date": "2010-10-12", "tags": []}
+            {"title": "Post3", "date": "2011-10-12", "tags": []}
+            {"title": "Post4", "date": "2011-10-10", "tags": []}
+            {"title": "Post4", "date": "2011-01-05", "tags": []}
+            {"title": "Post5", "date": "2010-09-12", "tags": []}
+        ]
 
-        beforeEach inject ($controller, $httpBackend) ->
-
+        beforeEach inject ($httpBackend) ->
             scope.locale = {}
             scope.page = {}
+            $httpBackend.expectGET('/data/list.json')
+            $httpBackend.whenGET('/data/list.json').respond posts
 
-            $httpBackend.expectGET('/data/list.json').respond [{"title": "Post", "date": "2012-10-12", "tags": []}]
-            controller = $controller('BlogCtl', {$scope: scope, $routeParams: {}})
-
+        it 'should load posts list', inject ($controller, $httpBackend) ->
+            controller = $controller 'BlogCtl', {$scope: scope, $routeParams: {}}
             $httpBackend.flush()
 
-        it 'should load posts list', inject ($httpBackend, Pager) ->
             scope.pager.then (
-                (pager) -> expect(pager.slice).toEqual ["title": "Post", "date": "2012-10-12", "tags": []]
+                (pager) -> expect(pager.slice).toEqual posts
             ), (
                 (result) -> expect(result.status).toBe 200
             )
+
+        expectations = [
+            { params: { year: 2012 }, dates: ['2012-10-12'] }
+            { params: { year: 2010 }, dates: ['2010-10-12', '2010-09-12'] }
+            { params: { year: 2011, month: 10 }, dates: ['2011-10-12', '2011-10-10'] }
+            { params: { year: 2011, month: 10 }, dates: ['2011-10-12', '2011-10-10'] }
+            { params: { year: 2010, month: 9, day: 12 }, dates: ['2010-09-12'] }
+        ]
+        pluck = (attr) -> (list) -> (obj[attr] for obj in list)
+
+        for expectation in expectations
+            it "should filter posts by date: #{expectation.params.year}-#{expectation.params.month || '?'}-#{expectation.params.day || '?'}", inject ($controller, $httpBackend) ->
+                controller = $controller 'BlogCtl', {$scope: scope, $routeParams: expectation.params}
+                $httpBackend.flush()
+
+                scope.pager.then (
+                    (pager) ->
+                        expect(pager.slice.length).toEqual expectation.dates.length
+                        expect(pluck('date')(pager.slice)).toEqual expectations.dates
+                ), (
+                    (result) -> expect(result.status).toBe 200
+                )
 
     describe 'TagCtl', ->
 

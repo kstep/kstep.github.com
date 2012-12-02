@@ -44,4 +44,20 @@ describe 'Directives', ->
             expect(element.attr('width')).toEqual '1280'
             expect(element.attr('height')).toEqual '800'
 
+    describe 'disqus', ->
+
+        it 'should generate unique id for tag without id', inject ($compile) ->
+            element0 = $compile('<disqus name="shortname" />')(scope)
+            element1 = $compile('<disqus name="shortname" />')(scope)
+            scope.$apply()
+
+            expect(element0.attr('id')).toEqual 'disqus_thread0'
+            expect(element1.attr('id')).toEqual 'disqus_thread1'
+
+        it 'should load and configure Disqus API', inject ($compile, $window, $jsload) ->
+            element = $compile('<disqus id="thread" name="kstep" />')(scope)
+            scope.$apply()
+
+            expect($window.disqus_container_id).toEqual 'thread'
+            #waitsFor -> $window.DISQUS?
 
