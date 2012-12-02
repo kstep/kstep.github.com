@@ -2,9 +2,11 @@
 
 YUIC=/usr/bin/yuicompressor
 COFFEE=/usr/bin/coffee
+JSCOVER=/usr/bin/jscoverage
 
 if [ x$1 = xdebug ]; then
     $COFFEE -p js/application.coffee > js/application-min.js
+    test -x $JSCOVER && $JSCOVER js js-cover
 else
     $COFFEE -p js/application.coffee | $YUIC --type js > js/application-min.js
     git add js/application-min.js
