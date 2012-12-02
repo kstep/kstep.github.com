@@ -381,7 +381,7 @@ app
     ]
 
     TagsCtl: ['$scope', '$http', ($scope, $http) ->
-        $scope.$watch 'locale.tag_cloud', (locale_title) -> $scope.page.title = locale_title
+        $scope.$watch 'locale.tags', (locale_title) -> $scope.page.title = locale_title
 
         angular.extend $scope.page,
             url: '/tags'
