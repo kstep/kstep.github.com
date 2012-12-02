@@ -8,6 +8,7 @@
     "tag": "Tag",
     "tag_cloud": "Cloud",
     "tag_list": "List",
+    "tags_hint": "Two flavours available: cloud or list!",
     "signature": "© Konstantin Stepanov",
     "date_format": "M/d/yyyy",
     "tests_hint": "Yes, my site works correctly, and I have tests to prove it!",
@@ -16,5 +17,6 @@
     "reload": "Reload",
     "cancel": "Cancel",
     "sort_by_name": "by name",
-    "sort_by_size": "by size"
+    "sort_by_size": "by size",
+    "or": "or"
 }
