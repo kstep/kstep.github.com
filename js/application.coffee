@@ -1,6 +1,6 @@
 
-valueFn = (value) -> (-> value)
-attr = (name) -> ((obj) -> obj[name])
+@valueFn = (value) -> (-> value)
+@attr = (name) -> ((obj) -> obj[name])
 
 app = angular.module 'kstep', ['ng', 'ngSanitize', 'ngCookies']
 
