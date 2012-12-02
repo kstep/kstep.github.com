@@ -1,0 +1,30 @@
+.calendar a, .calendar span {
+    width: 14%;
+    display: block;
+    float: left;
+    text-align: center;
+}
+
+.calendar .day-1.mon { margin-left: 0%; }
+.calendar .day-1.tue { margin-left: 14%; }
+.calendar .day-1.wed { margin-left: 28%; }
+.calendar .day-1.thu { margin-left: 42%; }
+.calendar .day-1.fri { margin-left: 56%; }
+.calendar .day-1.sat { margin-left: 70%; }
+.calendar .day-1.sun { margin-left: 84%; }
+
+.calendar.september .day-31,
+.calendar.april .day-31,
+.calendar.june .day-31,
+.calendar.november .day-31 {
+    display: none;
+}
+
+.calendar.february .day-29,
+.calendar.february .day-30,
+.calendar.february .day-31 {
+    display: none;
+}
+.calendar.february.leap-year .day-29 {
+    display: block;
+}
