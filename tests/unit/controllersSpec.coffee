@@ -106,5 +106,8 @@ describe 'Controllers', ->
             expect(scope.page.url).toEqual '/tags'
 
         it 'should load tags and calculate their weights', ->
-            expect(scope.tags).toEqual {"tag1": {"size": 1, "weight": 0, "posts": []}, "tag2": {"size": 2, "weight": 1, "posts": []}}
+            expect(scope.tags).toEqual [
+                { name: "tag1", size: 1, weight: 0, posts: [] }
+                { name: "tag2", size: 2, weight: 1, posts: [] }
+            ]
 
