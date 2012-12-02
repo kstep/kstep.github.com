@@ -10,11 +10,17 @@ describe 'Directives', ->
         element = undefined
 
         beforeEach inject ($compile) ->
-            element = $compile('<totop></totop>')(scope)
+            element = $compile('<a class="totop"></a>')(scope)
+            scope.$apply()
 
         it 'should scroll to top on click', inject ($window) ->
-            # TODO: fake onclick and test scrollTop position
-            expect(true).toBeTruthy()
+            scrollTop = 1000
+            spyOn($window.jQuery.prototype, 'scrollTop').andCallFake (pos) ->
+                scrollTop = pos
+
+            $(element[0]).trigger 'click'
+            expect($window.jQuery.prototype.scrollTop).toHaveBeenCalledWith 0
+            expect(scrollTop).toEqual 0
 
     describe 'ngMeta', ->
 
