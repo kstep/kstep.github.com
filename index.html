@@ -86,16 +86,16 @@
                             <h5 class="clearfix">
                                 <a style="float: left;" ng-click="date.month = date.month - 1">←</a>
                                 <a style="float: right;" ng-click="date.month = date.month + 1">→</a>
-                                <a ng-href="/#!/{: date.year :}/{: date.month | lpad:2 :}">{: month | caps :}</a> <a ng-href="/#!/{: date.year :}">{: date.year :}</a>
+                                <a ng-href="/#!/{: date.year :}/{: date.month | lpad:2 :}">{: locale[month] | caps :}</a> <a ng-href="/#!/{: date.year :}">{: date.year :}</a>
                             </h5>
-                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span>
-                            <span>Sat</span><span>Sun</span>
+                            <span>{: locale.mon :}</span><span>{: locale.tue :}</span><span>{: locale.wed :}</span><span>{: locale.thu :}</span><span>{: locale.fri :}</span>
+                            <span>{: locale.sat :}</span><span>{: locale.sun :}</span>
                         </div>
                         <div class="clearfix">
                             <a ng-repeat="day in days" ng-class="['day-'+day, weekday(day), is_today(day) && 'today' || '', has_posts(day) || 'muted']" ng-href="/#!/{: date.year :}/{: date.month | lpad:2 :}/{: day | lpad:2 :}">{: day :}</a>
                         </div>
                         <div class="header">
-                            <a ng-hide="are_equal(date, today)" ng-click="date = today">← Today</a>
+                            <a ng-hide="are_equal(date, today)" ng-click="date = today">← {: locale.today :}</a>
                         </div>
                     </div>
 
