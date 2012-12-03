@@ -81,7 +81,23 @@
             <div class="row">
                 <div class="content span9" ng-view></div>
                 <div class="span3">
-                    <div class="calendar" data-href="/#!/{: date.year :}/{: date.month | lpad:2 :}/{: day | lpad:2 :}"></div>
+                    <div class="calendar" ng-class="[month, leap_year && 'leap-year' || '']">
+                        <div class="header">
+                            <h5 class="clearfix">
+                                <a style="float: left;" ng-click="date.month = date.month - 1">←</a>
+                                <a style="float: right;" ng-click="date.month = date.month + 1">→</a>
+                                {: month | caps :} {: date.year :}
+                            </h5>
+                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span>
+                            <span>Sat</span><span>Sun</span>
+                        </div>
+                        <div class="clearfix">
+                            <a ng-repeat="day in days" ng-class="['day-'+day, weekday(day), is_today(day) && 'today' || '']" ng-href="/#!/{: date.year :}/{: date.month | lpad:2 :}/{: day | lpad:2 :}">{: day :}</a>
+                        </div>
+                        <div class="header">
+                            <a ng-hide="are_equal(date, today)" ng-click="date = today">← Today</a>
+                        </div>
+                    </div>
 
                     <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/kstepme" data-widget-id="272776746049339393">Tweets by @kstepme</a>
                     <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>

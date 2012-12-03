@@ -199,131 +199,9 @@ app
                 nameExpr.assign scope, valueExpr scope if valueExpr?
                 angular.extend (nameExpr scope), updateExpr scope if updateExpr?
     ]
-    calendar: ['$parse', '$interpolate', ($parse, $interpolate) ->
-        restrict: 'CAE'
-        scope: yes
-        replace: yes
-        # I unroll loop here for better performance, all calendar logic is in CSS,
-        # I really need to set correct classes only.
-        template: '''
-            <div ng-class="[month, leap_year]">
-                <div class="header">
-                    <nobr class="clearfix"><a ng-click="prev_month()">← {: months[(date.month - 1) % 12] | caps :}</a> <strong>{: month | caps :} {: date.year :}</strong> <a ng-click="next_month()">{: months[(date.month + 1) % 12] | caps :} →</a></nobr>
-                    <span class="mon">Mon</span>
-                    <span class="tue">Tue</span>
-                    <span class="wed">Wed</span>
-                    <span class="thu">Thu</span>
-                    <span class="fri">Fri</span>
-                    <span class="sat">Sat</span>
-                    <span class="sun">Sun</span>
-                </div>
-                <a ng-href="{: href(1) :}" class="day-1" ng-class="[weekday(1), is_today(1)]">1</a>
-                <a ng-href="{: href(2) :}" class="day-2" ng-class="[weekday(2), is_today(2)]">2</a>
-                <a ng-href="{: href(3) :}" class="day-3" ng-class="[weekday(3), is_today(3)]">3</a>
-                <a ng-href="{: href(4) :}" class="day-4" ng-class="[weekday(4), is_today(4)]">4</a>
-                <a ng-href="{: href(5) :}" class="day-5" ng-class="[weekday(5), is_today(5)]">5</a>
-                <a ng-href="{: href(6) :}" class="day-6" ng-class="[weekday(6), is_today(6)]">6</a>
-                <a ng-href="{: href(7) :}" class="day-7" ng-class="[weekday(7), is_today(7)]">7</a>
-                <a ng-href="{: href(8) :}" class="day-8" ng-class="[weekday(8), is_today(8)]">8</a>
-                <a ng-href="{: href(9) :}" class="day-9" ng-class="[weekday(9), is_today(9)]">9</a>
-                <a ng-href="{: href(10) :}" class="day-10" ng-class="[weekday(10), is_today(10)]">10</a>
-                <a ng-href="{: href(11) :}" class="day-11" ng-class="[weekday(11), is_today(11)]">11</a>
-                <a ng-href="{: href(12) :}" class="day-12" ng-class="[weekday(12), is_today(12)]">12</a>
-                <a ng-href="{: href(13) :}" class="day-13" ng-class="[weekday(13), is_today(13)]">13</a>
-                <a ng-href="{: href(14) :}" class="day-14" ng-class="[weekday(14), is_today(14)]">14</a>
-                <a ng-href="{: href(15) :}" class="day-15" ng-class="[weekday(15), is_today(15)]">15</a>
-                <a ng-href="{: href(16) :}" class="day-16" ng-class="[weekday(16), is_today(16)]">16</a>
-                <a ng-href="{: href(17) :}" class="day-17" ng-class="[weekday(17), is_today(17)]">17</a>
-                <a ng-href="{: href(18) :}" class="day-18" ng-class="[weekday(18), is_today(18)]">18</a>
-                <a ng-href="{: href(19) :}" class="day-19" ng-class="[weekday(19), is_today(19)]">20</a>
-                <a ng-href="{: href(20) :}" class="day-20" ng-class="[weekday(20), is_today(20)]">20</a>
-                <a ng-href="{: href(21) :}" class="day-21" ng-class="[weekday(21), is_today(21)]">21</a>
-                <a ng-href="{: href(22) :}" class="day-22" ng-class="[weekday(22), is_today(22)]">22</a>
-                <a ng-href="{: href(23) :}" class="day-23" ng-class="[weekday(23), is_today(23)]">23</a>
-                <a ng-href="{: href(24) :}" class="day-24" ng-class="[weekday(24), is_today(24)]">24</a>
-                <a ng-href="{: href(25) :}" class="day-25" ng-class="[weekday(25), is_today(25)]">25</a>
-                <a ng-href="{: href(26) :}" class="day-26" ng-class="[weekday(26), is_today(26)]">26</a>
-                <a ng-href="{: href(27) :}" class="day-27" ng-class="[weekday(27), is_today(27)]">27</a>
-                <a ng-href="{: href(28) :}" class="day-28" ng-class="[weekday(28), is_today(28)]">28</a>
-                <a ng-href="{: href(29) :}" class="day-29" ng-class="[weekday(29), is_today(29)]">29</a>
-                <a ng-href="{: href(30) :}" class="day-30" ng-class="[weekday(30), is_today(30)]">30</a>
-                <a ng-href="{: href(31) :}" class="day-31" ng-class="[weekday(31), is_today(31)]">31</a>
-            </div>'''
-        compile: (element, attrs) ->
-            inner_date = (date) ->
-                year: date.getFullYear()
-                month: date.getMonth() + 1
-                day: date.getDate()
-                dow: date.getDay()
-
-            now = inner_date new Date
-            today = now
-
-            nowExpr = (scope) -> now
-            nowExpr.assign = (scope, value) -> now = value
-
-            dateExpr = if attrs.date then $parse attrs.date else nowExpr
-            hrefExpr = $interpolate attrs.href
-
-            (scope, element, attrs) ->
-                first_dow = 1
-                date = {}
-
-                weekdays = [
-                    'sun'
-                    'mon'
-                    'tue'
-                    'wed'
-                    'thu'
-                    'fri'
-                    'sat'
-                    'sun'
-                ]
-
-                months = [
-                    'december'
-                    'january'
-                    'february'
-                    'march'
-                    'april'
-                    'may'
-                    'june'
-                    'july'
-                    'august'
-                    'september'
-                    'october'
-                    'november'
-                    'december'
-                ]
-
-                is_leap = (year) -> (year % 4 == 0) and (year % 100 != 0 or year % 400 == 0)
-
-                scope.href = (day) -> hrefExpr { day: day, date: date }
-                scope.weekday = (day) -> weekdays[(first_dow + day - 1) % 7]
-
-                scope.months = months
-                scope.prev_month = -> (dateExpr.assign or angular.noop) scope, { year: date.year, month: date.month - 1, day: date.day }
-                scope.next_month = -> (dateExpr.assign or angular.noop) scope, { year: date.year, month: date.month + 1, day: date.day }
-                scope.set_date = (date) -> (dateExpr.assign or angular.noop) scope, date
-                scope.today = today
-
-                scope.$watch dateExpr, (newdate) ->
-                    newdate = if angular.isDate newdate then newdate \
-                        else if angular.isObject newdate then \
-                            new Date newdate.year, newdate.month - 1, newdate.day \
-                        else new Date newdate
-
-                    date = inner_date newdate
-
-                    scope.is_today = if date.year == today.year and date.month == today.month \
-                        then ((day) -> if day == date.day then 'today' else '') \
-                        else ((day) -> false)
-
-                    first_dow = (8 + date.dow - date.day % 7) % 7
-                    scope.date = date
-                    scope.month = months[date.month]
-                    scope.leap_year = if is_leap(date.year) then 'leap-year' else ''
-    ]
+    calendar: ->
+        restrict: 'CEA'
+        controller: 'CalendarCtl'
 
 .factory
     appcache: ['$window', '$rootScope', ($window, $root) ->
@@ -545,4 +423,82 @@ app
                 tag.weight = (tag.size - min) / delta
 
             $scope.tags = tags_list
+    ]
+    CalendarCtl: ['$scope', '$element', '$attrs', ($scope, $element, $attrs) ->
+        inner_date = (date) ->
+            #return date if date is $scope.date
+
+            date = unless date? then new Date \
+                else if angular.isDate date then date \
+                else if angular.isObject date then \
+                     new Date date.year, date.month - 1, date.day \
+                else new Date date
+
+            year: date.getFullYear()
+            month: date.getMonth() + 1
+            day: date.getDate()
+            dow: date.getDay()
+
+        today = inner_date new Date
+
+        is_leap = (year) -> (year % 4 == 0) and (year % 100 != 0 or year % 400 == 0)
+
+        weekdays = [
+            'sun'
+            'mon'
+            'tue'
+            'wed'
+            'thu'
+            'fri'
+            'sat'
+            'sun'
+        ]
+
+        months = [
+            'december'
+            'january'
+            'february'
+            'march'
+            'april'
+            'may'
+            'june'
+            'july'
+            'august'
+            'september'
+            'october'
+            'november'
+            'december'
+        ]
+
+        # Currently selected date
+        $scope.date = inner_date ($attrs.calendar or $attrs.date or null)
+
+        # Today date
+        $scope.today = today
+
+        # List of days for enumeration
+        $scope.days = [1..31]
+
+        # Weekday for given day in current month
+        first_dow = 1
+        $scope.weekday = (day) -> weekdays[(first_dow + day - 1) % 7]
+
+        $scope.is_current = (day) -> $scope.date.day == day  # Is the day is current one?
+        $scope.are_equal = (date1, date2) ->  # Are these two dates equal?
+            date1.year == date2.year and date1.month == date2.month and date1.day == date2.day
+
+        $scope.$watch 'date', ((date) ->
+            $scope.date = date = inner_date date  # Normalize date
+
+            $scope.leap_year = is_leap(date.year)  # Leap year flag
+
+            # Is today for day in current month
+            $scope.is_today = if date.year == today.year and date.month == today.month \
+                then ((day) -> day == date.day) else ((day) -> false)
+
+            $scope.month = months[date.month]  # Current month name
+
+            # Calculate first month day's weekday
+            first_dow = (8 + date.dow - date.day % 7) % 7
+        ), on
     ]
