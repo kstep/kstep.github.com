@@ -1,5 +1,6 @@
 User-agent: *
 Disallow: /tests
+Disallow: /partials
 
 User-agent: Yandex
 Sitemap: http://kstep.me/sitemap.xml
