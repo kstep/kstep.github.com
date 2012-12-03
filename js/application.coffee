@@ -182,6 +182,113 @@ app
                 nameExpr.assign scope, valueExpr scope if valueExpr?
                 angular.extend (nameExpr scope), updateExpr scope if updateExpr?
     ]
+    calendar: ['$parse', ($parse) ->
+        restrict: 'CAE'
+        scope: yes
+        replace: yes
+        # I unroll loop here for better performance, all calendar logic is in CSS,
+        # I really need to set correct classes only.
+        template: '''
+            <div ng-class="[month, leap_year]" title="{: date | json :}">
+                <div class="header">
+                    <span class="mon"></span>
+                    <span class="tue"></span>
+                    <span class="wed"></span>
+                    <span class="thu"></span>
+                    <span class="fri"></span>
+                    <span class="sat"></span>
+                    <span class="sun"></span>
+                </div>
+                <a ng-href="{: href(1) :}" class="day-1" ng-class="[weekday(1), today(1)]">1</a>
+                <a ng-href="{: href(2) :}" class="day-2" ng-class="[weekday(2), today(2)]">2</a>
+                <a ng-href="{: href(3) :}" class="day-3" ng-class="[weekday(3), today(3)]">3</a>
+                <a ng-href="{: href(4) :}" class="day-4" ng-class="[weekday(4), today(4)]">4</a>
+                <a ng-href="{: href(5) :}" class="day-5" ng-class="[weekday(5), today(5)]">5</a>
+                <a ng-href="{: href(6) :}" class="day-6" ng-class="[weekday(6), today(6)]">6</a>
+                <a ng-href="{: href(7) :}" class="day-7" ng-class="[weekday(7), today(7)]">7</a>
+                <a ng-href="{: href(8) :}" class="day-8" ng-class="[weekday(8), today(8)]">8</a>
+                <a ng-href="{: href(9) :}" class="day-9" ng-class="[weekday(9), today(9)]">9</a>
+                <a ng-href="{: href(10) :}" class="day-10" ng-class="[weekday(10), today(10)]">10</a>
+                <a ng-href="{: href(11) :}" class="day-11" ng-class="[weekday(11), today(11)]">11</a>
+                <a ng-href="{: href(12) :}" class="day-12" ng-class="[weekday(12), today(12)]">12</a>
+                <a ng-href="{: href(13) :}" class="day-13" ng-class="[weekday(13), today(13)]">13</a>
+                <a ng-href="{: href(14) :}" class="day-14" ng-class="[weekday(14), today(14)]">14</a>
+                <a ng-href="{: href(15) :}" class="day-15" ng-class="[weekday(15), today(15)]">15</a>
+                <a ng-href="{: href(16) :}" class="day-16" ng-class="[weekday(16), today(16)]">16</a>
+                <a ng-href="{: href(17) :}" class="day-17" ng-class="[weekday(17), today(17)]">17</a>
+                <a ng-href="{: href(18) :}" class="day-18" ng-class="[weekday(18), today(18)]">18</a>
+                <a ng-href="{: href(19) :}" class="day-19" ng-class="[weekday(19), today(19)]">20</a>
+                <a ng-href="{: href(20) :}" class="day-20" ng-class="[weekday(20), today(20)]">20</a>
+                <a ng-href="{: href(21) :}" class="day-21" ng-class="[weekday(21), today(21)]">21</a>
+                <a ng-href="{: href(22) :}" class="day-22" ng-class="[weekday(22), today(22)]">22</a>
+                <a ng-href="{: href(23) :}" class="day-23" ng-class="[weekday(23), today(23)]">23</a>
+                <a ng-href="{: href(24) :}" class="day-24" ng-class="[weekday(24), today(24)]">24</a>
+                <a ng-href="{: href(25) :}" class="day-25" ng-class="[weekday(25), today(25)]">25</a>
+                <a ng-href="{: href(26) :}" class="day-26" ng-class="[weekday(26), today(26)]">26</a>
+                <a ng-href="{: href(27) :}" class="day-27" ng-class="[weekday(27), today(27)]">27</a>
+                <a ng-href="{: href(28) :}" class="day-28" ng-class="[weekday(28), today(28)]">28</a>
+                <a ng-href="{: href(29) :}" class="day-29" ng-class="[weekday(29), today(29)]">29</a>
+                <a ng-href="{: href(30) :}" class="day-30" ng-class="[weekday(30), today(30)]">30</a>
+                <a ng-href="{: href(31) :}" class="day-31" ng-class="[weekday(31), today(31)]">31</a>
+            </div>'''
+        compile: (element, attrs) ->
+            now = new Date
+            dateExpr = $parse attrs.date or (scope) -> now
+            hrefExpr = $parse attrs.href
+
+            (scope, element, attrs) ->
+                first_dow = 1
+                date = {}
+
+                weekdays = [
+                    'sun'
+                    'mon'
+                    'tue'
+                    'wed'
+                    'thu'
+                    'fri'
+                    'sat'
+                ]
+
+                months = [
+                    undefined
+                    'january'
+                    'february'
+                    'march'
+                    'april'
+                    'may'
+                    'june'
+                    'july'
+                    'august'
+                    'september'
+                    'october'
+                    'november'
+                    'december'
+                ]
+
+                is_leap = (year) -> (year % 4 == 0) and (year % 100 != 0 or year % 400 == 0)
+
+                scope.href = (day) -> hrefExpr { day: day, date: date }
+                scope.weekday = (day) -> weekdays[(first_dow + day - 1) % 7]
+                scope.today = (day) -> if day == date.day then 'today' else ''
+
+                scope.$watch dateExpr, (newdate) ->
+                    newdate = if angular.isDate newdate then newdate \
+                        else if angular.isObject newdate then \
+                            new Date newdate.year, newdate.month, newdate.day \
+                        else new Date newdate
+
+                    date =
+                        year: newdate.getFullYear()
+                        month: newdate.getMonth() + 1
+                        day: newdate.getDate()
+                        dow: newdate.getDay()
+
+                    first_dow = (8 + date.dow - date.day % 7) % 7
+                    scope.date = date
+                    scope.month = months[date.month]
+                    scope.leap_year = if is_leap(date.year) then 'leap-year' else ''
+    ]
 
 .factory
     appcache: ['$window', '$rootScope', ($window, $root) ->
