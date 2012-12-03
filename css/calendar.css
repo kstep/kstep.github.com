@@ -5,6 +5,15 @@
     text-align: center;
 }
 
+.calendar .header {
+    text-align: center;
+}
+.calendar .header a {
+    display: inline;
+    float: none;
+    width: auto;
+}
+
 .calendar .day-1.mon { margin-left: 0%; }
 .calendar .day-1.tue { margin-left: 14%; }
 .calendar .day-1.wed { margin-left: 28%; }
@@ -28,3 +37,12 @@
 .calendar.february.leap-year .day-29 {
     display: block;
 }
+
+.calendar .sun, .calendar .sat {
+    background: #f2dede;
+}
+
+.calendar .today {
+    background: #d4d4d4;
+}
+
