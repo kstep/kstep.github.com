@@ -508,5 +508,5 @@ app
                 date = post.date.replace /-0/g, '-'
                 $scope.posts[date] = ($scope.posts[date] or 0) + 1
 
-        $scope.has_posts = (day) -> $scope.posts["#{$scope.date.year}-#{$scope.date.month}-#{day}"]
+        $scope.how_many_posts = (day) -> $scope.posts["#{$scope.date.year}-#{$scope.date.month}-#{day}"] or 0
     ]

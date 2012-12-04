@@ -1,8 +1,21 @@
-.calendar a, .calendar span {
+.calendar li {
     width: 14%;
     display: block;
     float: left;
     text-align: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.calendar ul {
+    width: 98%;
+    margin: 0;
+    padding: 0;
+}
+.calendar ul li a, .calendar ul li span {
+    display: block;
+    width: 100%;
+    height: 100%;
 }
 
 .calendar .header {
