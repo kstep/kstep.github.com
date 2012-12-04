@@ -79,13 +79,14 @@ app
         $http.responseInterceptors.push ['$rootScope', '$q', ($root, $q) ->
             (promise) ->
                 $root.$loading = yes
-                promise.then ((response) ->
-                    $root.$loading = no
-                    response
-                ), ((response) ->
-                    $root.$loading = no
-                    $q.reject(response)
-                )
+                promise.then(
+                    (response) ->
+                        $root.$loading = no
+                        response
+                    (response) ->
+                        $root.$loading = no
+                        $q.reject(response)
+                    )
         ]
 
         GA.setAccount 'kstep.me', 'UA-23938138-1'])
@@ -229,10 +230,16 @@ app
 
         callbacks = {}
         appcache.bind = (evname, callback) ->
-            appcache.addEventListener evname, (callbacks[callback] = (ev) -> callback.call this, ev $root.$apply()), false
+            appcache.addEventListener evname,
+                callbacks[callback] = (ev) ->
+                    callback.call this, ev
+                    $root.$apply()
+                false
 
         appcache.unbind = (evname, callback) ->
-            appcache.removeEventListener evname, callbacks[callback] or callback, false
+            appcache.removeEventListener evname,
+                callbacks[callback] or callback
+                false
 
         appcache
     ]
@@ -357,10 +364,9 @@ app
                 icon: "http://search.cpan.org/favicon.ico"
                 name: "CPAN"
             }
-
-            $scope.$on '$routeChangeSuccess', ->
-                GA '_trackPageview', $location.path()
         ]
+
+        $scope.$on '$routeChangeSuccess', -> GA '_trackPageview', $location.path()
     ]
 
     PostCtl: ['$scope', '$routeParams', ($scope, $params) ->
