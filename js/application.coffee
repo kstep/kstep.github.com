@@ -519,11 +519,11 @@ app
             first_dow = (8 + date.dow - date.day % 7) % 7
         ), on
 
-        $scope.posts = {}
+        posts_by_date = {}
         $http.get('/data/list.json').success (posts) ->
             for post in posts
                 date = post.date.replace /-0/g, '-'
-                $scope.posts[date] = ($scope.posts[date] or 0) + 1
+                posts_by_date[date] = (posts_by_date[date] or 0) + 1
 
-        $scope.how_many_posts = (day) -> $scope.posts["#{$scope.date.year}-#{$scope.date.month}-#{day}"] or 0
+        $scope.how_many_posts = (day) -> posts_by_date["#{$scope.date.year}-#{$scope.date.month}-#{day}"] or 0
     ]
