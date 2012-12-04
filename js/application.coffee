@@ -318,55 +318,66 @@ app
     ]
 
 .controller
-    RootCtl: ['$scope', '$http', 'locales', 'appcache', '$window', 'GA', '$location', ($scope, $http, locales, appcache, $window, GA, $location) ->
-        appcache.bind 'updateready', ->
-            $scope.update_available = true
-            appcache.swapCache()
+    RootCtl: [
+        '$scope'
+        '$http'
+        'locales'
+        'appcache'
+        '$window'
+        'GA'
+        '$location'
+        '$timeout'
+        ($scope, $http, locales, appcache, $window, GA, $location, $timeout) ->
+            appcache.bind 'updateready', ->
+                $scope.update_available = true
+                appcache.swapCache()
 
-        $scope.page = {}
-        $scope.locales = locales
+            $scope.page = {}
+            $scope.locales = locales
 
-        $scope.reload_site = -> $window.location.reload()
+            $scope.reload_site = -> $window.location.reload()
 
-        $scope.social_accounts = [
-            {
-                url: "https://twitter.com/kstepme"
-                icon: "http://twitter.com/favicon.ico"
-                name: "Twitter"
-            }
-            {
-                url: "http://www.linkedin.com/pub/konstantin-stepanov/54/47/450"
-                icon: "http://www.linkedin.com/favicon.ico"
-                name: "LinkedIn"
-            }
-            {
-                url: "http://kstepme.moikrug.ru/"
-                icon: "http://moikrug.ru/favicon.ico"
-                name: "Мой Круг"
-            }
-            {
-                url: "http://welinux.ru/user/kstep/"
-                icon: "http://welinux.ru/favicon.ico"
-                name: "WeLinux"
-            }
-            {
-                url: "https://github.com/kstep"
-                icon: "http://github.com/favicon.ico"
-                name: "Github"
-            }
-            {
-                url: "http://www.ohloh.net/accounts/kstep"
-                icon: "http://www.ohloh.net/favicon.ico"
-                name: "Ohloh"
-            }
-            {
-                url: "http://search.cpan.org/~kstepme/"
-                icon: "http://search.cpan.org/favicon.ico"
-                name: "CPAN"
-            }
-        ]
+            $scope.social_accounts = [
+                {
+                    url: "https://twitter.com/kstepme"
+                    icon: "http://twitter.com/favicon.ico"
+                    name: "Twitter"
+                }
+                {
+                    url: "http://www.linkedin.com/pub/konstantin-stepanov/54/47/450"
+                    icon: "http://www.linkedin.com/favicon.ico"
+                    name: "LinkedIn"
+                }
+                {
+                    url: "http://kstepme.moikrug.ru/"
+                    icon: "http://moikrug.ru/favicon.ico"
+                    name: "Мой Круг"
+                }
+                {
+                    url: "http://welinux.ru/user/kstep/"
+                    icon: "http://welinux.ru/favicon.ico"
+                    name: "WeLinux"
+                }
+                {
+                    url: "https://github.com/kstep"
+                    icon: "http://github.com/favicon.ico"
+                    name: "Github"
+                }
+                {
+                    url: "http://www.ohloh.net/accounts/kstep"
+                    icon: "http://www.ohloh.net/favicon.ico"
+                    name: "Ohloh"
+                }
+                {
+                    url: "http://search.cpan.org/~kstepme/"
+                    icon: "http://search.cpan.org/favicon.ico"
+                    name: "CPAN"
+                }
+            ]
 
-        $scope.$on '$routeChangeSuccess', -> GA '_trackPageview', $location.path()
+            $scope.$on '$routeChangeSuccess', -> $timeout ->
+                GA '_set', 'title', $scope.page.title
+                GA '_trackPageview', $location.path()
     ]
 
     PostCtl: ['$scope', '$routeParams', ($scope, $params) ->
