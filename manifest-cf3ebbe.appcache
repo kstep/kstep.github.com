@@ -1,6 +1,6 @@
 CACHE MANIFEST
 
-# VERSION 1aaed4d
+# VERSION cf3ebbe
 
 CACHE:
 
@@ -25,6 +25,7 @@ http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.0/js/bootstrap.min.js
 
 # Styles
 /css/pygmentize-default.css
+/css/calendar.css
 /css/style.css
 
 # i18n
