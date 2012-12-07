@@ -1,8 +1,6 @@
----
----
 CACHE MANIFEST
 
-# Timestamp: {{ site.time }}
+# VERSION {{VERSION}}
 
 CACHE:
 
