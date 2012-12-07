@@ -39,6 +39,9 @@ http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.0/js/bootstrap.min.js
 /partials/tags.html
 /partials/tag.html
 
+# Other static
+/favicon.ico
+
 NETWORK:
 *
 

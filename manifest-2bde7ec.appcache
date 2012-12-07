@@ -1,6 +1,6 @@
 CACHE MANIFEST
 
-# VERSION cf3ebbe
+# VERSION 2bde7ec
 
 CACHE:
 
@@ -38,6 +38,9 @@ http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.0/js/bootstrap.min.js
 /partials/post.html
 /partials/tags.html
 /partials/tag.html
+
+# Other static
+/favicon.ico
 
 NETWORK:
 *
