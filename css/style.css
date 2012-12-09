@@ -75,3 +75,7 @@ img.favicon {
 iframe[classname^="twitter-timeline"], .twitter-timeline {
     width: 100% !important;
 }
+
+.tags {
+    text-align: right;
+}
