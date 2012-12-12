@@ -1,6 +1,9 @@
 auto: true
 pygments: true
-markdown: rdiscount
+markdown: kramdown
+
+kramdown:
+    use_coderay: false
 
 title: Konstantin Stepanov
 author:
