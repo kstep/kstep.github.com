@@ -186,17 +186,21 @@ app
                     disqus shortname
         }
     ]
-    ngMeta: ['$parse', ($parse) ->
-        restrict: 'E'
+    ngMeta: ['$parse', '$interpolate', ($parse, $interpolate) ->
+        restrict: 'EA'
         terminal: yes
         compile: (elem, attrs) ->
-            return if not attrs.value and not attrs.update
-
-            nameExpr = $parse attrs.name
-            valueExpr = if attrs.value then $parse(attrs.value) else null
+            nameExpr = $parse attrs.ngMeta or attrs.name
+            valueExpr = if attrs.value then $parse(attrs.value) else
+                            if attrs.content then $interpolate(attrs.content) else
+                                if elem.html() then $interpolate(elem.html()) else null
             updateExpr = if attrs.update then $parse(attrs.update) else null
 
+            return unless nameExpr
+            return unless valueExpr or updateExpr
+
             (scope, elem, attrs) ->
+                console.log valueExpr scope
                 nameExpr.assign scope, valueExpr scope if valueExpr?
                 angular.extend (nameExpr scope), updateExpr scope if updateExpr?
     ]

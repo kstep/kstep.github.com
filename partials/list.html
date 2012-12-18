@@ -3,7 +3,16 @@
 </ul>
 
 <script type="text/ng-template" id="/partials/pager.html">
-<div class="pagination">
+<div class="btn-group pull-right">
+    <div class="button btn dropdown-toggle" data-toggle="dropdown">{: {title:['A–Z','Z–A'],date:['old→new','new→old']}[sort.field][sort.desc] :} <span class="caret"></span></div>
+    <ul class="dropdown-menu">
+        <li ng-class="{ active: sort.field == 'title' && !sort.desc }"><a ng-click="sort.field='title';sort.desc=0">A–Z</a></li>
+        <li ng-class="{ active: sort.field == 'title' && sort.desc }"><a ng-click="sort.field='title';sort.desc=1">Z–A</a></li>
+        <li ng-class="{ active: sort.field == 'date' && sort.desc }"><a ng-click="sort.field='date';sort.desc=1">new→old</a></li>
+        <li ng-class="{ active: sort.field == 'date' && !sort.desc }"><a ng-click="sort.field='date';sort.desc=0">old→new</a></li>
+    </ul>
+</div>
+<div class="pagination" ng-show="pager.total_pages > 1">
     <ul>
         <li ng-class="{ disabled: pager.page < 2 }"><a ng-click="pager.set_page(pager.page - 1)">←</a></li>
         <li ng-repeat="page in pager.pages" ng-class="{ active: page == pager.page }"><a ng-click="pager.set_page(page)" ng-bind="page"></a></li>
@@ -14,8 +23,8 @@
 
 <div ng-include="'/partials/pager.html'"></div>
 
-<ol>
-    <li ng-repeat="post in pager.slice">
+<ol ng-init="sort={field:'date',desc:1}">
+    <li ng-repeat="post in pager.slice | orderBy:sort.field:sort.desc">
         <a href="/#!{: post.url :}" ng-bind-html="post.title"></a> <small><nobr class="muted" ng-bind="post.date | asdate:locale.date_format"></nobr></small>
     </li>
 </ol>
