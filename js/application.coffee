@@ -200,7 +200,6 @@ app
             return unless valueExpr or updateExpr
 
             (scope, elem, attrs) ->
-                console.log valueExpr scope
                 nameExpr.assign scope, valueExpr scope if valueExpr?
                 angular.extend (nameExpr scope), updateExpr scope if updateExpr?
     ]
