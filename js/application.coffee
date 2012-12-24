@@ -207,11 +207,38 @@ app
         restrict: 'CEA'
         controller: 'CalendarCtl'
 
+    srcLarge: ['$body', '$timeout', ($body, $timeout) ->
+        restrict: 'A'
+        link: (scope, elem, attrs) ->
+            elem.bind 'click', (ev) ->
+                fullimage = angular.element """<div class="modal fade"><div class="modal-body"><img src="#{attrs.srcLarge}" /></div></div>"""
+                backdrop = angular.element '<div class="modal-backdrop fade"></div>'
+
+                $body.append backdrop
+                $body.append fullimage
+
+                close = ->
+                    backdrop.removeClass 'in'
+                    fullimage.removeClass 'in'
+                    $timeout ->
+                        backdrop.remove()
+                        fullimage.remove()
+
+                backdrop.bind 'click', close
+                fullimage.bind 'click', close
+
+                $timeout ->
+                    backdrop.addClass 'in'
+                    fullimage.addClass 'in'
+    ]
+
+
 .factory
+    $body: ['$document', ($document) -> angular.element $document[0].getElementsByTagName('body')[0] ]
     appcache: ['$window', '$rootScope', ($window, $root) ->
         appcache = $window.applicationCache or {
             fakeAppCache: yes
-            UNCACHED            : 0,
+            UNCACHED            : 0
             IDLE                : 1
             CHECKING            : 2
             DOWNLOADING         : 3
