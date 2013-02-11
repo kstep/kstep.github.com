@@ -232,6 +232,16 @@ app
                     fullimage.addClass 'in'
     ]
 
+    gist: ['$http', ($http) ->
+        restrict: 'EA'
+        link: (scope, elem, attrs) ->
+            gist_id = attrs.gist or attrs.id
+            return unless gist_id
+            gist_url = "https://gist.github.com/#{gist_id}.js"
+            $http.get(gist_url).then (result) ->
+                elem.html [line.substring(16, line.length - 2) for line in result.data.split('\n')].join('')
+    ]
+
 
 .factory
     $body: ['$document', ($document) -> angular.element $document[0].getElementsByTagName('body')[0] ]
