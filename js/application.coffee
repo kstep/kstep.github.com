@@ -239,7 +239,7 @@ app
             return unless gist_id
             gist_url = "https://gist.github.com/#{gist_id}.js"
             $http.get(gist_url).then (result) ->
-                elem.html [line.substring(16, line.length - 2) for line in result.data.split('\n')].join('')
+                elem.html (line.substring(16, line.length - 2) for line in result.data.split('\n')).join('')
     ]
 
 

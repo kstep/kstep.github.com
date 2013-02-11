@@ -72,7 +72,7 @@ describe 'Directives', ->
     describe 'gist', ->
 
         fakeGistData = '''
-document.write('<link href=\"https://gist.github.com/assets/embed-0af287a4b5c981db301049e56f06e5d3.css\" media=\"screen\" rel=\"stylesheet\" />')
+document.write('<link href=\"https://gist.github.com/assets/embed-0af287a4b5c981db301049e56f06e5d3.css\" media=\"screen\" rel=\"stylesheet\">')
 document.write('<div id=\"gist3516334\" class=\"gist\"><div class=\"gist-file\"><div class=\"gist-data gist-syntax\"></div></div></div>')
         '''
 
@@ -83,8 +83,9 @@ document.write('<div id=\"gist3516334\" class=\"gist\"><div class=\"gist-file\">
             $httpBackend.verifyNoOutstandingExpectation()
             $httpBackend.verifyNoOutstandingRequest()
 
-        it 'should load gist data and put them into element', inject ($compile) ->
+        it 'should load gist data and put them into element', inject ($compile, $httpBackend) ->
             element = $compile('<gist id="3516334" />')(scope)
+            $httpBackend.flush()
             scope.$apply()
 
             expect(element.html()).toEqual fakeGistData.replace(/document.write\('/g, '').replace(/'\)/g, '').replace(/\n/g, '')
