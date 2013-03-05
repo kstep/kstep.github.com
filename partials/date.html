@@ -19,22 +19,6 @@
     <li ng-show="date.day" class="active" ng-bind="date.day"></li>
 </ul>
 
-<script type="text/ng-template" id="/partials/pager.html">
-<div class="btn-group pull-right">
-    <button ng-class="" ng-click="" class="btn">A→Z</button>
-    <button ng-class="" ng-click="" class="btn">Z→A</button>
-    <button ng-class="" ng-click="" class="btn">new→old</button>
-    <button ng-class="" ng-click="" class="btn">old→new</button>
-</div>
-<div class="pagination" ng-show="pager.total_pages > 1">
-    <ul>
-        <li ng-class="{ disabled: pager.page < 2 }"><a ng-click="pager.set_page(pager.page - 1)">←</a></li>
-        <li ng-repeat="page in pager.pages" ng-class="{ active: page == pager.page }"><a ng-click="pager.set_page(page)" ng-bind="page"></a></li>
-        <li ng-class="{ disabled: pager.page >= pager.total_pages }"><a ng-click="pager.set_page(pager.page + 1)">→</a></li>
-    </ul>
-</div>
-</script>
-
 <div ng-include="'/partials/pager.html'"></div>
 
 <ol>
