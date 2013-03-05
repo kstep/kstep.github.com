@@ -33,6 +33,7 @@ http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.0/js/bootstrap.min.js
 /i18n/ru.json
 
 # Partial templates
+/partials/pager.html
 /partials/list.html
 /partials/date.html
 /partials/post.html
