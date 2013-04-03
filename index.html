@@ -82,7 +82,7 @@
             <div class="row">
                 <div class="content span9" ng-view></div>
                 <div class="span3">
-                    <div class="calendar" ng-class="[month, leap_year && 'leap-year' || '']">
+                    <div class="calendar" ng-class="[month, leap_year && 'leap-year' || '', date.year == today.year && date.month == today.month && 'day-' + date.day || '']">
                         <div class="header">
                             <h5 class="clearfix">
                                 <a style="float: left;" ng-click="date.month = date.month - 1">←</a>
@@ -95,7 +95,7 @@
                             </ul>
                         </div>
                         <ul class="clearfix">
-                            <li ng-repeat="day in days" ng-class="['day-'+day, weekday(day), is_today(day) && 'today' || '']" ng-switch="how_many_posts(day)">
+                            <li ng-repeat="day in days" ng-class="['day-'+day, weekday(day)]" ng-switch="how_many_posts(day)">
                                 <span class="muted" ng-switch-when="0" ng-bind="day"></span>
                                 <a title="{: how_many_posts(day) :}" ng-href="/#!/{: date.year :}/{: date.month | lpad:2 :}/{: day | lpad:2 :}" ng-switch-default ng-bind="day"></a>
                             </li>

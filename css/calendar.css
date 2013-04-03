@@ -55,7 +55,16 @@
     background: #f2dede;
 }
 
-.calendar .today {
+.calendar .today,
+.calendar.day-1 .day-1, .calendar.day-2 .day-2, .calendar.day-3 .day-3, .calendar.day-4 .day-4, .calendar.day-5 .day-5,
+.calendar.day-6 .day-6, .calendar.day-7 .day-7, .calendar.day-8 .day-8, .calendar.day-9 .day-9, .calendar.day-10 .day-10,
+.calendar.day-11 .day-11, .calendar.day-12 .day-12, .calendar.day-13 .day-13, .calendar.day-14 .day-14, .calendar.day-15 .day-15,
+.calendar.day-16 .day-16, .calendar.day-17 .day-17, .calendar.day-18 .day-18, .calendar.day-19 .day-19, .calendar.day-20 .day-20,
+.calendar.day-21 .day-21, .calendar.day-22 .day-22, .calendar.day-23 .day-23, .calendar.day-24 .day-24, .calendar.day-25 .day-25,
+.calendar.day-26 .day-26, .calendar.day-27 .day-27, .calendar.day-28 .day-28, .calendar.day-29 .day-29, .calendar.day-30 .day-30,
+.calendar.day-31 .day-31
+{
+    font-weight: bold;
     background: #d4d4d4;
 }
 
