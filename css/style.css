@@ -79,3 +79,21 @@ iframe[classname^="twitter-timeline"], .twitter-timeline {
 .tags {
     text-align: right;
 }
+
+#fork-me {
+    position: fixed;
+    background: #4183c4;
+    color: white;
+    font-weight: bold;
+    width: 200px;
+    padding: 4px 0;
+    text-align: center;
+    top: 45px;
+    right: -40px;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    transform: rotate(45deg);
+    z-index: 2000;
+    box-shadow: 0 0 5px #333333;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
