@@ -1,6 +1,6 @@
 CACHE MANIFEST
 
-# VERSION 79f1282
+# VERSION e90f2c4
 
 CACHE:
 
@@ -9,16 +9,16 @@ CACHE:
 /index.html
 
 # AngularJS
-http://ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js
-http://ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular-sanitize.min.js
-http://ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular-cookies.min.js
+http://ajax.googleapis.com/ajax/libs/angularjs/1.1.4/angular.min.js
+http://ajax.googleapis.com/ajax/libs/angularjs/1.1.4/angular-sanitize.min.js
+http://ajax.googleapis.com/ajax/libs/angularjs/1.1.4/angular-cookies.min.js
 
 # jQuery
 http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js
 
 # Bootstrap
-http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.0/css/bootstrap-combined.min.css
-http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.0/js/bootstrap.min.js
+http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css
+http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js
 
 # Main application
 /js/application-min.js
