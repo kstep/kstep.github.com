@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="kstep" ng-controller="RootCtl" manifest="/manifest-e90f2c4.appcache">
+<html lang="en" ng-app="kstep" ng-controller="RootCtl" manifest="/manifest-f8be3aa.appcache">
     <head>
         <meta charset="utf-8" />
         <title ng-bind="page.title | strip_tags">//kstep blog</title>
@@ -16,6 +16,27 @@
         <link href="/css/calendar.css" rel="stylesheet" type="text/css" />
         <link href="/css/style.css" rel="stylesheet" type="text/css" />
         <link rel="shortcut icon" href="/favicon.ico" />
+        <style type="text/css">
+            .fade-in-setup, .fade-out-setup {
+                transition: opacity linear .5s;
+            }
+            .fade-in-setup.fade-in-start, .fade-out-setup {
+                opacity: 1.0;
+            }
+            .fade-in-setup, .fade-out-start {
+                opacity: 0.0;
+            }
+
+            .slide-in-setup, .slide-out-setup {
+                transition: margin-left linear .5s;
+            }
+            .slide-in-setup.slide-in-start, .slide-out-setup {
+                margin-left: 0; 
+            }
+            .slide-out-setup.slide-out-start, .slide-in-setup {
+                margin-left: -5000px;
+            }
+        </style>
     </head>
 
     <body>
@@ -81,7 +102,12 @@
             </div>
 
             <div class="row">
-                <div class="content span9" ng-view></div>
+                <div class="content span9">
+                    <ul class="breadcrumb" ng-include="breadcrumb">
+                        <li class="active">//kstep</li>
+                    </ul>
+                    <div ng-view ng-animate="{'enter': 'fade-in'}"></div>
+                </div>
                 <div class="span3">
                     <div class="calendar" ng-class="[month, leap_year && 'leap-year' || '', date.year == today.year && date.month == today.month && 'day-' + date.day || '']">
                         <div class="header">

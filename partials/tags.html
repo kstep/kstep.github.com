@@ -1,10 +1,10 @@
-<ul class="breadcrumb">
+<script type="text/ng-template" id="breadcrumb-tags.html" ng-init="$parent.breadcrumb = 'breadcrumb-tags.html'">
     <li>
         <a href="/#!/">//kstep</a>
         <span class="divider">→</span>
     </li>
     <li ng-bind="locale.tags"></li>
-</ul>
+</script>
 
 <div class="btn-group pull-right" ng-init="order = 'name'">
     <button ng-click="order = 'name'" ng-class="{ active: order == 'name' }" class="btn">{: locale.sort_by_name :}</button>

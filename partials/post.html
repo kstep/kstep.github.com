@@ -1,10 +1,10 @@
-<ul class="breadcrumb">
+<script type="text/ng-template" id="breadcrumb-post.html" ng-init="$parent.breadcrumb = 'breadcrumb-post.html'">
     <li>
         <a href="/#!/">//kstep</a>
         <span class="divider">→</span>
     </li>
     <li class="active" ng-bind-html="page.title"></li>
-</ul>
+</script>
 
 <div ng-include="page.url"></div>
 

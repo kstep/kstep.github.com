@@ -1,4 +1,4 @@
-<ul class="breadcrumb">
+<script type="text/ng-template" id="breadcrumb-date.html" ng-init="$parent.breadcrumb = 'breadcrumb-date.html'">
     <li>
         <a href="/#!/">//kstep</a>
         <span class="divider">→</span>
@@ -17,7 +17,7 @@
     <li ng-hide="date.day || !date.month" ng-bind="date.month" class="active"></li>
 
     <li ng-show="date.day" class="active" ng-bind="date.day"></li>
-</ul>
+</script>
 
 <div ng-include="'/partials/pager.html'"></div>
 
