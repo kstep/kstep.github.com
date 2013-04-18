@@ -138,16 +138,12 @@ app
         restrict: 'AE'
         scope: yes
         replace: yes
-        template: '<iframe ng-src="http://www.youtube.com/embed/{: id :}" width="{: width :}" height="{: height :}" frameborder="0" allowfullscreen></iframe>'
+        template: '<iframe ng-src="http://www.youtube.com/embed/{: id :}" frameborder="0" allowfullscreen></iframe>'
         compile: (elem, attrs) ->
             youtube_id = attrs.youtube or attrs.id
-            width = parseInt(attrs.width, 10) or 560
-            height = parseInt(attrs.height, 10) or 315
 
             (scope, elem, attrs) ->
                 scope.id = youtube_id
-                scope.width = width
-                scope.height = height
 
     totop: ['$window', ($window) ->
         restrict: 'AC'

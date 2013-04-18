@@ -90,7 +90,7 @@ describe 'Controllers', ->
                 scope.pager.then (
                     (pager) ->
                         expect(pager.slice.length).toEqual expectation.dates.length
-                        expect(pluck('date')(pager.slice)).toEqual expectations.dates
+                        expect(pluck('date')(pager.slice)).toEqual expectation.dates
                 ), (
                     (result) -> expect(result.status).toBe 200
                 )
