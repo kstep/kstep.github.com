@@ -4,6 +4,7 @@
     <title ng-meta="page.title">{{ page.title }}</title>
     <meta name="keywords" ng-meta="page.tags" value="[{% for tag in page.tags %}'{{ tag | replace: "'", "\\'" }}'{% unless forloop.last %},{% endunless %}{% endfor %}]" content="{% for tag in page.tags %}{{ tag }} {% endfor %}" />
     <meta name="date" ng-meta="page.date" content="{{ page.date | date:"%Y-%m-%d" }}" />
+    <meta http-equiv="Refresh" content="0;URL='/#!{{ page.url }}'" />
 </head>
 <body>
 <h1>
