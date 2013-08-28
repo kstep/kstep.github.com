@@ -1,5 +1,5 @@
-auto: true
-pygments: true
+auto: false
+pygments: false
 markdown: kramdown
 
 kramdown:
