@@ -1,6 +1,0 @@
-#!/bin/sh
-
-CHROME_BIN="$(which chrome)" || CHROME_BIN="$(which chromium)"
-export CHROME_BIN
-
-/usr/bin/testacular start tests/_testacular.conf.js

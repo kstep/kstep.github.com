@@ -1,4 +1,0 @@
-User-agent: *
-Disallow: /tests
-Disallow: /partials
-Sitemap: http://kstep.me/sitemap.xml

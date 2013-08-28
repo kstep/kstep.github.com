@@ -1,3 +1,0 @@
----
----
-[{% for node in site.posts %}{"url":"{{ node.url }}","title":"{{ node.title | replace: '"', '\\"' }}","tags":[{% for tag in node.tags %}"{{ tag | replace: '"', '\\"' }}"{% unless forloop.last %},{% endunless %}{% endfor %}],"date":"{{ node.date | date:'%Y-%m-%d' }}"}{% unless forloop.last %},{% endunless %}{% endfor %}]
