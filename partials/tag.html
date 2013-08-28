@@ -1,0 +1,17 @@
+<script type="text/ng-template" id="breadcrumb-tag.html" ng-init="$parent.breadcrumb = 'breadcrumb-tag.html'">
+    <li>
+        <a href="/#!/">//kstep</a>
+        <span class="divider">→</span>
+    </li>
+    <li>
+        <a href="/#!/tags" ng-bind="locale.tags"></a>
+        <span class="divider">→</span>
+    </li>
+    <li class="active" ng-bind="tag.name"></li>
+</script>
+
+<div>
+    <ol>
+        <li ng-repeat="post in tag.posts"><a ng-href="/#!{: post.url :}" ng-bind="post.title"></a> <small><nobr class="muted" ng-bind="post.date | asdate:locale.date_format"></nobr></small></li>
+    </ol>
+</div>

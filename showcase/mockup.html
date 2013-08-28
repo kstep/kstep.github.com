@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html ng-app="OrderTicketApp">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta charset="utf-8" />
+
+        <link type="text/css" rel="stylesheet" href="public/bootstrap/css/bootstrap.min.css" />
+        <link type="text/css" rel="stylesheet" href="public/bootstrap/css/bootstrap-responsive.min.css" />
+        <link type="text/css" rel="stylesheet" href="public/pikaday/css/pikaday.css" />
+
+        <style type="text/css">
+            .pika-select { 
+                width: auto;
+            }
+        </style>
+
+        <script type="text/javascript" src="public/pikaday/js/pikaday.js"></script>
+        <script type="text/javascript" src="public/angular-1.1.5/angular.min.js"></script>
+        <script type="text/javascript" src="public/angular-1.1.5/angular-resource.min.js"></script>
+    </head>
+    <body ng-controller="RootController">
+        <div class="container">
+            <div class="row">
+                <div class="span3" id="left-column">
+                </div>
+
+                <div class="span9" id="right-column">
+                    <div class="row" id="contact-info">
+                        <div class="span2"><a href="tel:+3706133440">+370 613 3440</a></div>
+                        <div class="span2"><a href="mailto:info@info-travel.lt">info@info-travel.lt</a></div>
+                        <div class="span2"><a href="skype:travel.lt">Travel Lt</a></div>
+                        <div class="span2">
+                            <form name="language_form"><select ng-model="lang" ng-options="v.code as v.name for v in languages"></select></form>
+                        </div>
+                    </div>
+
+                    <div class="alert">
+                        Book transfer in Greece &mdash; Rhodas. <b>Attention!</b> We only transfer to KAUNAS flights.
+                    </div>
+
+                    <form name="order_form" class="form-horizontal" ng-controller="OrderFormController">
+                        <div class="control-group" ng-class="{ error: order_form.name.$dirty && order_form.name.$invalid }">
+                            <label class="control-label">Name</label>
+                            <div class="controls">
+                                <input class="span4" type="text" maxlength="255" required name="name" id="name" ng-model="order.name" />
+                            </div>
+                        </div>
+                        <div class="control-group" ng-class="{ error: order_form.last_name.$dirty && order_form.last_name.$invalid }">
+                            <label class="control-label">Last Name</label>
+                            <div class="controls">
+                                <input class="span4" type="text" maxlength="255" required name="last_name" id="last_name" ng-model="order.last_name" />
+                            </div>
+                        </div>
+                        <div class="control-group" ng-class="{ error: order_form.email.$dirty && order_form.email.$invalid }">
+                            <label class="control-label">Email</label>
+                            <div class="controls">
+                                <input class="span4" type="email" maxlength="255" required name="email" id="email" ng-model="order.email" />
+                            </div>
+                        </div>
+                        <div class="control-group" ng-class="{ error: order_form.phone.$dirty && order_form.phone.$invalid }">
+                            <label class="control-label">Phone Number</label>
+                            <div class="controls">
+                                <input class="span4" type="text" maxlength="255" required name="phone" id="phone" ng-model="order.phone" />
+                            </div>
+                        </div>
+
+                        <fieldset ng-repeat="transfer in order.transfers">
+                            <legend>Transfer {: $index + 1 :}</legend>
+                            <a class="close pull-right" ng-show="$index > 0" ng-click="order.transfers.splice($index, 1)">&times;</a>
+
+                            <div class="control-group" ng-class="{ error: order_form['transfer_'+$index+'_date'].$dirty && order_form['transfer_'+$index+'_date'].$invalid }">
+                                <label class="control-label">Date and time of transfer</label>
+                                <div class="controls">
+                                    <input class="span4" type="datetime" pikaday required name="transfer_{:$index:}_date" id="transfer_{:$index:}_date" ng-model="transfer.date" />
+                                </div>
+                            </div>
+
+                            <div class="control-group" ng-class="{ error: order_form['transfer_'+$index+'_from'].$dirty && order_form['transfer_'+$index+'_from'].$invalid }">
+                                <label class="control-label">From</label>
+                                <div class="controls">
+                                    <select required name="transfer_{:$index:}_from" id="transfer_{:$index:}_from" ng-model="transfer.from" ng-options="v.id as v.name for v in transfer_regions"></select>
+                                </div>
+                            </div>
+
+                            <div class="control-group" ng-class="{ error: order_form['transfer_'+$index+'_from_comment'].$dirty && order_form['transfer_'+$index+'_from_comment'].$invalid }">
+                                <label class="control-label">Comment</label>
+                                <div class="controls">
+                                    <textarea name="transfer_{:$index:}_from_comment" id="transfer_{:$index:}_from_comment" rows="6" class="span4" ng-model="transfer.from_comment" maxlength="512"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="control-group" ng-class="{ error: order_form['transfer_'+$index+'_to'].$dirty && order_form['transfer_'+$index+'_to'].$invalid }">
+                                <label class="control-label">To</label>
+                                <div class="controls">
+                                    <select required name="transfer_{:$index:}_to" id="transfer_{:$index:}_to" placeholder="Destination" ng-model="transfer.to" ng-options="v.id as v.name for v in transfer_regions"></select>
+                                </div>
+                            </div>
+
+                            <div class="control-group" ng-class="{ error: order_form['transfer_'+$index+'_to_comment'].$dirty && order_form['transfer_'+$index+'_to_comment'].$invalid }">
+                                <label class="control-label">Comment</label>
+                                <div class="controls">
+                                    <textarea name="transfer_{:$index:}_to_comment" id="transfer_{:$index:}_to_comment" rows="6" class="span4" ng-model="transfer.to_comment" maxlength="512"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="control-group" ng-class="{ error: order_form['transfer_'+$index+'_type'].$dirty && order_form['transfer_'+$index+'_type'].$invalid }">
+                                <label class="control-label">The Type of Transfer</label>
+                                <div class="controls">
+                                    <select required name="transfer_{:$index:}_type" id="transfer_{:$index:}_type" ng-model="transfer.type" ng-options="v.id as v.name for v in transfer_types"></select>
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <label class="control-label">Number of Passengers</label>
+                                <div class="controls">
+                                    <table>
+                                        <thead>
+                                            <tr><th>Adults</th><th></th><th>Children</th><th></th><th>Total</th><th>Total transfer price</th></tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><input requried type="number" name="transfer_{:$index:}_adults" id="transfer_{:$index:}_adults" ng-model="transfer.adults" min="1" max="99" class="span1" /></td>
+                                                <td>+</td>
+                                                <td><input type="number" name="transfer_{:$index:}_children" id="transfer_{:$index:}_children" ng-model="transfer.children" min="0" max="99" class="span1" /></td>
+                                                <td>=</td>
+                                                <td>{: transfer.adults + transfer.children :}</td>
+                                                <td>{: calculate_transfer_price(transfer) | currency:"&euro;" | default:"Not defined" :}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <span ng-show="transfer.type == 1" class="help-block">The child ticket has 50% of discount.</span>
+                                </div>
+                            </div>
+
+                            <div class="control-group" ng-class="{ error: order_form['transfer_'+$index+'_payment_type'].$dirty && order_form['transfer_'+$index+'_payment_type'].$invalid }">
+                                <label class="control-label">Way of Payment</label>
+                                <div class="controls">
+                                    <select name="transfer_{:$index:}_payment_type" id="transfer_{:$index:}_payment_type" ng-options="v.id as v.name for v in payment_types" ng-model="transfer.payment_type" required></select>
+                                    <span class="help-inline">{: payment_types[transfer.payment_type].hint :}</span>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <div class="control-group" ng-class="{ error: order_form['transfer_'+$index+'_recaptcha'].$dirty && order_form['transfer_'+$index+'_recaptcha'].$invalid }">
+                            <label class="control-label">Enter Symbols</label>
+                            <div class="controls">
+                                <div recaptcha name="transfer_{:$index:}_recaptcha"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <a class="btn" ng-click="order.transfers.push({adults: order.transfers[0].adults, children: order.transfers[0].children, from: order.transfers[0].to, to: order.transfers[0].from})" ng-hide="order.transfers.length > 1">+ Add back transfer</a>
+                        </div>
+
+                        <div class="form-actions">
+                            <p>Total book price {: calculate_order_price(order) | currency:"&euro;" | default:"Not defined" :}</p>
+
+                            <button class="btn btn-primary btn-large" ng-disabled="order_form.$invalid">Send</button>
+
+                            <p ng-show="order_form.$invalid">
+                                You have following fields to fill:
+                                <span ng-repeat="(name, field) in order_form" ng-show="field.$invalid">
+                                    <a ng-href="#{: name :}" ng-click="goto_input(name)">{: get_label_by_name(name) :}</a><span ng-hide="$last">, </span>
+                                </span>.
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+<script type="text/javascript">
+var app = angular.module('OrderTicketApp', ['ng']);
+app
+.config(['$interpolateProvider', function ($interpolate) {
+    $interpolate.startSymbol('{:');
+    $interpolate.endSymbol(':}');
+}])
+// AngularJS bugfix: force input name interpolation in ng-repeat
+.directive('name', ['$interpolate', function ($interpolate) {
+    return {
+        restrict: 'A',
+        require: '?ngModel',
+        // This is important! ng-repeat's priority is 1000, we must
+        // do our work AFTER ng-repeat finished its work.
+        priority: 1001,
+        compile: function (elem, attrs) {
+            if (attrs.ngModel) {
+                var name = $interpolate(attrs.name);
+
+                return function (scope, elem, attrs, ctrl) {
+                    if (ctrl) {
+                        ctrl.$name = name(scope);
+                    }
+                };
+            }
+        }
+    };
+}])
+.directive('pikaday', [function () {
+    return {
+        restrict: 'A',
+        link: function (scope, elem, attrs) {
+            var pikaday = new Pikaday({
+                field: elem[0],
+                showTime: true,
+                onSelect: function (value) {
+                    console.log(value);
+                }
+            });
+        }
+    };
+}])
+.factory('TransferPrices', [function () {
+    return [
+        { region_id: 0, type_id: 1, price: null },
+        { region_id: 0, type_id: 2, price: null },
+        { region_id: 0, type_id: 3, price: null },
+
+        { region_id: 1, type_id: 1, price: [3, 1.5] },
+        { region_id: 1, type_id: 2, price: [99, 99] },
+        { region_id: 1, type_id: 3, price: [29, 29] },
+
+        { region_id: 2, type_id: 1, price: [3, 1.5] },
+        { region_id: 2, type_id: 2, price: [99, 99] },
+        { region_id: 2, type_id: 3, price: [40, 40] },
+
+        { region_id: 3, type_id: 1, price: [3, 1.5] },
+        { region_id: 3, type_id: 2, price: [99, 99] },
+        { region_id: 3, type_id: 3, price: [24, 24] },
+
+        { region_id: 4, type_id: 1, price: [3, 1.5] },
+        { region_id: 4, type_id: 2, price: [99, 99] },
+        { region_id: 4, type_id: 3, price: [18, 18] },
+
+        { region_id: 5, type_id: 1, price: [3, 1.5] },
+        { region_id: 5, type_id: 2, price: [99, 99] },
+        { region_id: 5, type_id: 3, price: [78, 78] },
+
+        { region_id: 6, type_id: 1, price: [12, 6] },
+        { region_id: 6, type_id: 2, price: [99, 99] },
+        { region_id: 6, type_id: 3, price: [48, 48] },
+
+        { region_id: 7, type_id: 1, price: [12, 6] },
+        { region_id: 7, type_id: 2, price: [99, 99] },
+        { region_id: 7, type_id: 3, price: [48, 48] },
+
+        { region_id: 8, type_id: 1, price: [3, 1.5] },
+        { region_id: 8, type_id: 2, price: [99, 99] },
+        { region_id: 8, type_id: 3, price: [12, 12] },
+
+        { region_id: 9, type_id: 1, price: [3, 1.5] },
+        { region_id: 9, type_id: 2, price: [99, 99] },
+        { region_id: 9, type_id: 3, price: [15, 15] },
+
+        { region_id: 10, type_id: 1, price: [3, 1.5] },
+        { region_id: 10, type_id: 2, price: [99, 99] },
+        { region_id: 10, type_id: 3, price: [55, 55] },
+
+        { region_id: 11, type_id: 1, price: [12, 6] },
+        { region_id: 11, type_id: 2, price: [99, 99] },
+        { region_id: 11, type_id: 3, price: [24, 24] },
+
+        { region_id: 12, type_id: 1, price: [3, 1.5] },
+        { region_id: 12, type_id: 2, price: [99, 99] },
+        { region_id: 12, type_id: 3, price: [26, 26] },
+
+        { region_id: 13, type_id: 1, price: [3, 1.5] },
+        { region_id: 13, type_id: 2, price: [99, 99] },
+        { region_id: 13, type_id: 3, price: [38, 38] },
+
+        { region_id: 14, type_id: 1, price: [12, 6] },
+        { region_id: 14, type_id: 2, price: [99, 99] },
+        { region_id: 14, type_id: 3, price: [25, 25] },
+
+        { region_id: 15, type_id: 1, price: [3, 1.5] },
+        { region_id: 15, type_id: 2, price: [99, 99] },
+        { region_id: 15, type_id: 3, price: [72, 72] },
+
+        { region_id: 16, type_id: 1, price: [3, 1.5] },
+        { region_id: 16, type_id: 2, price: [99, 99] },
+        { region_id: 16, type_id: 3, price: [35, 35] },
+
+        { region_id: 17, type_id: 1, price: [3, 1.5] },
+        { region_id: 17, type_id: 2, price: [99, 99] },
+        { region_id: 17, type_id: 3, price: [25, 25] },
+
+        { region_id: 18, type_id: 1, price: [3, 1.5] },
+        { region_id: 18, type_id: 2, price: [99, 99] },
+        { region_id: 18, type_id: 3, price: [9, 9] },
+
+        { region_id: 19, type_id: 1, price: [3, 1.5] },
+        { region_id: 19, type_id: 2, price: [99, 99] },
+        { region_id: 19, type_id: 3, price: [91, 91] },
+
+        { region_id: 20, type_id: 1, price: [3, 1.5] },
+        { region_id: 20, type_id: 2, price: [99, 99] },
+        { region_id: 20, type_id: 3, price: [25, 25] },
+
+        { region_id: 21, type_id: 1, price: [3, 1.5] },
+        { region_id: 21, type_id: 2, price: [99, 99] },
+        { region_id: 21, type_id: 3, price: [63, 63] },
+
+        { region_id: 22, type_id: 1, price: [3, 1.5] },
+        { region_id: 22, type_id: 2, price: [99, 99] },
+        { region_id: 22, type_id: 3, price: [68, 68] },
+
+        { region_id: 23, type_id: 1, price: [3, 1.5] },
+        { region_id: 23, type_id: 2, price: [99, 99] },
+        { region_id: 23, type_id: 3, price: [61, 61] },
+
+        { region_id: 24, type_id: 1, price: [3, 1.5] },
+        { region_id: 24, type_id: 2, price: [99, 99] },
+        { region_id: 24, type_id: 3, price: [11, 11] },
+
+        { region_id: 25, type_id: 1, price: [3, 1.5] },
+        { region_id: 25, type_id: 2, price: [99, 99] },
+        { region_id: 25, type_id: 3, price: [5, 5] },
+
+        { region_id: 26, type_id: 1, price: [3, 1.5] },
+        { region_id: 26, type_id: 2, price: [99, 99] },
+        { region_id: 26, type_id: 3, price: [64, 64] },
+
+        { region_id: 27, type_id: 1, price: [3, 1.5] },
+        { region_id: 27, type_id: 2, price: [99, 99] },
+        { region_id: 27, type_id: 3, price: [108, 108] },
+
+        { region_id: 28, type_id: 1, price: [3, 1.5] },
+        { region_id: 28, type_id: 2, price: [99, 99] },
+        { region_id: 28, type_id: 3, price: [20, 20] },
+
+        { region_id: 29, type_id: 1, price: [3, 1.5] },
+        { region_id: 29, type_id: 2, price: [99, 99] },
+        { region_id: 29, type_id: 3, price: [108, 108] },
+
+        { region_id: 30, type_id: 1, price: [3, 1.5] },
+        { region_id: 30, type_id: 2, price: [99, 99] },
+        { region_id: 30, type_id: 3, price: [42, 42] },
+
+        { region_id: 31, type_id: 1, price: [3, 1.5] },
+        { region_id: 31, type_id: 2, price: [99, 99] },
+        { region_id: 31, type_id: 3, price: [11, 11] },
+
+        { region_id: 32, type_id: 1, price: [3, 1.5] },
+        { region_id: 32, type_id: 2, price: [99, 99] },
+        { region_id: 32, type_id: 3, price: [11, 11] },
+
+        { region_id: 33, type_id: 1, price: [3, 1.5] },
+        { region_id: 33, type_id: 2, price: [99, 99] },
+        { region_id: 33, type_id: 3, price: [12, 12] },
+
+        { region_id: 34, type_id: 1, price: [3, 1.5] },
+        { region_id: 34, type_id: 2, price: [99, 99] },
+        { region_id: 34, type_id: 3, price: [56, 56] },
+
+        { region_id: 35, type_id: 1, price: null },
+        { region_id: 35, type_id: 2, price: null },
+        { region_id: 35, type_id: 3, price: null }
+    ];
+}])
+.factory('Regions', [function () {
+    return [
+        { id: 0, name: "Rhodas Airport (RHO)" },
+        { id: 1, name: "Afantou" },
+        { id: 2, name: "Archangelos" },
+        { id: 3, name: "Faliraki" },
+        { id: 4, name: "Fanes" },
+        { id: 5, name: "Gennadi" },
+        { id: 6, name: "Empona" },
+        { id: 7, name: "Haraki" },
+        { id: 8, name: "Ialyssos (No suttle to Parasun)" },
+        { id: 9, name: "Ixia" },
+        { id: 10, name: "Kalathos" },
+        { id: 11, name: "Kolossos" },
+        { id: 12, name: "Kalithea" },
+        { id: 13, name: "Kamiros" },
+        { id: 14, name: "Ancient Kamiros" },
+        { id: 15, name: "Kiotari" },
+        { id: 16, name: "Kolumbia" },
+        { id: 17, name: "Koskinou" },
+        { id: 18, name: "Kremasti" },
+        { id: 19, name: "Lachania" },
+        { id: 20, name: "Ladiko" },
+        { id: 21, name: "Lardos" },
+        { id: 22, name: "Lindian Village" },
+        { id: 23, name: "Lindos" },
+        { id: 24, name: "Pastida" },
+        { id: 25, name: "Paradisi" },
+        { id: 26, name: "Pefko" },
+        { id: 27, name: "Plimmiri" },
+        { id: 28, name: "CITY Rhodes" },
+        { id: 29, name: "Prasonisi" },
+        { id: 30, name: "Stegna" },
+        { id: 31, name: "Theologos" },
+        { id: 32, name: "Tholos" },
+        { id: 33, name: "Trianta" },
+        { id: 34, name: "Vlicha" },
+        { id: 35, name: "Other" }
+    ];
+}])
+.controller('RootController', ['$scope', function ($scope) {
+    $scope.lang = 'en';
+    $scope.languages = [
+        { code: "en", name: "English" },
+        { code: "lt", name: "Lithuanian" },
+        { code: "ru", name: "Russian" }
+    ];
+}])
+.controller('OrderFormController', ['$scope', 'Regions', 'TransferPrices', function ($scope, Regions, TransferPrices) {
+    $scope.order = {
+        transfers: [{
+            from: 0,
+            children: 0,
+            adults: 1
+        }]
+    };
+
+    $scope.transfer_regions = Regions;
+    $scope.transfer_types = [
+        { id: 1, name: "Bus" },
+        { id: 2, name: "Minibus" },
+        { id: 3, name: "Car" }
+    ];
+    $scope.payment_types = [
+        { id: 1, name: "Cash", hint: "You can find our service desk at the Kaunos airport (KUN)." },
+        { id: 2, name: "Bank Transfer", hint: "It takes 3 days for approval the payment. Please, use this way of payment, if there is enough time for this operation." }
+    ];
+
+    var find_transfer_prices = function (region_id, type_id) {
+        if (!region_id) return;
+
+        var i, n;
+        for (i = 0, n = TransferPrices.length; i < n; i++) {
+            if (TransferPrices[i].region_id == region_id && TransferPrices[i].type_id == type_id) {
+                return TransferPrices[i];
+            }
+        }
+    };
+
+    $scope.calculate_transfer_price = function (transfer) {
+        var prices = find_transfer_prices(transfer.to, transfer.type) || find_transfer_prices(transfer.from, transfer.type);
+
+        return prices? (prices.price[0] * transfer.adults + prices.price[1] * transfer.children): undefined;
+    };
+
+    $scope.calculate_order_price = function (order) {
+        var total = 0, i, n, price;
+        for (i = 0, n = order.transfers.length; i < n; i++) {
+            price = $scope.calculate_transfer_price(order.transfers[i]);
+            if (!price) return undefined;
+
+            total += price;
+        }
+
+        return total;
+    };
+
+    $scope.get_label_by_name = function (name) {
+        var elem = document.getElementById(name);
+        if (!elem) return name;
+
+        while (elem && elem.className.indexOf('control-group') == -1) {
+            elem = elem.parentNode;
+        }
+        if (!elem) return name;
+
+        elem = elem.firstChild;
+        while (elem && elem.tagName != 'LABEL') {
+            elem = elem.nextSibling;
+        }
+
+        return elem? elem.innerHTML: name;
+    };
+
+    $scope.goto_input = function (name) {
+        var elem = document.getElementById(name);
+        if (elem) { elem.focus(); }
+    };
+}])
+.filter('default', function () {
+    return function (value, def) {
+        return value? value: def;
+    };
+})
+;
+</script>
+    </body>
+</html>

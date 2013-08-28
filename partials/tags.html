@@ -1,0 +1,30 @@
+<script type="text/ng-template" id="breadcrumb-tags.html" ng-init="$parent.breadcrumb = 'breadcrumb-tags.html'">
+    <li>
+        <a href="/#!/">//kstep</a>
+        <span class="divider">→</span>
+    </li>
+    <li ng-bind="locale.tags"></li>
+</script>
+
+<div class="btn-group pull-right" ng-init="order = 'name'">
+    <button ng-click="order = 'name'" ng-class="{ active: order == 'name' }" class="btn">{: locale.sort_by_name :}</button>
+    <button ng-click="order = 'size'" ng-class="{ active: order == 'size' }" class="btn">{: locale.sort_by_size :}</button>
+</div>
+
+<ul class="nav nav-pills" ng-init="tags_mode = 'cloud'">
+    <li ng-class="{ active: tags_mode == 'cloud' }"><a ng-click="tags_mode = 'cloud'">{: locale.tag_cloud :}</a></li>
+    <li ng-class="{ active: tags_mode == 'list' }"><a ng-click="tags_mode = 'list'">{: locale.tag_list :}</a></li>
+</ul>
+
+<div class="tab-content">
+    <div style="line-height: normal;" class="tab-pane fade" ng-class="{ in: tags_mode == 'cloud', active: tags_mode == 'cloud' }">
+        <span ng-repeat="tag in tags | orderBy:order:order=='size'"><a ng-style="{ 'font-size': (5 * tag.weight + 1) + 'em' }" ng-href="/#!/tag/{: tag.name :}" ng-bind="tag.name"></a> </span>
+    </div>
+    <div class="tab-pane fade" ng-class="{ in: tags_mode == 'list', active: tags_mode == 'list' }">
+        <ul>
+            <li ng-repeat="tag in tags | orderBy:order:order=='size'">
+                <a href="/#!/tag/{: tag.name :}">{: tag.name :}<sup class="muted help-inline" ng-bind="tag.size"></sup></a>
+            </li>
+        </ul>
+    </div>
+</div>

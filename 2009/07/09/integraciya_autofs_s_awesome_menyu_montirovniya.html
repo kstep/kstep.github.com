@@ -1,0 +1,134 @@
+<html>
+<head lang="">
+    <meta charset="utf-8" />
+    <title ng-meta="page.title">Интеграция autofs с awesome: меню монтировния</title>
+    <meta name="keywords" ng-meta="page.tags" value="[]" content="" />
+    <meta name="date" ng-meta="page.date" content="2009-07-09" />
+    <meta http-equiv="Refresh" content="0;URL='/#!/2009/07/09/integraciya_autofs_s_awesome_menyu_montirovniya.html'" />
+</head>
+<body>
+<h1>
+    Интеграция autofs с awesome: меню монтировния <small><nobr ng-bind="page.date | asdate:locale.date_format" class="published">2009-07-09</nobr></small>
+</h1>
+
+<p>Во-первых нам потребуется библиотека posix, т.к. иначе не проверить существования файла и его тип:</p>
+
+<div>
+  <pre><code class="lua">assert(package.loadlib(&quot;/usr/lib/lua/5.1/posix.so&quot;, &quot;luaopen_posix&quot;))()</code></pre>
+</div>
+
+<p>Ставиться она из пакета liblua5.1-posix1.</p>
+
+<p>Дальше описываем такую функцию:</p>
+
+<div>
+  <pre><code class="lua">function mounts_menu()
+    local Automisc = &#39;/etc/auto.misc&#39;
+    local Mounts = &#39;/proc/mounts&#39;
+    local line
+
+    local automisc = {}
+    local stat
+    for line in io.lines(Automisc) do
+        if not (line:sub(1,1) == &#39;#&#39; or line:find(&quot;^%s*$&quot;)) then
+            local dir, opts, dev = line:match(&quot;^(%S+)%s+(%S+)%s+(%S+)&quot;)
+            if dev and dev:sub(1,1) == &#39;:&#39; then
+                dev = dev:sub(2)
+                stat = posix.stat(dev)
+                if stat and stat.type == &#39;block device&#39; then
+                    automisc[dev] = dir
+                end
+            end
+        end
+    end
+
+    local mounts = {}
+    local autofsdir
+    for line in io.lines(Mounts) do
+        local dev, dir, ft = line:match(&quot;^(%S+)%s+(%S+)%s+(%S+)&quot;)
+        if ft == &#39;autofs&#39; then autofsdir = dir end
+        if automisc[dev] then
+            mounts[dev] = dir
+        end
+    end
+
+    local items = {}
+    local dev, dir
+    for dev, dir in pairs(automisc) do
+        line = (&quot;%s %s/%s\	\	%s&quot;):format(mounts[dev] and &quot;*&quot; or &quot; &quot;, autofsdir, dir, dev)
+        local func
+        if mounts[dev] then
+            func = function () os.execute(&quot;sudo umount &quot;..autofsdir..&quot;/&quot;..dir) end
+        else
+            func = function () os.execute(&quot;ls &quot;..autofsdir..&quot;/&quot;..dir) end
+        end
+
+        local item = { line, func }
+        table.insert(items, item)
+    end
+
+    local menu = awful.menu.new({ items = items, width = 300 })
+    return menu
+end</code></pre>
+</div>
+
+<p>Возвращает она объект меню со списком доступных через autofs устройст, смонтированные устройства будут помечены звёздочкой. Использование:</p>
+
+<div>
+  <pre><code class="lua">mounts_menu():show()</code></pre>
+</div>
+
+<p>Работает с awesome v3.3.1-2-gd61ca1b (Bionic).</p>
+
+<p>Тот же список, полученный с помощью perl:</p>
+
+<div>
+  <pre><code class="perl">#!/usr/bin/perl
+
+use strict;
+
+my $AUTOMISC=&quot;/etc/auto.misc&quot;;
+my $MOUNTS=&quot;/proc/mounts&quot;;
+
+my %autofs = ();
+open FIN, &#39;&lt;&#39;, $AUTOMISC;
+while (&lt;FIN&gt;)
+{
+    chomp;
+    next if /^#/ or /^\\s*$/;
+
+    my ($dir, $opts, $dev) = split /\\s+/;
+    next unless $dev =~ /^:/;
+    $dev = substr($dev, 1);
+
+    next unless -b $dev;
+    $autofs{$dev} = $dir;
+}
+close FIN;
+
+my %mounts = ();
+my $autofsdir;
+open FIN, &#39;&lt;&#39;, $MOUNTS;
+while (&lt;FIN&gt;)
+{
+    chomp;
+    my ($dev, $dir, $type) = split /\\s+/;
+    $autofsdir = $dir if $type eq &#39;autofs&#39;;
+    next unless exists $autofs{$dev};
+    $mounts{$dev} = $dir;
+}
+close FIN;
+
+foreach my $dev (sort keys %autofs)
+{
+    my $ismounted = exists $mounts{$dev};
+    printf &quot;%s\	%s/%s\	%s\\n&quot;, $ismounted? &quot;*&quot;: &quot; &quot;, $autofsdir, $autofs{$dev}, $dev;
+}</code></pre>
+</div>
+
+
+
+<p class="clearfix tags">
+    
+</p>
+</body></html>

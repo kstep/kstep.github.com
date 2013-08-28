@@ -1,0 +1,322 @@
+<html>
+<head lang="">
+    <meta charset="utf-8" />
+    <title ng-meta="page.title">Pearlwall</title>
+    <meta name="keywords" ng-meta="page.tags" value="['perl','firewall']" content="perl firewall " />
+    <meta name="date" ng-meta="page.date" content="2011-04-12" />
+    <meta http-equiv="Refresh" content="0;URL='/#!/2011/04/12/pearlwall.html'" />
+</head>
+<body>
+<h1>
+    Pearlwall <small><nobr ng-bind="page.date | asdate:locale.date_format" class="published">2011-04-12</nobr></small>
+</h1>
+
+<div>
+  <pre><code class="perl">use strict;
+
+package Pearlwall;
+use base &#39;Exporter&#39;;
+our @EXPORT = qw(iface port net mode oneof from to filter mangle nat raw flush with by user group marked list forwarding chain record on off);
+
+my $_table = &#39;&#39;;
+my $_dry_run = 0;
+
+BEGIN {
+
+    no strict &#39;refs&#39;;
+
+    sub apply($)
+    {
+        my $command = &quot;iptables -t $Pearlwall::_table $_[0]&quot;;
+        if ($Pearlwall::_dry_run)
+        {
+            print &quot;$command\\n&quot;;
+        }
+        else
+        {
+            system $command;
+        }
+    }
+
+    sub list
+    {
+        print &quot;Table $Pearlwall::_table:\\n&quot;;
+        apply &quot;-v -L &quot; . ($_[0]||&#39;&#39;);
+        print &quot;\\n&quot;;
+    }
+
+    sub parse_opts
+    {
+        my ($opts, $pfx) = @_;
+        $pfx ||= &#39;&#39;;
+        return join(&quot; &quot;, map { my ($a, $b) = ($pfx.$_, $opts-&gt;{$_}); $a =~ s/_/-/g; &quot;--$a &quot; . ($b == 1? &#39;&#39;: $b) } keys %{$opts});
+    }
+
+    my %bare_actions = qw(deny DROP allow ACCEPT mask MASQUERADE);
+    my %opts_actions = qw(forbid REJECT mark MARK throw REDIRECT pass SNAT);
+    while (my ($name, $action) = each(%bare_actions))
+    {
+        *{&quot;main::$name&quot;} = sub { apply &quot;$_[0] $action&quot;; return $_[0]; };
+    }
+    while (my ($name, $action) = each(%opts_actions))
+    {
+        *{&quot;main::$name&quot;} = sub { my $a = pop; apply &quot;$a $action &quot; . parse_opts({@_}) ; return $a; };
+    }
+    sub record
+    {
+        my $filter = pop;
+        my $opts = parse_opts({@_}, &#39;log-&#39;);
+        apply &quot;$filter LOG $opts&quot;;
+        return $filter;
+    }
+
+    my %chain_names = qw(input INPUT output OUTPUT forward FORWARD before_route PREROUTING after_route POSTROUTING);
+    while (my ($name, $chain) = each(%chain_names))
+    {
+        *{&quot;main::$name&quot;} = sub { return @_? &quot; -A $chain &quot;.join(&quot; &quot;, @_).&quot; -j &quot;: &quot; -P $chain &quot;; };
+    }
+    sub chain($;$)
+    {
+        my $chainname = shift;
+        if (@_) {
+            if ($_[0]) {
+                apply &quot;-E $chainname $_[0]&quot;;
+            } else {
+                apply &quot;-X $chainname&quot;;
+            }
+        } else {
+            apply &quot;-N $chainname&quot;;
+            bless sub { return @_? &quot; -A $chainname &quot;.join(&quot; &quot;, @_).&quot; -j &quot;: &quot; -P $chainname &quot;; }, $chainname;
+        }
+    }
+
+    foreach my $proto (qw(tcp udp udplite icmp esp ah sctp all))
+    {
+        *{&quot;main::$proto&quot;} = sub { return Pearlwall::Inversible-&gt;new(&quot; -p $proto &quot;), @_; };
+    }
+
+    sub by($)
+    {
+        return &quot; --reject-with $_[0] &quot;;
+    }
+    sub with($)
+    {
+        return Pearlwall::MarkMask-&gt;new($_[0]);
+    }
+
+    sub flush(;$)
+    {
+        apply &quot; -F &quot; . ($_[0]||&#39;&#39;);
+    }
+
+    sub iface($)
+    {
+        return Pearlwall::Iface-&gt;new($_[0]);
+    }
+    sub mode($)
+    {
+        my $mode = uc(shift);
+        return Pearlwall::Inversible-&gt;new(&quot; --state $mode &quot;, &quot; -m state &quot;);
+    }
+    sub port($)
+    {
+        return Pearlwall::Port-&gt;new($_[0]);
+    }
+    sub net($)
+    {
+        return Pearlwall::Network-&gt;new($_[0]);
+    }
+    sub user($)
+    {
+        return Pearlwall::Inversible-&gt;new(&quot; --uid-owner $_[0] &quot;, &quot; -m owner &quot;);
+    }
+    sub group($)
+    {
+        return Pearlwall::Inversible-&gt;new(&quot; --gid-owner $_[0] &quot;, &quot; -m owner &quot;);
+    }
+    sub marked($)
+    {
+        return Pearlwall::Inversible-&gt;new(&quot; --mark $_[0] &quot;, &quot; -m mark &quot;);
+    }
+
+    sub oneof(@)
+    {
+        return join(&#39;,&#39;, @_);
+    }
+
+    sub from(@)
+    {
+        return join &quot; &quot;, map { UNIVERSAL::isa($_, &#39;Pearlwall::Object&#39;)? $_-&gt;from(): $_ } @_;
+    }
+    sub to(@)
+    {
+        return join &quot; &quot;, map { UNIVERSAL::isa($_, &#39;Pearlwall::Object&#39;)? $_-&gt;to(): $_ } @_;
+    }
+
+    sub filter(&amp;)
+    {
+        local $Pearlwall::_table = &#39;filter&#39;;
+        $_[0]-&gt;();
+    }
+    sub mangle(&amp;)
+    {
+        local $Pearlwall::_table = &#39;mangle&#39;;
+        $_[0]-&gt;();
+    }
+    sub nat(&amp;)
+    {
+        local $Pearlwall::_table = &#39;nat&#39;;
+        $_[0]-&gt;();
+    }
+    sub raw(&amp;)
+    {
+        local $Pearlwall::_table = &#39;raw&#39;;
+        $_[0]-&gt;();
+    }
+
+    sub forwarding($)
+    {
+        open my $fh, &quot;&gt;&quot;, &quot;/proc/sys/net/ipv4/ip_forward&quot;;
+        print $fh 0+(!!$_[0]);
+        close $fh;
+    }
+
+    sub on()
+    {
+        return 1;
+    }
+    sub off()
+    {
+        return 0;
+    }
+}
+
+1;
+
+package Pearlwall::Inversible;
+
+use overload
+    &#39;!&#39; =&gt; sub {
+        $_[0]-&gt;[1] = !$_[0]-&gt;[1];
+        return $_[0];
+    },
+    &#39;&quot;&quot;&#39; =&gt; sub {
+        return $_[0]-&gt;[2] . ($_[0]-&gt;[1]? &#39;!&#39;: &#39;&#39;) . $_[0]-&gt;[0];
+    };
+
+sub new
+{
+    my $class = shift;
+    my $self = [ shift, 0, shift||&#39;&#39; ];
+    bless $self, $class;
+}
+
+1;
+
+package Pearlwall::Object;
+use base &#39;Pearlwall::Inversible&#39;;
+
+sub from
+{
+    return $_[0]-&gt;[2] . ($_[0]-&gt;[1]? &#39;!&#39;: &#39;&#39;) . $_[0]-&gt;_from();
+}
+
+sub to
+{
+    return $_[0]-&gt;[2] . ($_[0]-&gt;[1]? &#39;!&#39;: &#39;&#39;) . $_[0]-&gt;_to();
+}
+
+1;
+
+package Pearlwall::Iface;
+use base &#39;Pearlwall::Object&#39;;
+
+sub _from
+{
+    return &quot; -i $_[0]-&gt;[0] &quot;;
+}
+
+sub _to
+{
+    return &quot; -o $_[0]-&gt;[0] &quot;;
+}
+
+1;
+
+package Pearlwall::Port;
+use base &#39;Pearlwall::Object&#39;;
+
+sub _from
+{
+    return &quot; --sport $_[0]-&gt;[0] &quot;;
+}
+
+sub _to
+{
+    return &quot; --dport $_[0]-&gt;[0] &quot;;
+}
+
+1;
+
+package Pearlwall::Network;
+use base &#39;Pearlwall::Object&#39;;
+
+sub _from
+{
+    return &quot; -s $_[0]-&gt;[0] &quot;;
+}
+
+sub _to
+{
+    return &quot; -d  $_[0]-&gt;[0] &quot;;
+}
+
+1;
+
+package Pearlwall::MarkMask;
+
+use overload &#39;&quot;&quot;&#39; =&gt; sub {
+        return &quot;$_[0]-&gt;[1] $_[0]-&gt;[0]$_[0]-&gt;[2]&quot;;
+    },
+    &#39;/&#39; =&gt; sub {
+        $_[0]-&gt;[2] = &quot;/$_[1]&quot;;
+        return $_[0];
+    },
+    &#39;|&#39; =&gt; sub {
+        $_[0]-&gt;[1] = &#39;set-mark&#39;;
+        $_[0]-&gt;[2] = &quot;/$_[1]&quot;;
+        return $_[0];
+    },
+    &#39;^&#39; =&gt; sub {
+        $_[0]-&gt;[1] = &#39;set-xmark&#39;;
+        $_[0]-&gt;[2] = &quot;/$_[1]&quot;;
+        return $_[0];
+    },
+    &#39;~&#39; =&gt; sub {
+        $_[0]-&gt;[1] = &#39;set-xmark&#39;;
+        $_[0]-&gt;[2] = &quot;&quot;;
+        return $_[0];
+    },
+    &#39;&amp;&#39; =&gt; sub {
+        $_[0]-&gt;[0] = $_[1];
+        $_[0]-&gt;[1] = &#39;and-mark&#39;;
+        $_[0]-&gt;[2] = &quot;&quot;;
+        return $_[0];
+    };
+
+sub new
+{
+    my $class = shift;
+    my $self = [ shift, &#39;set-mark&#39;, &#39;&#39; ];
+    bless $self, $class;
+}
+
+1;</code></pre>
+</div>
+
+
+
+<p class="clearfix tags">
+    <a href="/#!/tag/perl" class="tag badge" rel="tag">perl</a><a href="/#!/tag/firewall" class="tag badge" rel="tag">firewall</a>
+</p>
+</body></html>

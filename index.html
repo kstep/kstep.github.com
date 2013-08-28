@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="kstep" ng-controller="RootCtl" manifest="/manifest-540fec3.appcache">
+    <head>
+        <meta charset="utf-8" />
+        <title ng-bind="page.title | strip_tags">//kstep blog</title>
+        <meta name="description" content="K's blog on life and development" />
+        <meta name="author" content="Konstantin Stepanov" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="url" content="http://kstep.me/sitemap.xml" />
+        <meta name="fragment" content="!" />
+
+        <link rel="alternate" type="application/atom+xml" title="RSS Feed" href="/feed.xml" />
+
+        <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.0/css/bootstrap-combined.min.css" rel="stylesheet" type="text/css" />
+        <link href="/css/pygmentize-default.css" rel="stylesheet" type="text/css" />
+        <link href="/css/calendar.css" rel="stylesheet" type="text/css" />
+        <link href="/css/style.css" rel="stylesheet" type="text/css" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <style type="text/css">
+            .fade-enter-setup, .fade-leave-setup {
+                -webkit-transition: all linear .5s;
+                -moz-transition: all linear .5s;
+                -ms-transition: all linear .5s;
+                -o-transition: all linear .5s;
+                transition: all linear .5s;
+                position: relative;
+            }
+            .fade-enter-setup.fade-enter-start, .fade-leave-setup {
+                top: 0;
+                opacity: 1.0;
+            }
+            .fade-enter-setup, .fade-leave-start {
+                top: -5px;
+                opacity: 0.0;
+            }
+        </style>
+    </head>
+
+    <body>
+        <a id="fork-me" href="http://github.com/kstep/kstep.github.com" target="_blank">Available on GitHub!</a>
+        <header class="navbar navbar-fixed-top ng-cloak">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+
+                    <a class="brand" href="/#!/" ng-class="{ loading: $loading }">//kstep</a>
+
+                    <div class="btn-group pull-right">
+                        <button ng-click="locales('en')" ng-class="{ active: locale.lang == 'en' }" class="btn">en</button>
+                        <button ng-click="locales('ru')" ng-class="{ active: locale.lang == 'ru' }" class="btn">ru</button>
+                    </div>
+
+                    <div class="nav-collapse collapse">
+                        <ul class="nav">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{: locale.in_social_networks :} <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li ng-repeat="acc in social_accounts"><a target="_blank" ng-href="{: acc.url :}"><img class="favicon" ng-src="{: acc.icon :}" /> {: acc.name :}</a></li>
+                                </ul>
+                            </li>
+                            <li><span class="navbar-text" ng-bind="locale.or"></span></li>
+                            <li><a ng-href="{: 'znvygb:zr@xfgrc.zr' | rot13 :}" title="{: locale.no_spam_please :}" ng-bind="locale.email_me"></a></li>
+                        </ul>
+                        <ul class="nav pull-right">
+                            <li ng-class="{ active: page.group == 'tags' }"><a title="{: locale.tags_hint :}" href="/#!/tags" ng-bind="locale.tags | lower"></a></li>
+                            <li><a target="_blank" href="/tests" title="{: locale.tests_hint :}" rel="nofollow" ng-bind="locale.tests"></a></li>
+                            <li class="divider-vertical"></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="modal-backdrop ng-cloak" ng-show="$loading"></div>
+        <div ng-show="$loading" id="loading-indicator" ng-bind="locale.loading" class="ng-cloak"></div>
+
+        <noscript>
+            <div class="container">
+                <h1>Hello!</h1>
+                <p>I'm sorry, but you <strong>have</strong> to enable JavaScript to view my site.</p>
+                <p>I know, I know, JS dependency makes my site not-so-accessible, but hey, we live in 21st century!</p>
+                <p>So why bother? Just turn your JavaScript on and enjoy.</p>
+                <p><strong>Sidenote:</strong> if you have to browse web with something like Lynx, well, I'm sorry for you. Maybe I will add no-JS browsers support in the future, though it's unlikely.</p>
+            </div>
+        </noscript>
+
+        <div class="container ng-cloak" id="content">
+            <div class="alert alert-info" ng-show="update_available">
+                <button ng-click="update_available = false" class="close">&times;</button>
+                <p ng-bind="locale.update_available"></p>
+                <p>
+                    <button ng-click="reload_site()" class="btn btn-primary" ng-bind="locale.reload"></button>
+                    <button ng-click="update_available = false" class="btn btn-link" ng-bind="locale.cancel"></button>
+                </p>
+            </div>
+
+            <div class="row">
+                <div class="content span9">
+                    <ul class="breadcrumb" ng-include="breadcrumb">
+                        <li class="active">//kstep</li>
+                    </ul>
+                    <div ng-view style="overflow: hidden;" ng-animate="{'enter': 'fade-enter'}"></div>
+                </div>
+                <div class="span3">
+                    <div class="calendar" ng-class="[month, leap_year && 'leap-year' || '', date.year == today.year && date.month == today.month && 'day-' + date.day || '']">
+                        <div class="header">
+                            <h5 class="clearfix">
+                                <a style="float: left;" ng-click="date.month = date.month - 1">←</a>
+                                <a style="float: right;" ng-click="date.month = date.month + 1">→</a>
+                                <a ng-href="/#!/{: date.year :}/{: date.month | lpad:2 :}" ng-bind="locale[month] | caps"></a> <a ng-href="/#!/{: date.year :}" ng-bind="date.year"></a>
+                            </h5>
+                            <ul>
+                                <li ng-bind="locale.mon"></li><li ng-bind="locale.tue"></li><li ng-bind="locale.wed"></li><li ng-bind="locale.thu"></li><li ng-bind="locale.fri"></li>
+                                <li ng-bind="locale.sat"></li><li ng-bind="locale.sun"></li>
+                            </ul>
+                        </div>
+                        <ul class="clearfix">
+                            <li ng-repeat="day in days" ng-class="['day-'+day, weekday(day)]" ng-switch="how_many_posts(day)">
+                                <span class="muted" ng-switch-when="0" ng-bind="day"></span>
+                                <a title="{: how_many_posts(day) :}" ng-href="/#!/{: date.year :}/{: date.month | lpad:2 :}/{: day | lpad:2 :}" ng-switch-default ng-bind="day"></a>
+                            </li>
+                        </ul>
+                        <div class="header">
+                            <a ng-hide="are_equal(date, today)" ng-click="date = today">← {: locale.today :}</a>
+                        </div>
+                    </div>
+
+                    <br />
+                    <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/kstepme" data-widget-id="272776746049339393">Tweets by @kstepme</a>
+                    <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+                </div>
+            </div>
+        </div> <!-- /container -->
+
+        <footer class="navbar navbar-fixed-bottom ng-cloak">
+            <div class="navbar-inner">
+                <div class="container">
+                    <ul class="nav">
+                        <li><span class="navbar-text">{: locale.signature :} 2012</span></li>
+                    </ul>
+                    <ul class="nav pull-right social-icons">
+                        <li ng-repeat="acc in social_accounts"><a target="_blank" ng-href="{: acc.url :}" title="{: acc.name :}"><img class="favicon" ng-src="{: acc.icon :}" alt="{: acc.name :}" /></a></li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+
+        <a class="totop ng-cloak">↑</a>
+
+        <!--[if lt IE 9]>
+        <script src="http:http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.1.4/angular.min.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.1.4/angular-sanitize.min.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.1.4/angular-cookies.min.js"></script>
+
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+        <script type="text/javascript" src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+
+        <script type="text/javascript" src="/js/application-min.js"></script>
+    </body>
+</html>
+

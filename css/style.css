@@ -1,0 +1,124 @@
+.ng-cloak {
+    display: none !important;
+}
+
+img.favicon {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+}
+
+.totop {
+    z-index: 1000;
+    display: block;
+    background: #fafafa;
+    border: 1px solid #d4d4d4;
+    border-radius: 5px;
+    color: #333333;
+    font-size: 18px;
+    padding: 10px 0;
+    text-align: center;
+    text-decoration: none;
+    width: 40px;
+    position: fixed;
+    bottom: 60px;
+    right: 30px;
+    box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.1);
+}
+
+.tag {
+    margin-right: 0.5em;
+}
+
+#content.container {
+    margin-bottom: 60px;
+    margin-top: 60px;
+}
+
+#fork-me {
+    position: fixed;
+    background: #4183c4;
+    color: white;
+    font-weight: bold;
+    width: 200px;
+    padding: 4px 0;
+    text-align: center;
+    top: 45px;
+    right: -40px;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    transform: rotate(45deg);
+    z-index: 2000;
+    box-shadow: 0 0 5px #333333;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+@media (max-width: 979px) {
+    #content.container {
+        margin-bottom: 0;
+        margin-top: 0;
+    }
+
+    #fork-me {
+        width: 155px;
+        -webkit-transform: rotate(90deg);
+        -moz-transform: rotate(90deg);
+        transform: rotate(90deg);
+        box-shadow: none;
+        position: absolute;
+        right: 80px;
+        top: -30px;
+    }
+
+    #fork-me:after {
+        display: block;
+        content: ' ';
+        width: 0;
+        height: 0;
+        border-color: #4183c4 transparent;
+        border-style: solid;
+        border-width: 14px 10px 14px 0;
+        position: absolute;
+        right: -9px;
+        top: 0;
+    }
+}
+
+.loading {
+    text-decoration: blink;
+    color: #dddddd !important;
+}
+
+#loading-indicator {
+    z-index: 5000;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    padding: 10px 0;
+    line-height: 20px;
+    display: block;
+    background: #fafafa;
+    border: 1px solid #d4d4d4;
+    border-radius: 5px;
+    text-align: center;
+    margin-top: -20px;
+    margin-left: -50px;
+    text-decoration: blink;
+    color: #333333;
+    box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .nav.social-icons > li > a {
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+iframe[classname^="twitter-timeline"], .twitter-timeline {
+    width: 100% !important;
+}
+
+.tags {
+    text-align: right;
+}
+

@@ -1,0 +1,81 @@
+<html>
+<head lang="">
+    <meta charset="utf-8" />
+    <title ng-meta="page.title">Хотплаг по линуксовски</title>
+    <meta name="keywords" ng-meta="page.tags" value="[]" content="" />
+    <meta name="date" ng-meta="page.date" content="2009-07-11" />
+    <meta http-equiv="Refresh" content="0;URL='/#!/2009/07/11/hotplag_po_linuksovski.html'" />
+</head>
+<body>
+<h1>
+    Хотплаг по линуксовски <small><nobr ng-bind="page.date | asdate:locale.date_format" class="published">2009-07-11</nobr></small>
+</h1>
+
+<p>Купил <a href="http://www.wacom.eu/index2.asp?lang=ru&amp;pid=220">Wacom Bamboo</a> (всегда мечтал о маленьком планшетике чтоб можно было быстро набросать заметку-рисунок и наконец-то избавиться от стопки бумаги на столе). Установка на мою Дебиань была очень проста:</p>
+
+<ol>
+  <li>Поставить пару пакетов:</li>
+</ol>
+
+<pre><code>$ sudo apt-get install wacom-tools xserver-xorg-input-wacom
+</code></pre>
+
+<ol>
+  <li>Настроить иксы в /etc/X11/xorg.conf:</li>
+</ol>
+
+<pre><code>Section "ServerLayout"
+    Identifier     "Layout0"
+    Screen      0  "Screen0"
+    InputDevice    "Keyboard0" "CoreKeyboard"
+    InputDevice    "Mouse0" "CorePointer"
+
+	InputDevice "stylus" "SendCoreEvents"
+	InputDevice "eraser" "SendCoreEvents"
+	InputDevice "pad" "SendCoreEvents"
+EndSection
+
+Section "InputDevice"
+	Driver "wacom"
+	Identifier "stylus"
+	Option "Device" "/dev/input/wacom"
+	Option "Type" "stylus"
+	Option "USB" "on"
+	Option "PressCurve" "0,0,100,100"
+EndSection
+
+Section "InputDevice"
+	Driver "wacom"
+	Identifier "eraser"
+	Option "Device" "/dev/input/wacom"
+	Option "Type" "eraser"
+	Option "USB" "on"
+EndSection
+
+Section "InputDevice"
+	Driver "wacom"
+	Identifier "pad"
+	Option "Device" "/dev/input/wacom"
+	Option "Type" "pad"
+	Option "Mode" "relative"
+	Option "USB" "on"
+EndSection
+</code></pre>
+
+<ol>
+  <li>Настроить GIMP в Правка &gt; Параметры &gt; Устройтва ввода &gt; Настроить дополнительные устройства ввода…</li>
+</ol>
+
+<p>И всё вроде бы заработало… Но только если втыкать его <strong>до</strong> того, как запустились Иксы. Если воткнуть (или перевоткнуть, или погрузить комп в сон и разбудить) при уже работающих Иксах, то планшет начинает работать как вульгарная мышь. Хотплаг не обнаружен :( Но, как оказалось, он есть! Но чисто линуксовский. Решение <a href="http://linuxwacom.sourceforge.net/index.php/faq#HOTPLUG">было найдено</a>:</p>
+
+<blockquote>
+  <p><a href="http://wiki.x.org/wiki/XInputHotplug">X Intput Device Hotplug</a> is not fullly supported at Xorg yet. But, Wacom X driver has implemented a workaround for those who have to unplug/replug the tablet while X is running. To make your tablet work without restarting X server, please switch your virtual terminals after replug your tablet. That is, press Ctrl + Alt + F1 together then release them (screen turns to console); and press Ctrl + Alt + F7 together then release them (screen returns back to normal).</p>
+</blockquote>
+
+<p>Вот так вот: перевоткнул планшет, переключился на консоль и обратно, и получил полноценный хотплаг планшета в абсолютный режим.</p>
+
+
+<p class="clearfix tags">
+    
+</p>
+</body></html>

@@ -1,0 +1,142 @@
+<html>
+<head lang="">
+    <meta charset="utf-8" />
+    <title ng-meta="page.title">Система учёта времени или Как не надо управлять сотрудниками</title>
+    <meta name="keywords" ng-meta="page.tags" value="[]" content="" />
+    <meta name="date" ng-meta="page.date" content="2009-08-12" />
+    <meta http-equiv="Refresh" content="0;URL='/#!/2009/08/12/sistema_ucheta_vremeni.html'" />
+</head>
+<body>
+<h1>
+    Система учёта времени или Как не надо управлять сотрудниками <small><nobr ng-bind="page.date | asdate:locale.date_format" class="published">2009-08-12</nobr></small>
+</h1>
+
+<p>В одной фирме (не будем тыкать пальцем) принята такая система учёта времени на основе интранет-ресурса, что при приходе на работу нужно обязательно залогиниться и нажать кнопку «Я тут», чтобы отметился приход на работу. Если забудешь, получится опаздание, а за опаздания в фирме ебут.</p>
+
+<p>Естественно каждый раз лезть на этот «ресурс» чтобы отметиться мало того что лень, так и банально жалко времени. Не говоря уже о том, что они сами напрашивались на то, чтобы их немного «поломали». Поэтому с помощью двух скриптов и крона была сооружена противомозгоебическая система, позволяющая избежать ежемесячной ёбли мозгов по поводу времени прихода на работу.</p>
+
+<p>Суть системы учёта времени, если опускаться до уровня программной реализации, сводиться к посылке одного POST-запроса к серверу для логина, если юзер ещё не залогинился, либо к посылке одного GET-запроса в противном случае, при этом авторизация проходит по кукисам. Перл в помощь:</p>
+
+<div>
+  <pre><code class="perl">#!/usr/bin/perl
+
+use strict;
+use utf8;
+use LWP::UserAgent;
+
+our $host = &quot;http://www.intranet.com&quot;;
+our $ua   = LWP::UserAgent-&gt;new;
+
+my $login    = &#39;user.login&#39;;
+my $password = &#39;domain_password&#39;;
+
+my $response;
+my $exit_code = 0;
+
+init_ua();
+
+print &quot;I&#39;m here!\\n&quot;;
+$response = i_am_here();
+
+unless (is_logged_in($response))
+{
+	print &quot;Not logged in, trying to login...\\n&quot;;
+	login($login, $password, 1);
+	$response = i_am_here();
+
+	if (is_logged_in($response))
+	{
+		print &quot;Login successful.\\n&quot;;
+	}
+	else
+	{
+		$exit_code = 1;
+		print &quot;Login failed!\\n&quot;;
+	}
+}
+
+exit $exit_code;
+
+sub init_ua()
+{
+	$ua-&gt;agent(&quot;Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.7) Gecko/2009030814 Iceweasel/3.0.9 (Debian-3.0.9-1)&quot;);
+	$ua-&gt;cookie_jar({ file =&gt; &quot;/tmp/intra.cookies&quot;, autosave =&gt; 1 });
+}
+
+sub login($$;$)
+{
+	my ( $login, $password, $remember ) = @_;
+	my %params;
+
+	$params{&#39;login&#39;}    = $login;
+	$params{&#39;password&#39;} = $password;
+	$params{&#39;member&#39;}   = &#39;on&#39; if $remember;
+	my $response = $ua-&gt;post(&quot;$host/login/&quot;, \\%params);
+
+	die(&#39;Can\\&#39;t connect to server.&#39;) unless ($response-&gt;code == 301);
+	return $response;
+}
+
+sub i_am_here()
+{
+	my $response = $ua-&gt;get(&quot;$host/?alert=tut&quot;);
+
+	die(&#39;Can\\&#39;t connect to server.&#39;) unless ($response-&gt;code == 200);
+	return $response;
+}
+
+sub is_logged_in($)
+{
+	my $response = shift;
+
+	my $content = $response-&gt;decoded_content;
+	return $content =~ m#var dialog = new Boxy\\(&#39;&lt;h1&gt;Введите ваше имя и пароль для входа в систему&lt;/h1&gt;&#39;, {title: &#39;Вы не авторизированы&#39;, modal: true}\\);#? 0: 1;
+}</code></pre>
+</div>
+
+<p>Скрипт был оттестирован и признан вполне рабочим. Осталась ещё одна задача: запускать его по расписанию каждое утро, чтобы он сам меня логинил. Конечно, можно было бы использовать его и честно, поставив в автозапуск при загрузке компа/входе в систему, но меня на момент написания этих скриптов достало мозгоёбство с политикой фирмы, так что я пошёл по другому пути: рисование красивого графика посещаемости рабочего места, раз уж им так этого хотелось. Вполне себе стандартная задача для крона, но осложняется она тем, что для избежания слишком явного палева требовалось несколько рандомизировать время прихода, а то как-то странно выглядело бы, если бы на графике посещения у сотрудника было выставлено 9:00 за весь месяц.</p>
+
+<p>Для решения этой задачи был на коленке писан простой shell-скрипт-обёртка для этого перлового скрипта:</p>
+
+<div>
+  <pre><code class="bash">#!/bin/sh
+
+FIND=/usr/bin/find
+GREP=/bin/grep
+TEST=/usr/bin/test
+LOGIN=/home/kstep/bin/login.pl
+TOUCH=/bin/touch
+
+LOCKFILE=/tmp/last.login
+
+if $TEST x$1 = xrandom; then
+	$TEST $RANDOM -lt 22000 &amp;&amp; exit 0
+fi
+
+$FIND $LOCKFILE -mmin -1440 2&gt; /dev/null | $GREP -q $LOCKFILE || $LOGIN &amp;&amp; $TOUCH $LOCKFILE</code></pre>
+</div>
+
+<p>Что он делает? Очень просто: он использует lock-файл для проверки успешно прошедшего логина, и если он отсутствует или не модифицирован последние сутки (см. строку 15), то запускается скрипт логина и «трогается» lock-файл в случае удачного логина. Собственно для этого и был сделан красивый <code>exit</code> в перловом скрипте (login.pl), который возвращает 0 если логин был успешен или 1 в противном случае.</p>
+
+<p>Кроме того он принимает первый и единственный параметр, и если он равен random, то скрипт выполняется только если на кости 1d32768-1 под хитрым shell-именем <code>$RANDOM</code> выпадет не менее 22000. Это число было подобрано чисто экспериментально, так что в случае необходимости его можно и поменять.</p>
+
+<p>Теперь настроим крон:</p>
+
+<pre><code># m h  dom mon dow   command
+57-59/1 8 * * 1-5 /home/kstep/bin/login.sh random
+0-4/1 9 * * 1-5 /home/kstep/bin/login.sh random
+5 9 * * 1-5 /home/kstep/bin/login.sh
+30 15 * * 1-5 /bin/rm -f /tmp/last.login
+</code></pre>
+
+<p>То есть автологин происходит в случайный момент времени с понедельника по пятницу между 8:57 и 9:04, при этом в 9:05 автологин форсируется, так что в любом случае я «приду» на работу не позже 9:05. Пятая строчка с удалением lock-файла сделана на всякий случай в качестве перестраховки, т.к. между автологинами может в принципе пройти немного менее суток из-за случайной его природы.</p>
+
+<p>Кстати, такая методика случайного запуска скрипта в некий промежуток времени по крону может быть полезна и в других случаях.</p>
+
+<p>В общем эта противомозгоебическая система написанная на коленке успешно и беспалевно проработала почти всё время моей работы в этой фирме. Может эти скрипты пригодятся кому-то ещё =)</p>
+
+
+<p class="clearfix tags">
+    
+</p>
+</body></html>

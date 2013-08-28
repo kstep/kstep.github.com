@@ -1,0 +1,32 @@
+<html>
+<head lang="">
+    <meta charset="utf-8" />
+    <title ng-meta="page.title">RIP HAL!</title>
+    <meta name="keywords" ng-meta="page.tags" value="[]" content="" />
+    <meta name="date" ng-meta="page.date" content="2010-01-31" />
+    <meta http-equiv="Refresh" content="0;URL='/#!/2010/01/31/rip_hal.html'" />
+</head>
+<body>
+<h1>
+    RIP HAL! <small><nobr ng-bind="page.date | asdate:locale.date_format" class="published">2010-01-31</nobr></small>
+</h1>
+
+<p>Вчера сделал <code>aptitude update &amp;&amp; aptitude full-upgrade</code>. Пришлось сбегать на nvidia.com за новыми драйверами 190.53, потому что старый пакет с дровами 185.18.36 ни в какую не хотели подхватываться иксами, а в репах до сих пор лежат древние 173.14.09, которые помечены (и очень верно помечены) как конфликтующие со всем, чем только можно и нельзя. Лучше бы они обновились уже.</p>
+
+<p>Но это ладно. Гораздо большим сюрпризом для меня стало то, что не подхватились настройки тачпада из HAL’а. Проверил gsyntaptics-ом: точно дефолтные стоят: клик на удар отключён, равно как и циклическая прокрутка.</p>
+
+<p>Проверил новую версию xorg-а, оказалось он обновился до 7.5. Ок, полез <a href="http://www.google.com.by/search?hl=ru&amp;source=hp&amp;q=configuration%20hal%20fdi%20xorg%207.5&amp;meta=">гуглить</a>. Буквально на <a href="http://www.x.org/releases/X11R7.5/doc/RELNOTES.html#AEN620">второй ссылке</a> выяснилась интересная подробность в разделе <strong>Future Removals</strong>:</p>
+
+<blockquote>
+  <p>Input device discovery via HAL</p>
+
+  <p>The Xorg server currently uses the <a href="http://www.freedesktop.org/wiki/Software/hal">HAL framework</a> to discover connected input devices, receive notification of hotplug events for them, and to retrieve configuration parameters for them. The HAL maintainers have deprecated HAL, so the X.Org developers are investigating alternatives. As a result, configuration of input devices via HAL *.fdi files may not be supported in future Xorg server releases.</p>
+</blockquote>
+
+<p>Вот так вот, HAL умирает. И в Дебиане, видимо, решили его отключить, раз такое дело. В общем, похоже на то, что начиная с версии deb-пакета xserver-xorg 1:7.5+2 настройки из халовских *.fdi файлов не подхватываются. Пришлось вспоминать как оно настраивается в классическом xorg.conf и поднимать эти настройки. В общем, всякие халы это хорошо, но настройки из своих родных конфигов лучше не выкидывать, а то всякое бывает… Ждём, на чём xorg остановит свой выбор. Думаю, это будет DevKit, но хз, хз…</p>
+
+
+<p class="clearfix tags">
+    
+</p>
+</body></html>

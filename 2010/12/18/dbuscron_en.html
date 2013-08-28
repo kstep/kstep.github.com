@@ -1,0 +1,129 @@
+<html>
+<head lang="">
+    <meta charset="utf-8" />
+    <title ng-meta="page.title">Dbuscron</title>
+    <meta name="keywords" ng-meta="page.tags" value="[]" content="" />
+    <meta name="date" ng-meta="page.date" content="2010-12-18" />
+    <meta http-equiv="Refresh" content="0;URL='/#!/2010/12/18/dbuscron_en.html'" />
+</head>
+<body>
+<h1>
+    Dbuscron <small><nobr ng-bind="page.date | asdate:locale.date_format" class="published">2010-12-18</nobr></small>
+</h1>
+
+<p><strong>Upd:</strong> I’ve just release version 1.3. You can download <a href="../../../download/71">deb-package for Maemo 5</a>. The build includes one new feature and some improvements in log messages and error handling:</p>
+
+<ul>
+  <li>new cli args: userid and groupid to set user and group to change too</li>
+  <li>moved user &amp; group id setting code into separate function</li>
+  <li>main module code cleanup: more comments &amp; logging, better error handling etc.</li>
+  <li>Makefile: debclean &amp; deb targets</li>
+  <li>auto version setting</li>
+  <li>Makefile: build target</li>
+  <li>changelog updated</li>
+</ul>
+
+<p>The main feature of the build is two new options <code>--userid</code> and <code>--groupid</code>. They make daemon change its process’s user and group id. You may need it for two reasons: for security, and to run the daemon on other user’s sessions bus. These options work only if dbuscron is run by the root itself, of cause. You can pass either numeric id of user/group or their name as value for these options. If you pass <code>--userid</code> only, the process’s group will be set to main group of given user.</p>
+
+<hr />
+
+<p><strong>Upd:</strong> The new 1.2 version is out. You can download <a href="../../../download/70">deb-package for Maemo 5</a>. It includes some fixes and code improvements:</p>
+
+<ul>
+  <li>dbuscron uses optparse instead of getopt</li>
+  <li>Makefile: ignore error on existing config</li>
+  <li>more robust and unicode safe dbus string handling</li>
+  <li>fixed unset session bus address issue</li>
+  <li>more robust loggin of unicode messages</li>
+  <li>better log messages</li>
+  <li>dbuscrontab: refactored error handling</li>
+  <li>moved shell part into modules</li>
+  <li>Makefile updated</li>
+  <li>changelog updated</li>
+</ul>
+
+<p>Besides that I’ve forgotten to mention dbuscrontab utility used to edit dbuscron’s config flawlessly. It works just like crontab utility from good old cron daemon. It accepts one of following arguments:</p>
+
+<ul>
+  <li><em>-l</em> — show config to standard output,</li>
+  <li><em>-k</em> — check config for syntax errors,</li>
+  <li><em>-e</em> — edit config with standard system editor (set in <code>EDITOR</code> environment variable or <code>/usr/bin/vim</code> if this variable is not set).</li>
+</ul>
+
+<p>The most useful argument is <em>-e</em>. Use <code>dbuscrontab -e</code> to edit system-wide config. The reasons a many:</p>
+
+<ol>
+  <li>it edits copy of /etc/dbuscrontab, not this file itself, so you are protected from system crashes like power or software failures,</li>
+  <li>it replaces original config with updated copy only if editor is finished correctly and the copy is really changed,</li>
+  <li>and the last, but the most important thing: it checks copy you changed for syntax errors before overwriting system-wide config, so even you make some mistake your main config will stay safe and intact.</li>
+</ol>
+
+<p>And here are dbuscron’s arguments:</p>
+
+<ul>
+  <li><em>-f, –nodaemon</em> — run daemon in foreground, e.g. for testing;</li>
+  <li><em>-l, –log, –logfile</em> — set log file to put standard error and output, used for both run programs and dbuscron itself output messages, doesn’t work with <em>-f</em>;</li>
+  <li><em>-c, –conf, –config</em> — set config file instead of default <code>/etc/dbuscrontab</code>;</li>
+  <li><em>-q, –quiet</em> — make daemon more quiet, can be repeated several times to hide more critical errors from log output;</li>
+  <li><em>-v, –verbose</em> — make daemon more verbose, can be repeated several times to show more debug and information messages (less important messages);</li>
+</ul>
+
+<hr />
+
+<p>After several cleanups I decided to present my cron-like DBUS messages scheduler to community. I made it for my N900, so deb-package is created for Maemo 5, but the daemon itself can be used on any Linux-based OS with DBUS. Written in Python.</p>
+
+<p>It work pretty simply: just run dbuscron and be happy =)</p>
+
+<p>But you better config it before running to make it useful. Main dbuscron’s config file is /etc/dbuscrontab and looks like crontab files. Every line is a rule to match DBUS messages. These rules consist of nine parts: bus (either “S” for system bus or “s” for session bus), message type (signal, method_call, method_return or error), source name, interface name, object path, member method name, destination name, message arguments and command to run on matched message.</p>
+
+<p>Every field can have many values to match separated with comma, or can have single star (*) to match any value. Arguments field can have several argument values separated with semi-colon, rule will match message only if all rule argument values match DBUS message argument values.</p>
+
+<p>You can also set environment variables in any place of config as “NAME=VALUE” pairs, one variable per line.</p>
+
+<p>Besides that these environment variables are set by dbuscron for commands run on matched message:</p>
+
+<ul>
+  <li>DBUS_ARG# (where # is a number between 0 and DBUS_ARGN-1) – message arguments,</li>
+  <li>DBUS_ARGN – number of message arguments,</li>
+  <li>DBUS_SENDER – sender’s name,</li>
+  <li>DBUS_DEST – destination name,</li>
+  <li>DBUS_IFACE – message interface,</li>
+  <li>DBUS_PATH – object path,</li>
+  <li>DBUS_MEMBER – member method,</li>
+  <li>DBUS_BUS – bus name, either “session” or “system”,</li>
+  <li>DBUS_TYPE – message type (signal, method_call, method_return or error).</li>
+</ul>
+
+<p>Empty lines and lines starting with “#” are ignored as always =)</p>
+
+<p>I can tell you about abilities of the daemon for many hours, but example of my own config is more useful in this case:</p>
+
+<pre><code># Stop player on headphones plug out
+S signal * org.freedesktop.Hal.Device /org/freedesktop/Hal/devices/platform_headphone Condition * ButtonPressed;connection grep -q disconnected /sys/devices/platform/gpio-switch/headphone/state &amp;&amp; run-standalone.sh /opt/userscripts/mpcontrol.sh stop
+# Say incoming number with espeak
+S signal * com.nokia.csd.Call /com/nokia/csd/call Coming * * run-standalone.sh /opt/userscripts/tasks/speak-caller.sh
+# Connect to ISP via PPTP on home WiFi network connection
+S signal * com.nokia.wlancond.signal /com/nokia/wlancond/signal connected * wlan0 run-standalone.sh /opt/userscripts/tasks/connect-pptp.sh
+# Disconnect PPTP
+S signal * com.nokia.wlancond.signal /com/nokia/wlancond/signal disconnected * wlan0 run-standalone.sh /opt/userscripts/tasks/disconnect-pptp.sh
+# Switch to 3G mode on GPRS connected to make it faster
+S signal * com.nokia.csd.GPRS.Context /com/nokia/csd/gprs/0 Connected * * /opt/userscripts/radiomode.sh both
+# Switch back to GSM mode only on GPRS disconnected to save battery
+S signal * com.nokia.csd.GPRS.Context /com/nokia/csd/gprs/0 Disconnected * * /opt/userscripts/radiomode.sh gsm
+# This message comes on cell changed:
+#S signal * Phone.Net /com/nokia/phone/net cell_info_change * status;lac;cid;mnc;mcc;services;userdata command
+# This message comes on operator name changed:
+#S signal * Phone.Net /com/nokia/phone/net operator_name_change * status;opname;unk;mnc;mcc command
+# Show notification message on operator name changed:
+S signal * Phone.Net /com/nokia/phone/net operator_name_change * * run-standalone.sh /opt/userscripts/tasks/show-opname.sh
+</code></pre>
+
+<p>That’s it, there’re really many possibilities as you can see =)</p>
+
+<p>This daemon can be found on my github account here: <a href="http://github.com/kstep/dbuscron">http://github.com/kstep/dbuscron</a>. Or you can download deb-package for Maemo 5 from <a href="../../../download/69">here</a>.</p>
+
+
+<p class="clearfix tags">
+    
+</p>
+</body></html>
