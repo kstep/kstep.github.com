@@ -10,308 +10,307 @@
     Pearlwall <small><nobr ng-bind="page.date | asdate:locale.date_format" class="published">2011-04-12</nobr></small>
 </h1>
 
-<div>
-  <pre><code class="perl">use strict;
 
-package Pearlwall;
-use base &#39;Exporter&#39;;
-our @EXPORT = qw(iface port net mode oneof from to filter mangle nat raw flush with by user group marked list forwarding chain record on off);
+<div class="highlight"><pre><code class="language-perl" data-lang="perl"><span class="k">use</span> <span class="n">strict</span><span class="p">;</span>
 
-my $_table = &#39;&#39;;
-my $_dry_run = 0;
+<span class="nb">package</span> <span class="n">Pearlwall</span><span class="p">;</span>
+<span class="k">use</span> <span class="n">base</span> <span class="s">&#39;Exporter&#39;</span><span class="p">;</span>
+<span class="k">our</span> <span class="nv">@EXPORT</span> <span class="o">=</span> <span class="sx">qw(iface port net mode oneof from to filter mangle nat raw flush with by user group marked list forwarding chain record on off)</span><span class="p">;</span>
 
-BEGIN {
+<span class="k">my</span> <span class="nv">$_table</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="p">;</span>
+<span class="k">my</span> <span class="nv">$_dry_run</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-    no strict &#39;refs&#39;;
+<span class="k">BEGIN</span> <span class="p">{</span>
 
-    sub apply($)
-    {
-        my $command = &quot;iptables -t $Pearlwall::_table $_[0]&quot;;
-        if ($Pearlwall::_dry_run)
-        {
-            print &quot;$command\\n&quot;;
-        }
-        else
-        {
-            system $command;
-        }
-    }
+    <span class="nb">no</span> <span class="n">strict</span> <span class="s">&#39;refs&#39;</span><span class="p">;</span>
 
-    sub list
-    {
-        print &quot;Table $Pearlwall::_table:\\n&quot;;
-        apply &quot;-v -L &quot; . ($_[0]||&#39;&#39;);
-        print &quot;\\n&quot;;
-    }
+    <span class="k">sub </span><span class="nf">apply</span><span class="p">($)</span>
+    <span class="p">{</span>
+        <span class="k">my</span> <span class="nv">$command</span> <span class="o">=</span> <span class="s">&quot;iptables -t $Pearlwall::_table $_[0]&quot;</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$</span><span class="nn">Pearlwall::</span><span class="nv">_dry_run</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">print</span> <span class="s">&quot;$command\\n&quot;</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span>
+        <span class="p">{</span>
+            <span class="nb">system</span> <span class="nv">$command</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
 
-    sub parse_opts
-    {
-        my ($opts, $pfx) = @_;
-        $pfx ||= &#39;&#39;;
-        return join(&quot; &quot;, map { my ($a, $b) = ($pfx.$_, $opts-&gt;{$_}); $a =~ s/_/-/g; &quot;--$a &quot; . ($b == 1? &#39;&#39;: $b) } keys %{$opts});
-    }
+    <span class="k">sub </span><span class="nf">list</span>
+    <span class="p">{</span>
+        <span class="k">print</span> <span class="s">&quot;Table $Pearlwall::_table:\\n&quot;</span><span class="p">;</span>
+        <span class="n">apply</span> <span class="s">&quot;-v -L &quot;</span> <span class="o">.</span> <span class="p">(</span><span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">||</span><span class="s">&#39;&#39;</span><span class="p">);</span>
+        <span class="k">print</span> <span class="s">&quot;\\n&quot;</span><span class="p">;</span>
+    <span class="p">}</span>
 
-    my %bare_actions = qw(deny DROP allow ACCEPT mask MASQUERADE);
-    my %opts_actions = qw(forbid REJECT mark MARK throw REDIRECT pass SNAT);
-    while (my ($name, $action) = each(%bare_actions))
-    {
-        *{&quot;main::$name&quot;} = sub { apply &quot;$_[0] $action&quot;; return $_[0]; };
-    }
-    while (my ($name, $action) = each(%opts_actions))
-    {
-        *{&quot;main::$name&quot;} = sub { my $a = pop; apply &quot;$a $action &quot; . parse_opts({@_}) ; return $a; };
-    }
-    sub record
-    {
-        my $filter = pop;
-        my $opts = parse_opts({@_}, &#39;log-&#39;);
-        apply &quot;$filter LOG $opts&quot;;
-        return $filter;
-    }
+    <span class="k">sub </span><span class="nf">parse_opts</span>
+    <span class="p">{</span>
+        <span class="k">my</span> <span class="p">(</span><span class="nv">$opts</span><span class="p">,</span> <span class="nv">$pfx</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+        <span class="nv">$pfx</span> <span class="o">||=</span> <span class="s">&#39;&#39;</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nb">join</span><span class="p">(</span><span class="s">&quot; &quot;</span><span class="p">,</span> <span class="nb">map</span> <span class="p">{</span> <span class="k">my</span> <span class="p">(</span><span class="nv">$a</span><span class="p">,</span> <span class="nv">$b</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$pfx</span><span class="o">.</span><span class="nv">$_</span><span class="p">,</span> <span class="nv">$opts</span><span class="o">-&gt;</span><span class="p">{</span><span class="nv">$_</span><span class="p">});</span> <span class="nv">$a</span> <span class="o">=~</span> <span class="sr">s/_/-/g</span><span class="p">;</span> <span class="s">&quot;--$a &quot;</span> <span class="o">.</span> <span class="p">(</span><span class="nv">$b</span> <span class="o">==</span> <span class="mi">1</span><span class="p">?</span> <span class="s">&#39;&#39;</span><span class="p">:</span> <span class="nv">$b</span><span class="p">)</span> <span class="p">}</span> <span class="nb">keys</span> <span class="nv">%</span><span class="p">{</span><span class="nv">$opts</span><span class="p">});</span>
+    <span class="p">}</span>
 
-    my %chain_names = qw(input INPUT output OUTPUT forward FORWARD before_route PREROUTING after_route POSTROUTING);
-    while (my ($name, $chain) = each(%chain_names))
-    {
-        *{&quot;main::$name&quot;} = sub { return @_? &quot; -A $chain &quot;.join(&quot; &quot;, @_).&quot; -j &quot;: &quot; -P $chain &quot;; };
-    }
-    sub chain($;$)
-    {
-        my $chainname = shift;
-        if (@_) {
-            if ($_[0]) {
-                apply &quot;-E $chainname $_[0]&quot;;
-            } else {
-                apply &quot;-X $chainname&quot;;
-            }
-        } else {
-            apply &quot;-N $chainname&quot;;
-            bless sub { return @_? &quot; -A $chainname &quot;.join(&quot; &quot;, @_).&quot; -j &quot;: &quot; -P $chainname &quot;; }, $chainname;
-        }
-    }
+    <span class="k">my</span> <span class="nv">%bare_actions</span> <span class="o">=</span> <span class="sx">qw(deny DROP allow ACCEPT mask MASQUERADE)</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">%opts_actions</span> <span class="o">=</span> <span class="sx">qw(forbid REJECT mark MARK throw REDIRECT pass SNAT)</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="k">my</span> <span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="nv">$action</span><span class="p">)</span> <span class="o">=</span> <span class="nb">each</span><span class="p">(</span><span class="nv">%bare_actions</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="o">*</span><span class="p">{</span><span class="s">&quot;main::$name&quot;</span><span class="p">}</span> <span class="o">=</span> <span class="k">sub </span><span class="p">{</span> <span class="n">apply</span> <span class="s">&quot;$_[0] $action&quot;</span><span class="p">;</span> <span class="k">return</span> <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="p">};</span>
+    <span class="p">}</span>
+    <span class="k">while</span> <span class="p">(</span><span class="k">my</span> <span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="nv">$action</span><span class="p">)</span> <span class="o">=</span> <span class="nb">each</span><span class="p">(</span><span class="nv">%opts_actions</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="o">*</span><span class="p">{</span><span class="s">&quot;main::$name&quot;</span><span class="p">}</span> <span class="o">=</span> <span class="k">sub </span><span class="p">{</span> <span class="k">my</span> <span class="nv">$a</span> <span class="o">=</span> <span class="nb">pop</span><span class="p">;</span> <span class="n">apply</span> <span class="s">&quot;$a $action &quot;</span> <span class="o">.</span> <span class="n">parse_opts</span><span class="p">({</span><span class="nv">@_</span><span class="p">})</span> <span class="p">;</span> <span class="k">return</span> <span class="nv">$a</span><span class="p">;</span> <span class="p">};</span>
+    <span class="p">}</span>
+    <span class="k">sub </span><span class="nf">record</span>
+    <span class="p">{</span>
+        <span class="k">my</span> <span class="nv">$filter</span> <span class="o">=</span> <span class="nb">pop</span><span class="p">;</span>
+        <span class="k">my</span> <span class="nv">$opts</span> <span class="o">=</span> <span class="n">parse_opts</span><span class="p">({</span><span class="nv">@_</span><span class="p">},</span> <span class="s">&#39;log-&#39;</span><span class="p">);</span>
+        <span class="n">apply</span> <span class="s">&quot;$filter LOG $opts&quot;</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$filter</span><span class="p">;</span>
+    <span class="p">}</span>
 
-    foreach my $proto (qw(tcp udp udplite icmp esp ah sctp all))
-    {
-        *{&quot;main::$proto&quot;} = sub { return Pearlwall::Inversible-&gt;new(&quot; -p $proto &quot;), @_; };
-    }
+    <span class="k">my</span> <span class="nv">%chain_names</span> <span class="o">=</span> <span class="sx">qw(input INPUT output OUTPUT forward FORWARD before_route PREROUTING after_route POSTROUTING)</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="k">my</span> <span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="nv">$chain</span><span class="p">)</span> <span class="o">=</span> <span class="nb">each</span><span class="p">(</span><span class="nv">%chain_names</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="o">*</span><span class="p">{</span><span class="s">&quot;main::$name&quot;</span><span class="p">}</span> <span class="o">=</span> <span class="k">sub </span><span class="p">{</span> <span class="k">return</span> <span class="nv">@_</span><span class="p">?</span> <span class="s">&quot; -A $chain &quot;</span><span class="o">.</span><span class="nb">join</span><span class="p">(</span><span class="s">&quot; &quot;</span><span class="p">,</span> <span class="nv">@_</span><span class="p">)</span><span class="o">.</span><span class="s">&quot; -j &quot;</span><span class="p">:</span> <span class="s">&quot; -P $chain &quot;</span><span class="p">;</span> <span class="p">};</span>
+    <span class="p">}</span>
+    <span class="k">sub </span><span class="nf">chain</span><span class="p">($;$)</span>
+<span class="p">    {</span>
+        <span class="k">my</span> <span class="nv">$chainname</span> <span class="o">=</span> <span class="nb">shift</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">@_</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="p">{</span>
+                <span class="n">apply</span> <span class="s">&quot;-E $chainname $_[0]&quot;</span><span class="p">;</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="n">apply</span> <span class="s">&quot;-X $chainname&quot;</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">apply</span> <span class="s">&quot;-N $chainname&quot;</span><span class="p">;</span>
+            <span class="nb">bless</span> <span class="k">sub </span><span class="p">{</span> <span class="k">return</span> <span class="nv">@_</span><span class="p">?</span> <span class="s">&quot; -A $chainname &quot;</span><span class="o">.</span><span class="nb">join</span><span class="p">(</span><span class="s">&quot; &quot;</span><span class="p">,</span> <span class="nv">@_</span><span class="p">)</span><span class="o">.</span><span class="s">&quot; -j &quot;</span><span class="p">:</span> <span class="s">&quot; -P $chainname &quot;</span><span class="p">;</span> <span class="p">},</span> <span class="nv">$chainname</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
 
-    sub by($)
-    {
-        return &quot; --reject-with $_[0] &quot;;
-    }
-    sub with($)
-    {
-        return Pearlwall::MarkMask-&gt;new($_[0]);
-    }
+    <span class="k">foreach</span> <span class="k">my</span> <span class="nv">$proto</span> <span class="p">(</span><span class="sx">qw(tcp udp udplite icmp esp ah sctp all)</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="o">*</span><span class="p">{</span><span class="s">&quot;main::$proto&quot;</span><span class="p">}</span> <span class="o">=</span> <span class="k">sub </span><span class="p">{</span> <span class="k">return</span> <span class="nn">Pearlwall::</span><span class="n">Inversible</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="s">&quot; -p $proto &quot;</span><span class="p">),</span> <span class="nv">@_</span><span class="p">;</span> <span class="p">};</span>
+    <span class="p">}</span>
 
-    sub flush(;$)
-    {
-        apply &quot; -F &quot; . ($_[0]||&#39;&#39;);
-    }
+    <span class="k">sub </span><span class="nf">by</span><span class="p">($)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="s">&quot; --reject-with $_[0] &quot;</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">sub </span><span class="nf">with</span><span class="p">($)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nn">Pearlwall::</span><span class="n">MarkMask</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+    <span class="p">}</span>
 
-    sub iface($)
-    {
-        return Pearlwall::Iface-&gt;new($_[0]);
-    }
-    sub mode($)
-    {
-        my $mode = uc(shift);
-        return Pearlwall::Inversible-&gt;new(&quot; --state $mode &quot;, &quot; -m state &quot;);
-    }
-    sub port($)
-    {
-        return Pearlwall::Port-&gt;new($_[0]);
-    }
-    sub net($)
-    {
-        return Pearlwall::Network-&gt;new($_[0]);
-    }
-    sub user($)
-    {
-        return Pearlwall::Inversible-&gt;new(&quot; --uid-owner $_[0] &quot;, &quot; -m owner &quot;);
-    }
-    sub group($)
-    {
-        return Pearlwall::Inversible-&gt;new(&quot; --gid-owner $_[0] &quot;, &quot; -m owner &quot;);
-    }
-    sub marked($)
-    {
-        return Pearlwall::Inversible-&gt;new(&quot; --mark $_[0] &quot;, &quot; -m mark &quot;);
-    }
+    <span class="k">sub </span><span class="nf">flush</span><span class="p">(;$)</span>
+<span class="p">    {</span>
+        <span class="n">apply</span> <span class="s">&quot; -F &quot;</span> <span class="o">.</span> <span class="p">(</span><span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">||</span><span class="s">&#39;&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    sub oneof(@)
-    {
-        return join(&#39;,&#39;, @_);
-    }
+    <span class="k">sub </span><span class="nf">iface</span><span class="p">($)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nn">Pearlwall::</span><span class="n">Iface</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+    <span class="p">}</span>
+    <span class="k">sub </span><span class="nf">mode</span><span class="p">($)</span>
+    <span class="p">{</span>
+        <span class="k">my</span> <span class="nv">$mode</span> <span class="o">=</span> <span class="nb">uc</span><span class="p">(</span><span class="nb">shift</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nn">Pearlwall::</span><span class="n">Inversible</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="s">&quot; --state $mode &quot;</span><span class="p">,</span> <span class="s">&quot; -m state &quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">sub </span><span class="nf">port</span><span class="p">($)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nn">Pearlwall::</span><span class="n">Port</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+    <span class="p">}</span>
+    <span class="k">sub </span><span class="nf">net</span><span class="p">($)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nn">Pearlwall::</span><span class="n">Network</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+    <span class="p">}</span>
+    <span class="k">sub </span><span class="nf">user</span><span class="p">($)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nn">Pearlwall::</span><span class="n">Inversible</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="s">&quot; --uid-owner $_[0] &quot;</span><span class="p">,</span> <span class="s">&quot; -m owner &quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">sub </span><span class="nf">group</span><span class="p">($)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nn">Pearlwall::</span><span class="n">Inversible</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="s">&quot; --gid-owner $_[0] &quot;</span><span class="p">,</span> <span class="s">&quot; -m owner &quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">sub </span><span class="nf">marked</span><span class="p">($)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nn">Pearlwall::</span><span class="n">Inversible</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="s">&quot; --mark $_[0] &quot;</span><span class="p">,</span> <span class="s">&quot; -m mark &quot;</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    sub from(@)
-    {
-        return join &quot; &quot;, map { UNIVERSAL::isa($_, &#39;Pearlwall::Object&#39;)? $_-&gt;from(): $_ } @_;
-    }
-    sub to(@)
-    {
-        return join &quot; &quot;, map { UNIVERSAL::isa($_, &#39;Pearlwall::Object&#39;)? $_-&gt;to(): $_ } @_;
-    }
+    <span class="k">sub </span><span class="nf">oneof</span><span class="p">(@)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nb">join</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">,</span> <span class="nv">@_</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    sub filter(&amp;)
-    {
-        local $Pearlwall::_table = &#39;filter&#39;;
-        $_[0]-&gt;();
-    }
-    sub mangle(&amp;)
-    {
-        local $Pearlwall::_table = &#39;mangle&#39;;
-        $_[0]-&gt;();
-    }
-    sub nat(&amp;)
-    {
-        local $Pearlwall::_table = &#39;nat&#39;;
-        $_[0]-&gt;();
-    }
-    sub raw(&amp;)
-    {
-        local $Pearlwall::_table = &#39;raw&#39;;
-        $_[0]-&gt;();
-    }
+    <span class="k">sub </span><span class="nf">from</span><span class="p">(@)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nb">join</span> <span class="s">&quot; &quot;</span><span class="p">,</span> <span class="nb">map</span> <span class="p">{</span> <span class="nn">UNIVERSAL::</span><span class="n">isa</span><span class="p">(</span><span class="nv">$_</span><span class="p">,</span> <span class="s">&#39;Pearlwall::Object&#39;</span><span class="p">)?</span> <span class="nv">$_</span><span class="o">-&gt;</span><span class="n">from</span><span class="p">():</span> <span class="nv">$_</span> <span class="p">}</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">sub </span><span class="nf">to</span><span class="p">(@)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nb">join</span> <span class="s">&quot; &quot;</span><span class="p">,</span> <span class="nb">map</span> <span class="p">{</span> <span class="nn">UNIVERSAL::</span><span class="n">isa</span><span class="p">(</span><span class="nv">$_</span><span class="p">,</span> <span class="s">&#39;Pearlwall::Object&#39;</span><span class="p">)?</span> <span class="nv">$_</span><span class="o">-&gt;</span><span class="n">to</span><span class="p">():</span> <span class="nv">$_</span> <span class="p">}</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="p">}</span>
 
-    sub forwarding($)
-    {
-        open my $fh, &quot;&gt;&quot;, &quot;/proc/sys/net/ipv4/ip_forward&quot;;
-        print $fh 0+(!!$_[0]);
-        close $fh;
-    }
+    <span class="k">sub </span><span class="nf">filter</span><span class="p">(&amp;)</span>
+<span class="p">    {</span>
+        <span class="nb">local</span> <span class="nv">$</span><span class="nn">Pearlwall::</span><span class="nv">_table</span> <span class="o">=</span> <span class="s">&#39;filter&#39;</span><span class="p">;</span>
+        <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">sub </span><span class="nf">mangle</span><span class="p">(&amp;)</span>
+<span class="p">    {</span>
+        <span class="nb">local</span> <span class="nv">$</span><span class="nn">Pearlwall::</span><span class="nv">_table</span> <span class="o">=</span> <span class="s">&#39;mangle&#39;</span><span class="p">;</span>
+        <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">sub </span><span class="nf">nat</span><span class="p">(&amp;)</span>
+<span class="p">    {</span>
+        <span class="nb">local</span> <span class="nv">$</span><span class="nn">Pearlwall::</span><span class="nv">_table</span> <span class="o">=</span> <span class="s">&#39;nat&#39;</span><span class="p">;</span>
+        <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">sub </span><span class="nf">raw</span><span class="p">(&amp;)</span>
+<span class="p">    {</span>
+        <span class="nb">local</span> <span class="nv">$</span><span class="nn">Pearlwall::</span><span class="nv">_table</span> <span class="o">=</span> <span class="s">&#39;raw&#39;</span><span class="p">;</span>
+        <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">();</span>
+    <span class="p">}</span>
 
-    sub on()
-    {
-        return 1;
-    }
-    sub off()
-    {
-        return 0;
-    }
-}
+    <span class="k">sub </span><span class="nf">forwarding</span><span class="p">($)</span>
+    <span class="p">{</span>
+        <span class="nb">open</span> <span class="k">my</span> <span class="nv">$fh</span><span class="p">,</span> <span class="s">&quot;&gt;&quot;</span><span class="p">,</span> <span class="s">&quot;/proc/sys/net/ipv4/ip_forward&quot;</span><span class="p">;</span>
+        <span class="k">print</span> <span class="nv">$fh</span> <span class="mi">0</span><span class="o">+</span><span class="p">(</span><span class="o">!!</span><span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+        <span class="nb">close</span> <span class="nv">$fh</span><span class="p">;</span>
+    <span class="p">}</span>
 
-1;
+    <span class="k">sub </span><span class="nf">on</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">sub </span><span class="nf">off</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
 
-package Pearlwall::Inversible;
+<span class="mi">1</span><span class="p">;</span>
 
-use overload
-    &#39;!&#39; =&gt; sub {
-        $_[0]-&gt;[1] = !$_[0]-&gt;[1];
-        return $_[0];
-    },
-    &#39;&quot;&quot;&#39; =&gt; sub {
-        return $_[0]-&gt;[2] . ($_[0]-&gt;[1]? &#39;!&#39;: &#39;&#39;) . $_[0]-&gt;[0];
-    };
+<span class="nb">package</span> <span class="nn">Pearlwall::</span><span class="n">Inversible</span><span class="p">;</span>
 
-sub new
-{
-    my $class = shift;
-    my $self = [ shift, 0, shift||&#39;&#39; ];
-    bless $self, $class;
-}
+<span class="k">use</span> <span class="n">overload</span>
+    <span class="s">&#39;!&#39;</span> <span class="o">=&gt;</span> <span class="k">sub </span><span class="p">{</span>
+        <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">!</span><span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+        <span class="k">return</span> <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="p">},</span>
+    <span class="s">&#39;&quot;&quot;&#39;</span> <span class="o">=&gt;</span> <span class="k">sub </span><span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">.</span> <span class="p">(</span><span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">[</span><span class="mi">1</span><span class="p">]?</span> <span class="s">&#39;!&#39;</span><span class="p">:</span> <span class="s">&#39;&#39;</span><span class="p">)</span> <span class="o">.</span> <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="p">};</span>
 
-1;
+<span class="k">sub </span><span class="nf">new</span>
+<span class="p">{</span>
+    <span class="k">my</span> <span class="nv">$class</span> <span class="o">=</span> <span class="nb">shift</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="p">[</span> <span class="nb">shift</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">shift</span><span class="o">||</span><span class="s">&#39;&#39;</span> <span class="p">];</span>
+    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
+<span class="p">}</span>
 
-package Pearlwall::Object;
-use base &#39;Pearlwall::Inversible&#39;;
+<span class="mi">1</span><span class="p">;</span>
 
-sub from
-{
-    return $_[0]-&gt;[2] . ($_[0]-&gt;[1]? &#39;!&#39;: &#39;&#39;) . $_[0]-&gt;_from();
-}
+<span class="nb">package</span> <span class="nn">Pearlwall::</span><span class="n">Object</span><span class="p">;</span>
+<span class="k">use</span> <span class="n">base</span> <span class="s">&#39;Pearlwall::Inversible&#39;</span><span class="p">;</span>
 
-sub to
-{
-    return $_[0]-&gt;[2] . ($_[0]-&gt;[1]? &#39;!&#39;: &#39;&#39;) . $_[0]-&gt;_to();
-}
+<span class="k">sub </span><span class="nf">from</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">.</span> <span class="p">(</span><span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">[</span><span class="mi">1</span><span class="p">]?</span> <span class="s">&#39;!&#39;</span><span class="p">:</span> <span class="s">&#39;&#39;</span><span class="p">)</span> <span class="o">.</span> <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">_from</span><span class="p">();</span>
+<span class="p">}</span>
 
-1;
+<span class="k">sub </span><span class="nf">to</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">.</span> <span class="p">(</span><span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">[</span><span class="mi">1</span><span class="p">]?</span> <span class="s">&#39;!&#39;</span><span class="p">:</span> <span class="s">&#39;&#39;</span><span class="p">)</span> <span class="o">.</span> <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">_to</span><span class="p">();</span>
+<span class="p">}</span>
 
-package Pearlwall::Iface;
-use base &#39;Pearlwall::Object&#39;;
+<span class="mi">1</span><span class="p">;</span>
 
-sub _from
-{
-    return &quot; -i $_[0]-&gt;[0] &quot;;
-}
+<span class="nb">package</span> <span class="nn">Pearlwall::</span><span class="n">Iface</span><span class="p">;</span>
+<span class="k">use</span> <span class="n">base</span> <span class="s">&#39;Pearlwall::Object&#39;</span><span class="p">;</span>
 
-sub _to
-{
-    return &quot; -o $_[0]-&gt;[0] &quot;;
-}
+<span class="k">sub </span><span class="nf">_from</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="s">&quot; -i $_[0]-&gt;[0] &quot;</span><span class="p">;</span>
+<span class="p">}</span>
 
-1;
+<span class="k">sub </span><span class="nf">_to</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="s">&quot; -o $_[0]-&gt;[0] &quot;</span><span class="p">;</span>
+<span class="p">}</span>
 
-package Pearlwall::Port;
-use base &#39;Pearlwall::Object&#39;;
+<span class="mi">1</span><span class="p">;</span>
 
-sub _from
-{
-    return &quot; --sport $_[0]-&gt;[0] &quot;;
-}
+<span class="nb">package</span> <span class="nn">Pearlwall::</span><span class="n">Port</span><span class="p">;</span>
+<span class="k">use</span> <span class="n">base</span> <span class="s">&#39;Pearlwall::Object&#39;</span><span class="p">;</span>
 
-sub _to
-{
-    return &quot; --dport $_[0]-&gt;[0] &quot;;
-}
+<span class="k">sub </span><span class="nf">_from</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="s">&quot; --sport $_[0]-&gt;[0] &quot;</span><span class="p">;</span>
+<span class="p">}</span>
 
-1;
+<span class="k">sub </span><span class="nf">_to</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="s">&quot; --dport $_[0]-&gt;[0] &quot;</span><span class="p">;</span>
+<span class="p">}</span>
 
-package Pearlwall::Network;
-use base &#39;Pearlwall::Object&#39;;
+<span class="mi">1</span><span class="p">;</span>
 
-sub _from
-{
-    return &quot; -s $_[0]-&gt;[0] &quot;;
-}
+<span class="nb">package</span> <span class="nn">Pearlwall::</span><span class="n">Network</span><span class="p">;</span>
+<span class="k">use</span> <span class="n">base</span> <span class="s">&#39;Pearlwall::Object&#39;</span><span class="p">;</span>
 
-sub _to
-{
-    return &quot; -d  $_[0]-&gt;[0] &quot;;
-}
+<span class="k">sub </span><span class="nf">_from</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="s">&quot; -s $_[0]-&gt;[0] &quot;</span><span class="p">;</span>
+<span class="p">}</span>
 
-1;
+<span class="k">sub </span><span class="nf">_to</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="s">&quot; -d  $_[0]-&gt;[0] &quot;</span><span class="p">;</span>
+<span class="p">}</span>
 
-package Pearlwall::MarkMask;
+<span class="mi">1</span><span class="p">;</span>
 
-use overload &#39;&quot;&quot;&#39; =&gt; sub {
-        return &quot;$_[0]-&gt;[1] $_[0]-&gt;[0]$_[0]-&gt;[2]&quot;;
-    },
-    &#39;/&#39; =&gt; sub {
-        $_[0]-&gt;[2] = &quot;/$_[1]&quot;;
-        return $_[0];
-    },
-    &#39;|&#39; =&gt; sub {
-        $_[0]-&gt;[1] = &#39;set-mark&#39;;
-        $_[0]-&gt;[2] = &quot;/$_[1]&quot;;
-        return $_[0];
-    },
-    &#39;^&#39; =&gt; sub {
-        $_[0]-&gt;[1] = &#39;set-xmark&#39;;
-        $_[0]-&gt;[2] = &quot;/$_[1]&quot;;
-        return $_[0];
-    },
-    &#39;~&#39; =&gt; sub {
-        $_[0]-&gt;[1] = &#39;set-xmark&#39;;
-        $_[0]-&gt;[2] = &quot;&quot;;
-        return $_[0];
-    },
-    &#39;&amp;&#39; =&gt; sub {
-        $_[0]-&gt;[0] = $_[1];
-        $_[0]-&gt;[1] = &#39;and-mark&#39;;
-        $_[0]-&gt;[2] = &quot;&quot;;
-        return $_[0];
-    };
+<span class="nb">package</span> <span class="nn">Pearlwall::</span><span class="n">MarkMask</span><span class="p">;</span>
 
-sub new
-{
-    my $class = shift;
-    my $self = [ shift, &#39;set-mark&#39;, &#39;&#39; ];
-    bless $self, $class;
-}
+<span class="k">use</span> <span class="n">overload</span> <span class="s">&#39;&quot;&quot;&#39;</span> <span class="o">=&gt;</span> <span class="k">sub </span><span class="p">{</span>
+        <span class="k">return</span> <span class="s">&quot;$_[0]-&gt;[1] $_[0]-&gt;[0]$_[0]-&gt;[2]&quot;</span><span class="p">;</span>
+    <span class="p">},</span>
+    <span class="s">&#39;/&#39;</span> <span class="o">=&gt;</span> <span class="k">sub </span><span class="p">{</span>
+        <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;/$_[1]&quot;</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="p">},</span>
+    <span class="s">&#39;|&#39;</span> <span class="o">=&gt;</span> <span class="k">sub </span><span class="p">{</span>
+        <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;set-mark&#39;</span><span class="p">;</span>
+        <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;/$_[1]&quot;</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="p">},</span>
+    <span class="s">&#39;^&#39;</span> <span class="o">=&gt;</span> <span class="k">sub </span><span class="p">{</span>
+        <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;set-xmark&#39;</span><span class="p">;</span>
+        <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;/$_[1]&quot;</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="p">},</span>
+    <span class="s">&#39;~&#39;</span> <span class="o">=&gt;</span> <span class="k">sub </span><span class="p">{</span>
+        <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;set-xmark&#39;</span><span class="p">;</span>
+        <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="p">},</span>
+    <span class="s">&#39;&amp;&#39;</span> <span class="o">=&gt;</span> <span class="k">sub </span><span class="p">{</span>
+        <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$_</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+        <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;and-mark&#39;</span><span class="p">;</span>
+        <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">;</span>
+        <span class="k">return</span> <span class="nv">$_</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="p">};</span>
 
-1;</code></pre>
-</div>
+<span class="k">sub </span><span class="nf">new</span>
+<span class="p">{</span>
+    <span class="k">my</span> <span class="nv">$class</span> <span class="o">=</span> <span class="nb">shift</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="p">[</span> <span class="nb">shift</span><span class="p">,</span> <span class="s">&#39;set-mark&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span> <span class="p">];</span>
+    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="mi">1</span><span class="p">;</span></code></pre></div>
 
 
 

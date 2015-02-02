@@ -16,33 +16,29 @@
 
 <p>Собственно она:</p>
 
-<div>
-  <pre><code class="python">def curry(n):
-    def realcurry(func):
-        if n &lt; 2:
-            return func
-        else:
-            return lambda a: curry(n-1)(lambda *args: func(a, *args))
-    return realcurry</code></pre>
-</div>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">curry</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">realcurry</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">func</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">curry</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)(</span><span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">realcurry</span></code></pre></div>
 
 <p>Использование:</p>
 
-<div>
-  <pre><code class="python">@curry(5)
-def calc(a, b, c, d, e):
-	return a+b*c+d-e
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="nd">@curry</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">calc</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+	<span class="k">return</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">*</span><span class="n">c</span><span class="o">+</span><span class="n">d</span><span class="o">-</span><span class="n">e</span>
 
-print calc(2)(2)(2)(2)(2)
+<span class="k">print</span> <span class="n">calc</span><span class="p">(</span><span class="mi">2</span><span class="p">)(</span><span class="mi">2</span><span class="p">)(</span><span class="mi">2</span><span class="p">)(</span><span class="mi">2</span><span class="p">)(</span><span class="mi">2</span><span class="p">)</span>
 
-class TestClass(object):
-	@curry(6)
-	def calc(self, a, b, c, d, e):
-		return a+b*c+d-e
+<span class="k">class</span> <span class="nc">TestClass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+	<span class="nd">@curry</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">calc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span><span class="o">*</span><span class="n">c</span><span class="o">+</span><span class="n">d</span><span class="o">-</span><span class="n">e</span>
 
-obj = TestClass()
-print obj.calc()(2)(2)(2)(2)(2)</code></pre>
-</div>
+<span class="n">obj</span> <span class="o">=</span> <span class="n">TestClass</span><span class="p">()</span>
+<span class="k">print</span> <span class="n">obj</span><span class="o">.</span><span class="n">calc</span><span class="p">()(</span><span class="mi">2</span><span class="p">)(</span><span class="mi">2</span><span class="p">)(</span><span class="mi">2</span><span class="p">)(</span><span class="mi">2</span><span class="p">)(</span><span class="mi">2</span><span class="p">)</span></code></pre></div>
 
 <p>Кратко как оно работает: функция <code>curry()</code> рекурсивно создаёт цепочку λ-функций одного аргумента, которые последовательно вызывают друг друга вплоть до момента, когда число аргументов достигает одного. Работает это благодаря счётчику глубины развёртки n, который попадает в замыкание в функции <code>realcurry()</code>.</p>
 

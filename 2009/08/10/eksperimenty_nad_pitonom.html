@@ -25,18 +25,14 @@
 
 <p>Но это ещё не всё! Есть такой замечательный специальный метод <code>__call__(self, *args, **kwds)</code>. Если он определён для объекта, то при попытке вызвать объект вызывается именно он, то есть:</p>
 
-<div>
-  <pre><code class="python">obj = SomeClass()
-obj(&quot;Hello!&quot;)</code></pre>
-</div>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">obj</span> <span class="o">=</span> <span class="n">SomeClass</span><span class="p">()</span>
+<span class="n">obj</span><span class="p">(</span><span class="s">&quot;Hello!&quot;</span><span class="p">)</span></code></pre></div>
 
 <p>На самом деле неявно вызывает метод инстанса <code>obj.__call__("Hello!")</code></p>
 
 <p>Добавляем ещё один питонофакт: оператор создания класса в Питоне по сути является оператором вызова функции. То есть когда мы делаем:</p>
 
-<div>
-  <pre><code class="python">obj = SomeClass()</code></pre>
-</div>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">obj</span> <span class="o">=</span> <span class="n">SomeClass</span><span class="p">()</span></code></pre></div>
 
 <p>Мы на самом деле вызываем метод <code>SomeClass.__call__()</code>, который вызывает <code>SomeClass.__new__(SomeClass)</code>, а потом <code>SomeClass.__init__(inst)</code>, где inst — результат выполнения <code>SomeClass.__new__()</code>. Это означает, что:</p>
 
@@ -49,48 +45,44 @@ obj(&quot;Hello!&quot;)</code></pre>
 
 <p>Следующий вопрос, который возникает, это откуда берётся <code>SomeClass.__call__()</code>? Ведь это метод инстанса, то есть если определить его вот так:</p>
 
-<div>
-  <pre><code class="python">class SomeClass(object):
-	def __call__(self):</code></pre>
-</div>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">class</span> <span class="nc">SomeClass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></code></pre></div>
 
 <p>то мы сможем перехватить вызов инстанса этого класса — <code>obj()</code> — но не самого <code>SomeClass()</code>. То есть чтобы перехватить вызов класса как функции, надо объявить метод <code>__call__()</code> в классе класса… В метаклассе.</p>
 
 <p>Дальше привожу пример тестовой программки, которую я написал как раз для выяснения (и прояснения) этой всей крышесносящей байды:</p>
 
-<div>
-  <pre><code class="python">#!/usr/bin/python
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="c">#!/usr/bin/python</span>
 
-class MetaClass(type):
-	def __new__(cls, name, bases, dicts):
-		print &quot;meta __new__&quot;
-		return super(MetaClass, cls).__new__(cls, name, bases, dicts)
-	def __init__(cls, name, bases, dicts):
-		print &quot;meta __init__ called&quot;
-		super(MetaClass, cls).__init__(name, bases, dicts)
-	def __call__(self):
-		print &quot;meta __call__ called&quot;
-		return super(MetaClass, self).__call__()
+<span class="k">class</span> <span class="nc">MetaClass</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dicts</span><span class="p">):</span>
+		<span class="k">print</span> <span class="s">&quot;meta __new__&quot;</span>
+		<span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">MetaClass</span><span class="p">,</span> <span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dicts</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dicts</span><span class="p">):</span>
+		<span class="k">print</span> <span class="s">&quot;meta __init__ called&quot;</span>
+		<span class="nb">super</span><span class="p">(</span><span class="n">MetaClass</span><span class="p">,</span> <span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dicts</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">print</span> <span class="s">&quot;meta __call__ called&quot;</span>
+		<span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">MetaClass</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__call__</span><span class="p">()</span>
 
-class TestClass(object):
-	__metaclass__ = MetaClass
+<span class="k">class</span> <span class="nc">TestClass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+	<span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">MetaClass</span>
 
-	def __new__(cls):
-		print &quot;__new__ called&quot;
-		return super(TestClass, cls).__new__(cls)
-	def __init__(self):
-		print &quot;__init__ called&quot;
-		super(TestClass, self).__init__()
-	def __call__(self):
-		print &quot;__call__ called&quot;
+	<span class="k">def</span> <span class="nf">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+		<span class="k">print</span> <span class="s">&quot;__new__ called&quot;</span>
+		<span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">TestClass</span><span class="p">,</span> <span class="n">cls</span><span class="p">)</span><span class="o">.</span><span class="n">__new__</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">print</span> <span class="s">&quot;__init__ called&quot;</span>
+		<span class="nb">super</span><span class="p">(</span><span class="n">TestClass</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+	<span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">print</span> <span class="s">&quot;__call__ called&quot;</span>
 
-print &quot;Program start...&quot;
-print &quot;Instantiating TestClass...&quot;
-tclass = TestClass()
-print &quot;TestClass instantiated.&quot;
-print tclass
-print &quot;Finishing program...&quot;</code></pre>
-</div>
+<span class="k">print</span> <span class="s">&quot;Program start...&quot;</span>
+<span class="k">print</span> <span class="s">&quot;Instantiating TestClass...&quot;</span>
+<span class="n">tclass</span> <span class="o">=</span> <span class="n">TestClass</span><span class="p">()</span>
+<span class="k">print</span> <span class="s">&quot;TestClass instantiated.&quot;</span>
+<span class="k">print</span> <span class="n">tclass</span>
+<span class="k">print</span> <span class="s">&quot;Finishing program...&quot;</span></code></pre></div>
 
 <p>На выходе она выдаёт следующее:</p>
 

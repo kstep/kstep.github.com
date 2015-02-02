@@ -16,9 +16,7 @@
 
 <p>Дебиановского пакета навскидку не нашёл, потому собрал свой. LD_PRELOAD, впрочем, придётся ставить самому, например в ~/.profile:</p>
 
-<div>
-  <pre><code class="bash">export LD_PRELOAD=/usr/lib/libetc.so.0</code></pre>
-</div>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">export </span><span class="nv">LD_PRELOAD</span><span class="o">=</span>/usr/lib/libetc.so.0</code></pre></div>
 
 <p>В /etc/profile (или куда-то туда) не рекомендуется, т.к. хрен его знает, как себя может повести какой-нить демон с этой либой при прелоаде.</p>
 

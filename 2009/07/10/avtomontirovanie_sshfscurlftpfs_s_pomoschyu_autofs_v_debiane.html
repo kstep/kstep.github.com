@@ -36,27 +36,23 @@
 
 <p>Чтобы не плодить сущностей был создан один единственный унверсальный скрипт /etc/auto.remote:</p>
 
-<div>
-  <pre><code class="bash">#!/bin/sh
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/bin/sh</span>
 
-key=&quot;$1&quot;
-opts=&quot;-fstype=fuse,rw,nodev,nosuid,nonempty,noatime,allow_other&quot;
+<span class="nv">key</span><span class="o">=</span><span class="s2">&quot;$1&quot;</span>
+<span class="nv">opts</span><span class="o">=</span><span class="s2">&quot;-fstype=fuse,rw,nodev,nosuid,nonempty,noatime,allow_other&quot;</span>
 
-case $0 in
-*.ssh) proto=&quot;sshfs&quot;; key=&quot;$key\\\\:&quot; ;;
-*.ftp) proto=&quot;curlftpfs&quot; ;;
-*) exit 1 ;;
-esac
+<span class="k">case</span> <span class="nv">$0</span> in
+*.ssh<span class="o">)</span> <span class="nv">proto</span><span class="o">=</span><span class="s2">&quot;sshfs&quot;</span><span class="p">;</span> <span class="nv">key</span><span class="o">=</span><span class="s2">&quot;$key\\\\:&quot;</span> <span class="p">;;</span>
+*.ftp<span class="o">)</span> <span class="nv">proto</span><span class="o">=</span><span class="s2">&quot;curlftpfs&quot;</span> <span class="p">;;</span>
+*<span class="o">)</span> <span class="nb">exit </span><span class="m">1</span> <span class="p">;;</span>
+<span class="k">esac</span>
 
-echo &quot;$opts&quot; &quot;:$proto\\\\#$key&quot;</code></pre>
-</div>
+<span class="nb">echo</span> <span class="s2">&quot;$opts&quot;</span> <span class="s2">&quot;:$proto\\\\#$key&quot;</span></code></pre></div>
 
 <p>После чего на этот скрипт были проброшены линки:</p>
 
-<div>
-  <pre><code class="bash">ln -s /etc/auto.remote /etc/auto.ssh
-ln -s /etc/auto.remote /etc/auto.ftp</code></pre>
-</div>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">ln -s /etc/auto.remote /etc/auto.ssh
+ln -s /etc/auto.remote /etc/auto.ftp</code></pre></div>
 
 <p>Этот скрипт позволяет автоматически монтировать ssh и ftp хосты (в зависимости от того, под каким именем он был вызван). Единственное, о чём не стоит забывать, что выполняется монтирование autofs’ом от имени рута, так что все ftp-пароли в ~/.netrc, настройки коннекта ssh в ~/.ssh/config и соответствующие ssh-ключики должны быть продублированы в доме рута (по умолчанию /root) со всеми вытекающими… За то в результате мы получаем прозрачное монтирование-размонтирование удалённых ftp и ssh хостов: просто нужно зайти в соответствующий каталог и оно само автомагически подключится (или не подключится :), а после некоторого времени без доступа к этому каталогу (в примере указано 30 секунд, см. параметр –timeout), оно само же и отключится. Пользуйтесь на здоровье!</p>
 

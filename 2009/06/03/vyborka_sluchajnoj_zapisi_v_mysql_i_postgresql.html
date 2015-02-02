@@ -20,9 +20,7 @@
 
 <p>В Гугле есть ещё несколько вариантов (попробуйте поискать сами, есть интересные для разных типов СУБД), но вариант, изобретённый в своё время мной, я там не нашёл, поэтому кладу его тут:</p>
 
-<div>
-  <pre><code class="sql">SELECT * FROM table WHERE RAND() &gt; 0.5 LIMIT 10;</code></pre>
-</div>
+<div class="highlight"><pre><code class="language-sql" data-lang="sql"><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="k">table</span> <span class="k">WHERE</span> <span class="n">RAND</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">.</span><span class="mi">5</span> <span class="k">LIMIT</span> <span class="mi">10</span><span class="p">;</span></code></pre></div>
 
 <p>Его фишка в том, что он в реальности намного быстрее, чем о том говорит <code>EXPLAIN</code>, и вот почему: выборка прекращается очень рано за счёт <code>LIMIT</code>-а, так что вся таблица выбираться не будет. Сортировки нет, поэтому будет простой скан без файл-сортинга (как в случае с <code>ORDER BY RAND()</code>, который к тому же мускулу придётся вычислить <strong>для каждой</strong> записи), а <code>RAND()</code> будет посчитан только для немногих записей, которые мускул успеет пройти до полного формирования результата запроса. Полный скан у нас будет в любом случае, раз нет особо выборки с участием индексов, но избавление от сортировки и вычисления функции для каждой строки — огромный шаг вперёд!</p>
 

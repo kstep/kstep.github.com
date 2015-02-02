@@ -108,12 +108,10 @@ Haskell-е подход «отсортировать-и-выбрать» раб�
 <p>Что ещё лучше, наш код на Haskell-е, работающий так эффективно, очень краток и
 использует только стандартные библиотечные функции.</p>
 
-<div>
-  <pre><code class="haskell">-- file: ch00/KMinima.hs
--- lines beginning with &quot;--&quot; are comments.
+<div class="highlight"><pre><code class="language-haskell" data-lang="haskell"><span class="c1">-- file: ch00/KMinima.hs</span>
+<span class="c1">-- lines beginning with &quot;--&quot; are comments.</span>
 
-minima k xs = take k (sort xs)</code></pre>
-</div>
+<span class="nf">minima</span> <span class="n">k</span> <span class="n">xs</span> <span class="ow">=</span> <span class="n">take</span> <span class="n">k</span> <span class="p">(</span><span class="n">sort</span> <span class="n">xs</span><span class="p">)</span></code></pre></div>
 
 <p>Может потребоваться некоторое время, чтобы научиться интуитивно чувствовать,
 когда ленивые вычисления действительно важны, но при их использовании код

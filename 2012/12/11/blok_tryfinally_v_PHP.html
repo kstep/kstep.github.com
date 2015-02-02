@@ -18,88 +18,84 @@
 
 <p>Что я сделал, так это смешал принцип <a href="http://ru.wikipedia.org/wiki/RAII">RAII</a> из С++ и использование замыканий из функционального программирования. Получился такой вот метр колючей проволоки:</p>
 
-<div>
-  <pre><code class="php">&lt;?php
-class ensure {
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="k">class</span> <span class="nc">ensure</span> <span class="p">{</span>
 
-    public function __invokeStatic() {
-        $args = func_get_args();
-        $try = array_shift($args);
-        return new self($try, $args);
-    }
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">__invokeStatic</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$args</span> <span class="o">=</span> <span class="nb">func_get_args</span><span class="p">();</span>
+        <span class="nv">$try</span> <span class="o">=</span> <span class="nb">array_shift</span><span class="p">(</span><span class="nv">$args</span><span class="p">);</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nx">self</span><span class="p">(</span><span class="nv">$try</span><span class="p">,</span> <span class="nv">$args</span><span class="p">);</span>
+    <span class="p">}</span>
 
-    private $state;
-    private $error;
-    public function __construct($try, $args) {
-        try {
-            $this-&gt;state = call_user_func_array($try, $args);
+    <span class="k">private</span> <span class="nv">$state</span><span class="p">;</span>
+    <span class="k">private</span> <span class="nv">$error</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="nv">$try</span><span class="p">,</span> <span class="nv">$args</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">try</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">state</span> <span class="o">=</span> <span class="nb">call_user_func_array</span><span class="p">(</span><span class="nv">$try</span><span class="p">,</span> <span class="nv">$args</span><span class="p">);</span>
 
-        } catch (Exception $e) {
-            $this-&gt;error = $e;
-        }
-    }
+        <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">Exception</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">error</span> <span class="o">=</span> <span class="nv">$e</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
 
-    private $errorError;
-    public function except($error, $callback) {
-        if ($this-&gt;error and is_a($this-&gt;error, $error)) {
-            $error = $this-&gt;error;
-            $this-&gt;error = null;
+    <span class="k">private</span> <span class="nv">$errorError</span><span class="p">;</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">except</span><span class="p">(</span><span class="nv">$error</span><span class="p">,</span> <span class="nv">$callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">error</span> <span class="k">and</span> <span class="nb">is_a</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">error</span><span class="p">,</span> <span class="nv">$error</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nv">$error</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">error</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">error</span> <span class="o">=</span> <span class="k">null</span><span class="p">;</span>
 
-            try {
-                $callback($error);
-            } catch (Exception $e) {
-                $this-&gt;errorError = $e;
-            }
-        }
+            <span class="k">try</span> <span class="p">{</span>
+                <span class="nv">$callback</span><span class="p">(</span><span class="nv">$error</span><span class="p">);</span>
+            <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">Exception</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">errorError</span> <span class="o">=</span> <span class="nv">$e</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
 
-        return $this;
-    }
+        <span class="k">return</span> <span class="nv">$this</span><span class="p">;</span>
+    <span class="p">}</span>
 
-    public function finally($callback) {
-        $callback($this-&gt;state);
-        $this-&gt;finish();
-        return $this;
-    }
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">finally</span><span class="p">(</span><span class="nv">$callback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$callback</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">state</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">finish</span><span class="p">();</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="p">;</span>
+    <span class="p">}</span>
 
-    public function finish() {
-        $error = false;
-        if ($this-&gt;error) {
-            $error = $this-&gt;error;
-            $this-&gt;error = null;
-        } elseif ($this-&gt;errorError) {
-            $error = $this-&gt;errorError;
-            $this-&gt;errorError = null;
-        }
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">finish</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$error</span> <span class="o">=</span> <span class="k">false</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">error</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$error</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">error</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">error</span> <span class="o">=</span> <span class="k">null</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">elseif</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">errorError</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$error</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">errorError</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">errorError</span> <span class="o">=</span> <span class="k">null</span><span class="p">;</span>
+        <span class="p">}</span>
 
-        if ($error) {
-            throw $error;
-        }
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$error</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="nv">$error</span><span class="p">;</span>
+        <span class="p">}</span>
 
-        return $this;
-    }
+        <span class="k">return</span> <span class="nv">$this</span><span class="p">;</span>
+    <span class="p">}</span>
 
-    public function __destruct() {
-        $this-&gt;finish();
-    }
-}</code></pre>
-</div>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">__destruct</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">finish</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
 
 <p>Что же мы получили в итоге? А получили мы фактически новую версию блока <code>try/catch/finally</code>, которую можно использовать вместо стандартного <code>try/catch</code>:</p>
 
-<div>
-  <pre><code class="php">&lt;?php
-ensure(function () {
-    $fh = fopen(&quot;logfile.txt&quot;, &quot;a&quot;);
-    fwrite($fh, &quot;Log data\n&quot;);
-    return $fh;
-})
--&gt;except(&#39;Exception&#39;, function ($e) {
-    echo &quot;Error happened: &quot; . $e-&gt;getMessage();
-})
--&gt;finally(function ($fh) {
-    fclose($fh);
-});</code></pre>
-</div>
+<div class="highlight"><pre><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="nx">ensure</span><span class="p">(</span><span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nv">$fh</span> <span class="o">=</span> <span class="nb">fopen</span><span class="p">(</span><span class="s2">&quot;logfile.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">);</span>
+    <span class="nb">fwrite</span><span class="p">(</span><span class="nv">$fh</span><span class="p">,</span> <span class="s2">&quot;Log data</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nv">$fh</span><span class="p">;</span>
+<span class="p">})</span>
+<span class="o">-&gt;</span><span class="na">except</span><span class="p">(</span><span class="s1">&#39;Exception&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">echo</span> <span class="s2">&quot;Error happened: &quot;</span> <span class="o">.</span> <span class="nv">$e</span><span class="o">-&gt;</span><span class="na">getMessage</span><span class="p">();</span>
+<span class="p">})</span>
+<span class="o">-&gt;</span><span class="na">finally</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nv">$fh</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">fclose</span><span class="p">(</span><span class="nv">$fh</span><span class="p">);</span>
+<span class="p">});</span></code></pre></div>
 
 <p>«Блок» <code>finally</code> будет выполнен всегда, в не зависимости от ошибок, произошедших в «блоке» <code>try</code>, «блоки» <code>catch</code> будут работать как обычно. Однако необработанные исключения, возникшие в блоках <code>try</code> и <code>catch</code>, никуда не потеряются и будут вызваны после выполнения <code>finally</code>.</p>
 

@@ -12,118 +12,110 @@
 
 <p>Во-первых нам потребуется библиотека posix, т.к. иначе не проверить существования файла и его тип:</p>
 
-<div>
-  <pre><code class="lua">assert(package.loadlib(&quot;/usr/lib/lua/5.1/posix.so&quot;, &quot;luaopen_posix&quot;))()</code></pre>
-</div>
+<div class="highlight"><pre><code class="language-lua" data-lang="lua"><span class="nb">assert</span><span class="p">(</span><span class="nb">package.loadlib</span><span class="p">(</span><span class="s2">&quot;</span><span class="s">/usr/lib/lua/5.1/posix.so&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="s">luaopen_posix&quot;</span><span class="p">))()</span></code></pre></div>
 
 <p>Ставиться она из пакета liblua5.1-posix1.</p>
 
 <p>Дальше описываем такую функцию:</p>
 
-<div>
-  <pre><code class="lua">function mounts_menu()
-    local Automisc = &#39;/etc/auto.misc&#39;
-    local Mounts = &#39;/proc/mounts&#39;
-    local line
+<div class="highlight"><pre><code class="language-lua" data-lang="lua"><span class="k">function</span> <span class="nf">mounts_menu</span><span class="p">()</span>
+    <span class="kd">local</span> <span class="n">Automisc</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="s">/etc/auto.misc&#39;</span>
+    <span class="kd">local</span> <span class="n">Mounts</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="s">/proc/mounts&#39;</span>
+    <span class="kd">local</span> <span class="n">line</span>
 
-    local automisc = {}
-    local stat
-    for line in io.lines(Automisc) do
-        if not (line:sub(1,1) == &#39;#&#39; or line:find(&quot;^%s*$&quot;)) then
-            local dir, opts, dev = line:match(&quot;^(%S+)%s+(%S+)%s+(%S+)&quot;)
-            if dev and dev:sub(1,1) == &#39;:&#39; then
-                dev = dev:sub(2)
-                stat = posix.stat(dev)
-                if stat and stat.type == &#39;block device&#39; then
-                    automisc[dev] = dir
-                end
-            end
-        end
-    end
+    <span class="kd">local</span> <span class="n">automisc</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="kd">local</span> <span class="n">stat</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="k">in</span> <span class="nb">io.lines</span><span class="p">(</span><span class="n">Automisc</span><span class="p">)</span> <span class="k">do</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">line</span><span class="p">:</span><span class="n">sub</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="s">#&#39;</span> <span class="ow">or</span> <span class="n">line</span><span class="p">:</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;</span><span class="s">^%s*$&quot;</span><span class="p">))</span> <span class="k">then</span>
+            <span class="kd">local</span> <span class="n">dir</span><span class="p">,</span> <span class="n">opts</span><span class="p">,</span> <span class="n">dev</span> <span class="o">=</span> <span class="n">line</span><span class="p">:</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;</span><span class="s">^(%S+)%s+(%S+)%s+(%S+)&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">dev</span> <span class="ow">and</span> <span class="n">dev</span><span class="p">:</span><span class="n">sub</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="s">:&#39;</span> <span class="k">then</span>
+                <span class="n">dev</span> <span class="o">=</span> <span class="n">dev</span><span class="p">:</span><span class="n">sub</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+                <span class="n">stat</span> <span class="o">=</span> <span class="n">posix</span><span class="p">.</span><span class="n">stat</span><span class="p">(</span><span class="n">dev</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">stat</span> <span class="ow">and</span> <span class="n">stat</span><span class="p">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="s">block device&#39;</span> <span class="k">then</span>
+                    <span class="n">automisc</span><span class="p">[</span><span class="n">dev</span><span class="p">]</span> <span class="o">=</span> <span class="n">dir</span>
+                <span class="k">end</span>
+            <span class="k">end</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
 
-    local mounts = {}
-    local autofsdir
-    for line in io.lines(Mounts) do
-        local dev, dir, ft = line:match(&quot;^(%S+)%s+(%S+)%s+(%S+)&quot;)
-        if ft == &#39;autofs&#39; then autofsdir = dir end
-        if automisc[dev] then
-            mounts[dev] = dir
-        end
-    end
+    <span class="kd">local</span> <span class="n">mounts</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="kd">local</span> <span class="n">autofsdir</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="k">in</span> <span class="nb">io.lines</span><span class="p">(</span><span class="n">Mounts</span><span class="p">)</span> <span class="k">do</span>
+        <span class="kd">local</span> <span class="n">dev</span><span class="p">,</span> <span class="n">dir</span><span class="p">,</span> <span class="n">ft</span> <span class="o">=</span> <span class="n">line</span><span class="p">:</span><span class="n">match</span><span class="p">(</span><span class="s2">&quot;</span><span class="s">^(%S+)%s+(%S+)%s+(%S+)&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ft</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="s">autofs&#39;</span> <span class="k">then</span> <span class="n">autofsdir</span> <span class="o">=</span> <span class="n">dir</span> <span class="k">end</span>
+        <span class="k">if</span> <span class="n">automisc</span><span class="p">[</span><span class="n">dev</span><span class="p">]</span> <span class="k">then</span>
+            <span class="n">mounts</span><span class="p">[</span><span class="n">dev</span><span class="p">]</span> <span class="o">=</span> <span class="n">dir</span>
+        <span class="k">end</span>
+    <span class="k">end</span>
 
-    local items = {}
-    local dev, dir
-    for dev, dir in pairs(automisc) do
-        line = (&quot;%s %s/%s\	\	%s&quot;):format(mounts[dev] and &quot;*&quot; or &quot; &quot;, autofsdir, dir, dev)
-        local func
-        if mounts[dev] then
-            func = function () os.execute(&quot;sudo umount &quot;..autofsdir..&quot;/&quot;..dir) end
-        else
-            func = function () os.execute(&quot;ls &quot;..autofsdir..&quot;/&quot;..dir) end
-        end
+    <span class="kd">local</span> <span class="n">items</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="kd">local</span> <span class="n">dev</span><span class="p">,</span> <span class="n">dir</span>
+    <span class="k">for</span> <span class="n">dev</span><span class="p">,</span> <span class="n">dir</span> <span class="k">in</span> <span class="nb">pairs</span><span class="p">(</span><span class="n">automisc</span><span class="p">)</span> <span class="k">do</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;</span><span class="s">%s %s/%s\	\	%s&quot;</span><span class="p">):</span><span class="n">format</span><span class="p">(</span><span class="n">mounts</span><span class="p">[</span><span class="n">dev</span><span class="p">]</span> <span class="ow">and</span> <span class="s2">&quot;</span><span class="s">*&quot;</span> <span class="ow">or</span> <span class="s2">&quot;</span><span class="s"> &quot;</span><span class="p">,</span> <span class="n">autofsdir</span><span class="p">,</span> <span class="n">dir</span><span class="p">,</span> <span class="n">dev</span><span class="p">)</span>
+        <span class="kd">local</span> <span class="n">func</span>
+        <span class="k">if</span> <span class="n">mounts</span><span class="p">[</span><span class="n">dev</span><span class="p">]</span> <span class="k">then</span>
+            <span class="n">func</span> <span class="o">=</span> <span class="k">function</span> <span class="p">()</span> <span class="nb">os.execute</span><span class="p">(</span><span class="s2">&quot;</span><span class="s">sudo umount &quot;</span><span class="o">..</span><span class="n">autofsdir</span><span class="o">..</span><span class="s2">&quot;</span><span class="s">/&quot;</span><span class="o">..</span><span class="n">dir</span><span class="p">)</span> <span class="k">end</span>
+        <span class="k">else</span>
+            <span class="n">func</span> <span class="o">=</span> <span class="k">function</span> <span class="p">()</span> <span class="nb">os.execute</span><span class="p">(</span><span class="s2">&quot;</span><span class="s">ls &quot;</span><span class="o">..</span><span class="n">autofsdir</span><span class="o">..</span><span class="s2">&quot;</span><span class="s">/&quot;</span><span class="o">..</span><span class="n">dir</span><span class="p">)</span> <span class="k">end</span>
+        <span class="k">end</span>
 
-        local item = { line, func }
-        table.insert(items, item)
-    end
+        <span class="kd">local</span> <span class="n">item</span> <span class="o">=</span> <span class="p">{</span> <span class="n">line</span><span class="p">,</span> <span class="n">func</span> <span class="p">}</span>
+        <span class="nb">table.insert</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+    <span class="k">end</span>
 
-    local menu = awful.menu.new({ items = items, width = 300 })
-    return menu
-end</code></pre>
-</div>
+    <span class="kd">local</span> <span class="n">menu</span> <span class="o">=</span> <span class="n">awful</span><span class="p">.</span><span class="n">menu</span><span class="p">.</span><span class="n">new</span><span class="p">({</span> <span class="n">items</span> <span class="o">=</span> <span class="n">items</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">300</span> <span class="p">})</span>
+    <span class="k">return</span> <span class="n">menu</span>
+<span class="k">end</span></code></pre></div>
 
 <p>Возвращает она объект меню со списком доступных через autofs устройст, смонтированные устройства будут помечены звёздочкой. Использование:</p>
 
-<div>
-  <pre><code class="lua">mounts_menu():show()</code></pre>
-</div>
+<div class="highlight"><pre><code class="language-lua" data-lang="lua"><span class="n">mounts_menu</span><span class="p">():</span><span class="n">show</span><span class="p">()</span></code></pre></div>
 
 <p>Работает с awesome v3.3.1-2-gd61ca1b (Bionic).</p>
 
 <p>Тот же список, полученный с помощью perl:</p>
 
-<div>
-  <pre><code class="perl">#!/usr/bin/perl
+<div class="highlight"><pre><code class="language-perl" data-lang="perl"><span class="c1">#!/usr/bin/perl</span>
 
-use strict;
+<span class="k">use</span> <span class="n">strict</span><span class="p">;</span>
 
-my $AUTOMISC=&quot;/etc/auto.misc&quot;;
-my $MOUNTS=&quot;/proc/mounts&quot;;
+<span class="k">my</span> <span class="nv">$AUTOMISC</span><span class="o">=</span><span class="s">&quot;/etc/auto.misc&quot;</span><span class="p">;</span>
+<span class="k">my</span> <span class="nv">$MOUNTS</span><span class="o">=</span><span class="s">&quot;/proc/mounts&quot;</span><span class="p">;</span>
 
-my %autofs = ();
-open FIN, &#39;&lt;&#39;, $AUTOMISC;
-while (&lt;FIN&gt;)
-{
-    chomp;
-    next if /^#/ or /^\\s*$/;
+<span class="k">my</span> <span class="nv">%autofs</span> <span class="o">=</span> <span class="p">();</span>
+<span class="nb">open</span> <span class="n">FIN</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$AUTOMISC</span><span class="p">;</span>
+<span class="k">while</span> <span class="p">(</span><span class="sr">&lt;FIN&gt;</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="nb">chomp</span><span class="p">;</span>
+    <span class="k">next</span> <span class="k">if</span> <span class="sr">/^#/</span> <span class="ow">or</span> <span class="sr">/^\\s*$/</span><span class="p">;</span>
 
-    my ($dir, $opts, $dev) = split /\\s+/;
-    next unless $dev =~ /^:/;
-    $dev = substr($dev, 1);
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$dir</span><span class="p">,</span> <span class="nv">$opts</span><span class="p">,</span> <span class="nv">$dev</span><span class="p">)</span> <span class="o">=</span> <span class="nb">split</span> <span class="sr">/\\s+/</span><span class="p">;</span>
+    <span class="k">next</span> <span class="k">unless</span> <span class="nv">$dev</span> <span class="o">=~</span><span class="sr"> /^:/</span><span class="p">;</span>
+    <span class="nv">$dev</span> <span class="o">=</span> <span class="nb">substr</span><span class="p">(</span><span class="nv">$dev</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
 
-    next unless -b $dev;
-    $autofs{$dev} = $dir;
-}
-close FIN;
+    <span class="k">next</span> <span class="k">unless</span> <span class="o">-</span><span class="n">b</span> <span class="nv">$dev</span><span class="p">;</span>
+    <span class="nv">$autofs</span><span class="p">{</span><span class="nv">$dev</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$dir</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nb">close</span> <span class="n">FIN</span><span class="p">;</span>
 
-my %mounts = ();
-my $autofsdir;
-open FIN, &#39;&lt;&#39;, $MOUNTS;
-while (&lt;FIN&gt;)
-{
-    chomp;
-    my ($dev, $dir, $type) = split /\\s+/;
-    $autofsdir = $dir if $type eq &#39;autofs&#39;;
-    next unless exists $autofs{$dev};
-    $mounts{$dev} = $dir;
-}
-close FIN;
+<span class="k">my</span> <span class="nv">%mounts</span> <span class="o">=</span> <span class="p">();</span>
+<span class="k">my</span> <span class="nv">$autofsdir</span><span class="p">;</span>
+<span class="nb">open</span> <span class="n">FIN</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$MOUNTS</span><span class="p">;</span>
+<span class="k">while</span> <span class="p">(</span><span class="sr">&lt;FIN&gt;</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="nb">chomp</span><span class="p">;</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$dev</span><span class="p">,</span> <span class="nv">$dir</span><span class="p">,</span> <span class="nv">$type</span><span class="p">)</span> <span class="o">=</span> <span class="nb">split</span> <span class="sr">/\\s+/</span><span class="p">;</span>
+    <span class="nv">$autofsdir</span> <span class="o">=</span> <span class="nv">$dir</span> <span class="k">if</span> <span class="nv">$type</span> <span class="ow">eq</span> <span class="s">&#39;autofs&#39;</span><span class="p">;</span>
+    <span class="k">next</span> <span class="k">unless</span> <span class="nb">exists</span> <span class="nv">$autofs</span><span class="p">{</span><span class="nv">$dev</span><span class="p">};</span>
+    <span class="nv">$mounts</span><span class="p">{</span><span class="nv">$dev</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$dir</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nb">close</span> <span class="n">FIN</span><span class="p">;</span>
 
-foreach my $dev (sort keys %autofs)
-{
-    my $ismounted = exists $mounts{$dev};
-    printf &quot;%s\	%s/%s\	%s\\n&quot;, $ismounted? &quot;*&quot;: &quot; &quot;, $autofsdir, $autofs{$dev}, $dev;
-}</code></pre>
-</div>
+<span class="k">foreach</span> <span class="k">my</span> <span class="nv">$dev</span> <span class="p">(</span><span class="nb">sort</span> <span class="nb">keys</span> <span class="nv">%autofs</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">my</span> <span class="nv">$ismounted</span> <span class="o">=</span> <span class="nb">exists</span> <span class="nv">$mounts</span><span class="p">{</span><span class="nv">$dev</span><span class="p">};</span>
+    <span class="nb">printf</span> <span class="s">&quot;%s\	%s/%s\	%s\\n&quot;</span><span class="p">,</span> <span class="nv">$ismounted</span><span class="p">?</span> <span class="s">&quot;*&quot;</span><span class="p">:</span> <span class="s">&quot; &quot;</span><span class="p">,</span> <span class="nv">$autofsdir</span><span class="p">,</span> <span class="nv">$autofs</span><span class="p">{</span><span class="nv">$dev</span><span class="p">},</span> <span class="nv">$dev</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
 
 
 

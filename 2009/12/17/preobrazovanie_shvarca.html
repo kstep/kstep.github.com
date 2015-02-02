@@ -16,12 +16,10 @@
 
 <p>Сама идеома:</p>
 
-<div>
-  <pre><code class="perl">@sorted = map  { $_-&gt;[0] }
-          sort { $a-&gt;[1] cmp $b-&gt;[1] }
-          map  { [$_, foo($_)] }
-               @unsorted;</code></pre>
-</div>
+<div class="highlight"><pre><code class="language-perl" data-lang="perl"><span class="nv">@sorted</span> <span class="o">=</span> <span class="nb">map</span>  <span class="p">{</span> <span class="nv">$_</span><span class="o">-&gt;</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">}</span>
+          <span class="nb">sort</span> <span class="p">{</span> <span class="nv">$a</span><span class="o">-&gt;</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">cmp</span> <span class="nv">$b</span><span class="o">-&gt;</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">}</span>
+          <span class="nb">map</span>  <span class="p">{</span> <span class="p">[</span><span class="nv">$_</span><span class="p">,</span> <span class="n">foo</span><span class="p">(</span><span class="nv">$_</span><span class="p">)]</span> <span class="p">}</span>
+               <span class="nv">@unsorted</span><span class="p">;</span></code></pre></div>
 
 <p>Смысл: сперва каждый элемент неотсортированного массива с помощью map дополняется вычисленным значением ключа сортировки (функцией foo()), при этом используются анонимные двухэлементные массивы для сохранения и исходного значения элементов массива, и вычисленного ключа. Затем происходит собственно сортировка по вычисленным ключам, а в конце идёт «развёртка» анонимных массивов. Т.к. после последней операции ссылок на временные анонимные массивы не остаётся, то они сразу (ну или почти сразу) попадают в руки сборщика мусора, так что памяти используется не так много, как если бы мы использовали дополнительный временный массив для хранения вычисленных значений ключей сортировки. То есть использоваться-то памяти будет примерно столько же, но освобождаться она будет очень быстро.</p>
 
