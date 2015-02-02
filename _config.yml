@@ -1,6 +1,7 @@
 auto: false
 pygments: false
 markdown: kramdown
+excerpt_separator: ""   # Workaround for http://blog.slaks.net/2013-08-09/jekyll-tag-was-never-closed
 
 kramdown:
     use_coderay: false
