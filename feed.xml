@@ -4,10 +4,19 @@
     <link href="http://kstep.me/" />
     <link rel="self" href="http://kstep.me/feed.xml" />
     <id>http://kstep.me/</id>
-    <updated>2013-09-23T00:00:00Z</updated>
+    <updated>2015-02-02T00:00:00Z</updated>
     <author>
         <name>Konstantin Stepanov</name>
     </author>
+    
+    <entry>
+        <title>About me</title>
+        <link href="http://kstep.me/2015/02/02/about-me.html" />
+        <id>http://kstep.me/2015/02/02/about-me.html</id>
+        <updated>2015-02-02T00:00:00Z</updated>
+        <summary></summary>
+        
+    </entry>
     
     <entry>
         <title>Сон</title>
@@ -16,15 +25,6 @@
         <updated>2013-09-23T00:00:00Z</updated>
         <summary></summary>
         <category term="dream" />
-        
-    </entry>
-    
-    <entry>
-        <title>About me</title>
-        <link href="http://kstep.me/2013/02/08/about-me.html" />
-        <id>http://kstep.me/2013/02/08/about-me.html</id>
-        <updated>2013-02-08T00:00:00Z</updated>
-        <summary></summary>
         
     </entry>
     
