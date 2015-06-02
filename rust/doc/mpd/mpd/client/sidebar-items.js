@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Client","Client connection"],["IdleGuard","\"Idle\" mode guard enforcing MPD asynchronous events protocol"]]});
