@@ -46,9 +46,9 @@
                 [<span class='inner'>&#x2212;</span>]
             </a>
         </span><a id='src-11009' class='srclink' href='../../src/mpd/idle.rs.html#1-99' title='goto source code'>[src]</a></span></h1>
-<div class='docblock'><p>The module defines structers and protocols for asynchrnonous MPD communication</p>
+<div class='docblock'><p>The module defines structures and protocols for asynchronous MPD communication</p>
 
-<p>The MPD supports very simple protocol for asyncrhonous client notifications about
+<p>The MPD supports very simple protocol for asynchronous client notifications about
 different player events. First user issues <code>idle</code> command with optional argument
 to filter events by source subsystem (like &quot;database&quot;, &quot;player&quot;, &quot;mixer&quot; etc.)</p>
 
@@ -61,7 +61,7 @@ if user changed volume, client will get <code>mixer</code> event in idle mode, s
 it should issue <code>status</code> command then and check for any mixer-related field
 changes.)</p>
 
-<p>Once some such event occurs, and client is nofified about it, idle mode is interrupted,
+<p>Once some such event occurs, and client is notified about it, idle mode is interrupted,
 and client must issue another <code>idle</code> command to continue listening for interesting
 events.</p>
 
@@ -70,7 +70,7 @@ command, which interrupts &quot;idle&quot; mode, and provides a list queued even
 since last <code>idle</code> command, if they occurred.</p>
 
 <p>The module describes subsystems enum only, but the main workflow is determined by
-<a href="client/struct.IdleGuard.html"><code>IdleGuard</code></a> struct, which catches mutable reference
+<a href="../client/struct.IdleGuard.html"><code>IdleGuard</code></a> struct, which catches mutable reference
 to original <code>Client</code> struct, thus enforcing MPD contract in regards of (im)possibility
 to send commands while in &quot;idle&quot; mode.</p>
 </div><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>

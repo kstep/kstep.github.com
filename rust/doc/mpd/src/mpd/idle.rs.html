@@ -141,9 +141,9 @@
 <span id="99"> 99</span>
 <span id="100">100</span>
 </pre><pre class='rust '>
-<span class='doccomment'>//! The module defines structers and protocols for asynchrnonous MPD communication</span>
+<span class='doccomment'>//! The module defines structures and protocols for asynchronous MPD communication</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! The MPD supports very simple protocol for asyncrhonous client notifications about</span>
+<span class='doccomment'>//! The MPD supports very simple protocol for asynchronous client notifications about</span>
 <span class='doccomment'>//! different player events. First user issues `idle` command with optional argument</span>
 <span class='doccomment'>//! to filter events by source subsystem (like &quot;database&quot;, &quot;player&quot;, &quot;mixer&quot; etc.)</span>
 <span class='doccomment'>//!</span>
@@ -156,7 +156,7 @@
 <span class='doccomment'>//! it should issue `status` command then and check for any mixer-related field</span>
 <span class='doccomment'>//! changes.)</span>
 <span class='doccomment'>//!</span>
-<span class='doccomment'>//! Once some such event occurs, and client is nofified about it, idle mode is interrupted,</span>
+<span class='doccomment'>//! Once some such event occurs, and client is notified about it, idle mode is interrupted,</span>
 <span class='doccomment'>//! and client must issue another `idle` command to continue listening for interesting</span>
 <span class='doccomment'>//! events.</span>
 <span class='doccomment'>//!</span>
@@ -165,7 +165,7 @@
 <span class='doccomment'>//! since last `idle` command, if they occurred.</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! The module describes subsystems enum only, but the main workflow is determined by</span>
-<span class='doccomment'>//! [`IdleGuard`](client/struct.IdleGuard.html) struct, which catches mutable reference</span>
+<span class='doccomment'>//! [`IdleGuard`](../client/struct.IdleGuard.html) struct, which catches mutable reference</span>
 <span class='doccomment'>//! to original `Client` struct, thus enforcing MPD contract in regards of (im)possibility</span>
 <span class='doccomment'>//! to send commands while in &quot;idle&quot; mode.</span>
 
