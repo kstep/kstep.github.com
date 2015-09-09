@@ -2182,7 +2182,11 @@ var CRM = function (win, options) {
         }
       };
 
-      request.send();
+      try {
+        request.send();
+      } catch (e) {
+        callback(getLocalTime());
+      }
     };
 
     // Enqueue request to be sent asynchronously
