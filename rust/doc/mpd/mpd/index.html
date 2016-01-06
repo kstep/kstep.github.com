@@ -24,17 +24,17 @@
 
     
 
-    <section class="sidebar">
+    <nav class="sidebar">
         
         <p class='location'></p><script>window.sidebarCurrent = {name: 'mpd', ty: 'mod', relpath: '../'};</script>
-    </section>
+    </nav>
 
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
                 <input class="search-input" name="search"
                        autocomplete="off"
-                       placeholder="Click or press 'S' to search, '?' for more options..."
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
                        type="search">
             </div>
         </form>
@@ -45,7 +45,7 @@
             <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                 [<span class='inner'>&#x2212;</span>]
             </a>
-        </span><a id='src-0' class='srclink' href='../src/mpd/lib.rs.html#1-68' title='goto source code'>[src]</a></span></h1>
+        </span><a id='src-0' class='srclink' href='../src/mpd/lib.rs.html#1-69' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>MPD client for Rust</p>
 
 <p>This crate tries to provide idiomatic Rust API for <a href="http://www.musicpd.org/">Music Player Daemon</a>.
@@ -53,12 +53,11 @@ The main entry point to the API is <a href="client/struct.Client.html"><code>Cli
 and inherent methods of the struct follow <a href="http://www.musicpd.org/doc/protocol/">MPD protocol</a> for most part,
 making use of traits to overload different parameters for convenience.</p>
 
-<h1 id="usage" class='section-header'><a
-                           href="#usage">Usage</a></h1>
+<h1 id='usage' class='section-header'><a href='#usage'>Usage</a></h1>
 <pre><code class="language-text">[dependencies]
 mpd = &quot;*&quot;
 </code></pre>
-<pre id='rust-example-rendered' class='rust '>
+<pre class='rust rust-example-rendered'>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>mpd</span>;
 
 <span class='kw'>use</span> <span class='ident'>mpd</span>::<span class='ident'>Client</span>;
@@ -68,10 +67,9 @@ mpd = &quot;*&quot;
 <span class='ident'>conn</span>.<span class='ident'>volume</span>(<span class='number'>100</span>).<span class='ident'>unwrap</span>();
 <span class='ident'>conn</span>.<span class='ident'>load</span>(<span class='string'>&quot;My Lounge Playlist&quot;</span>, ..).<span class='ident'>unwrap</span>();
 <span class='ident'>conn</span>.<span class='ident'>play</span>().<span class='ident'>unwrap</span>();
-<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Status: {:?}&quot;</span>, <span class='ident'>conn</span>.<span class='ident'>status</span>());
-</pre>
+<span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;Status: {:?}&quot;</span>, <span class='ident'>conn</span>.<span class='ident'>status</span>());</pre>
 </div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
-<table><tr><td><code>pub use client::<a class='struct' href='../mpd/client/struct.Client.html' title='mpd::client::Client'>Client</a>;</code></td></tr><tr><td><code>pub use status::{<a class='struct' href='../mpd/status/struct.Status.html' title='mpd::status::Status'>Status</a>, <a class='enum' href='../mpd/status/enum.ReplayGain.html' title='mpd::status::ReplayGain'>ReplayGain</a>};</code></td></tr><tr><td><code>pub use version::<a class='struct' href='../mpd/version/struct.Version.html' title='mpd::version::Version'>Version</a>;</code></td></tr><tr><td><code>pub use song::<a class='struct' href='../mpd/song/struct.Song.html' title='mpd::song::Song'>Song</a>;</code></td></tr><tr><td><code>pub use playlist::<a class='struct' href='../mpd/playlist/struct.Playlist.html' title='mpd::playlist::Playlist'>Playlist</a>;</code></td></tr><tr><td><code>pub use output::<a class='struct' href='../mpd/output/struct.Output.html' title='mpd::output::Output'>Output</a>;</code></td></tr><tr><td><code>pub use plugin::<a class='struct' href='../mpd/plugin/struct.Plugin.html' title='mpd::plugin::Plugin'>Plugin</a>;</code></td></tr><tr><td><code>pub use stats::<a class='struct' href='../mpd/stats/struct.Stats.html' title='mpd::stats::Stats'>Stats</a>;</code></td></tr><tr><td><code>pub use search::{<a class='enum' href='../mpd/search/enum.Term.html' title='mpd::search::Term'>Term</a>, <a class='struct' href='../mpd/search/struct.Query.html' title='mpd::search::Query'>Query</a>, <a class='struct' href='../mpd/search/struct.Clause.html' title='mpd::search::Clause'>Clause</a>};</code></td></tr><tr><td><code>pub use message::{<a class='struct' href='../mpd/message/struct.Message.html' title='mpd::message::Message'>Message</a>, <a class='struct' href='../mpd/message/struct.Channel.html' title='mpd::message::Channel'>Channel</a>};</code></td></tr><tr><td><code>pub use idle::<a class='enum' href='../mpd/idle/enum.Subsystem.html' title='mpd::idle::Subsystem'>Subsystem</a>;</code></td></tr><tr><td><code>pub use mount::{<a class='struct' href='../mpd/mount/struct.Mount.html' title='mpd::mount::Mount'>Mount</a>, <a class='struct' href='../mpd/mount/struct.Neighbor.html' title='mpd::mount::Neighbor'>Neighbor</a>};</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table><tr><td><code>pub use client::<a class='struct' href='../mpd/client/struct.Client.html' title='mpd::client::Client'>Client</a>;</code></td></tr><tr><td><code>pub use status::{<a class='enum' href='../mpd/status/enum.ReplayGain.html' title='mpd::status::ReplayGain'>ReplayGain</a>, <a class='enum' href='../mpd/status/enum.State.html' title='mpd::status::State'>State</a>, <a class='struct' href='../mpd/status/struct.Status.html' title='mpd::status::Status'>Status</a>};</code></td></tr><tr><td><code>pub use version::<a class='struct' href='../mpd/version/struct.Version.html' title='mpd::version::Version'>Version</a>;</code></td></tr><tr><td><code>pub use song::{<a class='struct' href='../mpd/song/struct.Id.html' title='mpd::song::Id'>Id</a>, <a class='struct' href='../mpd/song/struct.Song.html' title='mpd::song::Song'>Song</a>};</code></td></tr><tr><td><code>pub use playlist::<a class='struct' href='../mpd/playlist/struct.Playlist.html' title='mpd::playlist::Playlist'>Playlist</a>;</code></td></tr><tr><td><code>pub use output::<a class='struct' href='../mpd/output/struct.Output.html' title='mpd::output::Output'>Output</a>;</code></td></tr><tr><td><code>pub use plugin::<a class='struct' href='../mpd/plugin/struct.Plugin.html' title='mpd::plugin::Plugin'>Plugin</a>;</code></td></tr><tr><td><code>pub use stats::<a class='struct' href='../mpd/stats/struct.Stats.html' title='mpd::stats::Stats'>Stats</a>;</code></td></tr><tr><td><code>pub use search::{<a class='struct' href='../mpd/search/struct.Query.html' title='mpd::search::Query'>Query</a>, <a class='enum' href='../mpd/search/enum.Term.html' title='mpd::search::Term'>Term</a>};</code></td></tr><tr><td><code>pub use message::{<a class='struct' href='../mpd/message/struct.Channel.html' title='mpd::message::Channel'>Channel</a>, <a class='struct' href='../mpd/message/struct.Message.html' title='mpd::message::Message'>Message</a>};</code></td></tr><tr><td><code>pub use idle::{<a class='trait' href='../mpd/idle/trait.Idle.html' title='mpd::idle::Idle'>Idle</a>, <a class='enum' href='../mpd/idle/enum.Subsystem.html' title='mpd::idle::Subsystem'>Subsystem</a>};</code></td></tr><tr><td><code>pub use mount::{<a class='struct' href='../mpd/mount/struct.Mount.html' title='mpd::mount::Mount'>Mount</a>, <a class='struct' href='../mpd/mount/struct.Neighbor.html' title='mpd::mount::Neighbor'>Neighbor</a>};</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                     <tr class=' module-item'>
                         <td><a class='mod' href='client/index.html'
@@ -202,40 +200,49 @@ mpd = &quot;*&quot;
 
     <section class="footer"></section>
 
-    <div id="help" class="hidden">
-        <div class="shortcuts">
-            <h1>Keyboard shortcuts</h1>
-            <dl>
-                <dt>?</dt>
-                <dd>Show this help dialog</dd>
-                <dt>S</dt>
-                <dd>Focus the search field</dd>
-                <dt>&larrb;</dt>
-                <dd>Move up in search results</dd>
-                <dt>&rarrb;</dt>
-                <dd>Move down in search results</dd>
-                <dt>&#9166;</dt>
-                <dd>Go to active search result</dd>
-            </dl>
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code>)
+                </p>
+            </div>
         </div>
-        <div class="infos">
-            <h1>Search tricks</h1>
-            <p>
-                Prefix searches with a type followed by a colon (e.g.
-                <code>fn:</code>) to restrict the search to a given type.
-            </p>
-            <p>
-                Accepted types are: <code>fn</code>, <code>mod</code>,
-                <code>struct</code>, <code>enum</code>,
-                <code>trait</code>, <code>typedef</code> (or
-                <code>tdef</code>).
-            </p>
-            <p>
-                Search functions by type signature (e.g.
-                <code>vec -> usize</code>)
-            </p>
-        </div>
-    </div>
+    </aside>
 
     
 

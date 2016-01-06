@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Term",""]],"struct":[["Clause",""],["Count",""],["Query",""]]});
+initSidebarItems({"enum":[["Term",""]],"struct":[["Filter",""],["Query",""]]});
