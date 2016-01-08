@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Version","MPD version"]]});

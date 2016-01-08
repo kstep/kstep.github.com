@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Id","Song ID"],["QueuePlace","Song place in the queue"],["Range","Song range"],["Song","Song data"]]});
