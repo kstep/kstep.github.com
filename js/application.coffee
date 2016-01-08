@@ -409,6 +409,11 @@ app
                     icon: "http://search.cpan.org/favicon.ico"
                     name: "CPAN"
                 }
+                {
+                    url: "http://habrahabr.ru/users/kstep/"
+                    icon: "http://habrahabr.ru/favicon.ico"
+                    name: "Habrahabr"
+                }
             ]
 
             $scope.$on '$routeChangeSuccess', -> $timeout ->
