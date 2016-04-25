@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Scala Implicits</title>
+    <style>
+     small {
+         font-size: 60%;
+     }
+     body {
+         font-family: 'Droid Serif';
+     }
+     h1, h2, h3 {
+         font-family: 'Yanone Kaffeesatz';
+         font-weight: 400;
+         margin-bottom: 0;
+     }
+     img {
+         text-align: center;
+         max-width: 640px;
+         max-height: 480px;
+     }
+     .inverse h1 {
+         margin-top: 0;
+     }
+     .remark-slide-content h1 { font-size: 3em; }
+     .remark-slide-content h2 { font-size: 2em; }
+     .remark-slide-content h3 { font-size: 1.6em; }
+     .footnote {
+         position: absolute;
+         bottom: 3em;
+     }
+     li p { line-height: 1.25em; }
+     .red { color: #fa0000; }
+     .large { font-size: 2em; }
+     a, a > code {
+         color: rgb(249, 38, 114);
+         text-decoration: none;
+     }
+     code {
+         background: #e7e8e2;
+         border-radius: 5px;
+     }
+     .remark-code, .remark-inline-code { font-family: 'Noto Mono'; }
+     .remark-code-line-highlighted     { background-color: #373832; }
+     .pull-left {
+         float: left;
+         width: 47%;
+     }
+     .pull-right {
+         float: right;
+         width: 47%;
+     }
+     .pull-right ~ p {
+         clear: both;
+     }
+     #slideshow .slide .content code {
+         font-size: 0.8em;
+     }
+     #slideshow .slide .content pre code {
+         font-size: 0.9em;
+         padding: 15px;
+     }
+     .inverse {
+         background: #272822;
+         color: #777872;
+         text-shadow: 0 0 20px #333;
+     }
+     .inverse h1, .inverse h2 {
+         color: #f3f3f3;
+         line-height: 0.8em;
+     }
+
+     /* Slide-specific styling */
+     #slide-inverse .footnote {
+         bottom: 12px;
+         left: 20px;
+     }
+     #slide-how .slides {
+         font-size: 0.9em;
+         position: absolute;
+         top:  151px;
+         right: 140px;
+     }
+     #slide-how .slides h3 {
+         margin-top: 0.2em;
+     }
+     #slide-how .slides .first, #slide-how .slides .second {
+         padding: 1px 20px;
+         height: 90px;
+         width: 120px;
+         -moz-box-shadow: 0 0 10px #777;
+         -webkit-box-shadow: 0 0 10px #777;
+         box-shadow: 0 0 10px #777;
+     }
+     #slide-how .slides .first {
+         background: #fff;
+         position: absolute;
+         top: 20%;
+         left: 20%;
+         z-index: 1;
+     }
+     #slide-how .slides .second {
+         position: relative;
+         background: #fff;
+         z-index: 0;
+     }
+
+     /* Two-column layout */
+     .left-column {
+         color: #777;
+         width: 20%;
+         height: 92%;
+         float: left;
+     }
+     .left-column h2:last-of-type, .left-column h3:last-child {
+         color: #000;
+     }
+     .right-column {
+         width: 75%;
+         float: right;
+         padding-top: 1em;
+     }
+
+    </style>
+	</head>
+	<body>
+		<textarea id="source">
+class: center, middle, inverse
+
+# Scala implicits
+
+<div><br /><img src="vader.jpg" /></div>
+
+Yes, we have!
+
+
+---
+## Два вкуса
+
+* Implicit parameters
+
+  ```scala
+  implicit val howManyTimes: Int = 100
+  
+  def justDoIt(implicit times: Int) {
+      println(s"I did it $times times.")
+  }
+  ```
+
+* Implicit conversions
+
+  ```scala
+  case class Doer(x: Int) {
+      def doItAgain {
+        println(s"I did it again $x times more.")
+      }
+  }
+  implicit def intToDoer(x: Int): Doer = Doer(x)
+  
+  def justDoIt(doer: Doer) {
+      doer.doItAgain
+  }
+  
+  justDoIt(42)
+  ```
+
+---
+## Implicit parameters
+
+* Любая функция может иметь один последний блок implicit-параметров.
+  ```scala
+  def someMethod(x: Int, y: String)(implicit c: Context, n: Config)
+  ```
+* Если явно не передать значения для implicit-параметра, компилятор найдёт implicit-переменную того же типа.
+* В месте вызова такой функции должна быть доступна implicit единственная переменная такого же типа.
+
+---
+## Implicit parameters
+
+Если явно не передать значения для implicit-параметра, компилятор найдёт implicit-переменную того же типа:
+
+```scala
+scala> def callme(implicit x: String) = println(x)
+scala> implicit val hello: String = "Hello, world!"
+scala> callme
+Hello, world!
+```
+
+---
+## Implicit parameters
+
+Если явно не передать значения для implicit-параметра, компилятор найдёт implicit-переменную того же типа,
+...или не найдёт:
+
+```scala
+scala> def callme(implicit x: String) = println(x)
+scala> callme
+<console>:13: error: could not find implicit value for parameter x: String
+       callme
+       ^
+```
+
+Но никто не запрещает сделать явно:
+```scala
+scala> callme("Hello, Scalalab!")
+Hello, Scalalab!
+```
+
+---
+## Implicit parameters
+
+### But why?!?
+
+* Передавать общий контекст, конфигурацию, состояние.
+* Используются для реализации type classes (monads, monoids, ordering).
+* В качестве свидетельства об истинности какого-то предположения о программе
+  при доказательстве её корректности.
+
+---
+## Implicit conversions
+
+* implicit methods
+
+  ```scala
+  implicit def fromAtoB(a: A): B = ???
+  ```
+
+* implicit classes
+
+  ```scala
+  implicit class B(val a: A) {
+      def brandNewMethod = ???
+  }
+  ```
+
+---
+## Implicit conversions
+
+* Отображают A в B
+* Применяются если значение типа A используется там, где нужен тип B:
+  * у `a: A` вызывается метод, которого нет у A, но есть у B.
+    ```scala
+    val a = new A();
+    a.brandNewMethod
+    ```
+  * функция требует аргумент типа B, но ей передают что-то типа A.
+    ```scala
+    def acceptB(x: B) = ???
+    acceptB(new A)
+    ```
+
+???
+
+Если значение используется в контексте не своего типа, то компилятор попытается найти implicit-преобразование в нужный тип.
+
+---
+## Implicit conversions
+
+### But why?!?
+
+* Кастомное приведение типов.
+* Для расширения функциональности классов без вмешательтва в их код (паттерн "pimp-my-class", a.k.a. extension methods).
+* В качестве правил/предикатов при доказательстве корректности программы.
+
+---
+## Implicits
+
+### <center>Компилятор находит… как?!?</center>
+
+<center><img src="rage-horror-l.png" /></center>
+
+---
+## Implicits
+
+### Компилятор находит… как?!?
+
+* Текущая область видимости
+  ```scala
+  implicit val x: Int = 123
+  implicit def strToInt(x: String) = x.toInt
+  ```
+* Объект-компаньон соответствующего типа
+  ```scala
+  case class A(x: Int)
+  object A {
+      implicit val defaultA: A = A(0)
+      implicit def intToA(x: Int) = A(x)
+  }
+  ```
+
+---
+class: center, middle, inverse
+
+# Implicit <small><%</small> b<small>:</small>ounds
+
+<img src="monocle-cat.jpg" />
+
+---
+## Implicit bounds
+
+### View <% bounds
+Я могу смотреть на A, как будто это B:
+
+```scala
+case class A(x: Int)
+case class B(x: Int) {
+  def methodFromB = ???
+}
+object B {
+  implicit def fromAtoB(a: A): B = B(a.x)
+}
+
+// def acceptA[A](a: A)(implicit ev: A => B) = ???
+def acceptA[A <% B](a: A) = a.methodFromB
+acceptA(A(1))
+```
+
+---
+## Implicit bounds
+
+### Context: bounds
+
+Я выполняюсь в заданном контексте B, привязанном к A:
+
+```scala
+trait Monad[M[_]] {
+  def point[A](x: => A): M[A]
+  def bind[A, B](xs: M[A], f: A => M[B]): M[B]
+  def ap[A, B](xs: List[A], f: A => B): M[B]
+}
+implicit object ListMonad extends Monad[List] {
+  def point[A](x: => A) = List(x)
+  def bind[A, B](xs: List[A], f: A => List[B]) = xs.flatMap(f)
+  def ap[A, B](xs: List[A], f: A => B) = xs.map(f)
+}
+
+// def zeroOut[A](xs: A)(implicit ev: Monad[A]) = ???
+def zeroOut[A: Monad](xs: A) = implicitly[Monad[A]].ap(xs, (_: Int) => 0)
+```
+
+---
+class: inverse, center, middle
+
+# That´s all folks!
+
+Grab a cookie
+
+<img src="cookies.jpg" />
+
+You deserved it!
+
+---
+class: center, middle
+
+# Questions?
+
+		</textarea>
+		<script src="http://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+		<script>
+			var slideshow = remark.create();
+		</script>
+		<script></script>
+	</body>
+</html>
+
