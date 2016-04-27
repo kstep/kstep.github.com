@@ -139,7 +139,7 @@ Beware!
 
 Hieronymus Bosch “A visual guide to the Scala language”  oil on oak panels, 1490-1510
 
-The left panel shows the functional features, the main one describes the type system, and the right the object oriented parts 
+The left panel shows the functional features, the main one describes the type system, and the right the object oriented parts.
 
 <http://classicprogrammerpaintings.com/post/142321815809/hieronymus-bosch-a-visual-guide-to-the-scala>
 
@@ -190,22 +190,28 @@ trait SomeModelDAO[T] {
 
 * Class can inherit one other class, but mix-in many traits.
 * Parent class must be the first one in inheritance chain.
-* Member overriding is explicit via `override` keyword.
+* Member overriding is always explicit via `override` keyword.
 * Members of each next mixed in trait override previous trait's members.
 
 ```scala
 trait T1 { def name = "T1" }
 trait T2 { def name = "T2" }
-class C1 { def name = "C1" }
+class C1
 class C2 { def name = "C2" }
+
 class A extends C1 with T1
 
 // error: class C1 needs to be a trait to be mixed in
-// class A extends T1 with C1
-// class A extends C2 with C1
+// class B extends T1 with C1
+// class B extends C2 with C1
 
-class B extends C1 with T1 with T2
-new B().name // "T2"
+// error: class B inherits conflicting members:
+//  method name in trait T1 of type => String  and
+//  method name in trait T2 of type => String
+// class B extends C1 with T1 with T2
+// class B extends C2 with T1
+
+class B extends C1 with T1 with T2 { override def name = "B" }
 ```
 
 ---
@@ -288,8 +294,8 @@ type Zero = Nothing
 // (A, B) | (C, C, C)
 
 sealed trait Sum
-case class One(a: A, b: B)
-case class Two(c1: C, c2: C, c3: C)
+case class One(a: A, b: B) extends Sum
+case class Two(c1: C, c2: C, c3: C) extends Sum
 ```
 
 ---
@@ -314,7 +320,7 @@ case class A() extends Sum
 ```
 
 ```scala
-// a*(b + c) = a*b + a*c
+// a*b + a*c = a*(b + c)
 
 sealed trait Sum
 case class AB(a: A, b: B) extends Sum
@@ -385,9 +391,9 @@ case class SomeComplexModel(
   children: Seq[U] forSome { type U <: BaseModel },
   // ... still a lot of fields
 )
+```
 
 You can think of them as inline value types.
-```
 
 ---
 ## Structural types
@@ -445,7 +451,11 @@ class Pool10 extends { val threadsNo = 10 } with Pool
 ---
 class: middle, center
 
+# Take a break
+
 ![](coffee.jpg)
+
+## we are nearly done!
 
 
 ---
