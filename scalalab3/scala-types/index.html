@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Scala Implicits</title>
+    <style>
+     small {
+         font-size: 60%;
+     }
+     body {
+         font-family: 'Droid Serif';
+     }
+     h1, h2, h3 {
+         font-family: 'Yanone Kaffeesatz';
+         font-weight: 400;
+         margin-bottom: 0;
+     }
+     img {
+         text-align: center;
+         max-width: 640px;
+         max-height: 480px;
+     }
+     .inverse h1 {
+         margin-top: 0;
+     }
+     .remark-slide-content h1 { font-size: 3em; }
+     .remark-slide-content h2 { font-size: 2em; }
+     .remark-slide-content h3 { font-size: 1.6em; }
+     .footnote {
+         position: absolute;
+         bottom: 3em;
+     }
+     li p { line-height: 1.25em; }
+     .red { color: #fa0000; }
+     .large { font-size: 2em; }
+     a, a > code {
+         color: rgb(249, 38, 114);
+         text-decoration: none;
+     }
+     code {
+         background: #e7e8e2;
+         border-radius: 5px;
+     }
+     .remark-code, .remark-inline-code { font-family: 'Noto Mono'; }
+     .remark-code-line-highlighted     { background-color: #373832; }
+     .pull-left {
+         float: left;
+         width: 47%;
+     }
+     .pull-right {
+         float: right;
+         width: 47%;
+     }
+     .pull-right ~ p {
+         clear: both;
+     }
+     #slideshow .slide .content code {
+         font-size: 0.8em;
+     }
+     #slideshow .slide .content pre code {
+         font-size: 0.9em;
+         padding: 15px;
+     }
+     .inverse {
+         background: #272822;
+         color: #777872;
+         text-shadow: 0 0 20px #333;
+     }
+     .inverse h1, .inverse h2 {
+         color: #f3f3f3;
+         line-height: 0.8em;
+     }
+
+     /* Slide-specific styling */
+     #slide-inverse .footnote {
+         bottom: 12px;
+         left: 20px;
+     }
+     #slide-how .slides {
+         font-size: 0.9em;
+         position: absolute;
+         top:  151px;
+         right: 140px;
+     }
+     #slide-how .slides h3 {
+         margin-top: 0.2em;
+     }
+     #slide-how .slides .first, #slide-how .slides .second {
+         padding: 1px 20px;
+         height: 90px;
+         width: 120px;
+         -moz-box-shadow: 0 0 10px #777;
+         -webkit-box-shadow: 0 0 10px #777;
+         box-shadow: 0 0 10px #777;
+     }
+     #slide-how .slides .first {
+         background: #fff;
+         position: absolute;
+         top: 20%;
+         left: 20%;
+         z-index: 1;
+     }
+     #slide-how .slides .second {
+         position: relative;
+         background: #fff;
+         z-index: 0;
+     }
+
+     /* Two-column layout */
+     .left-column {
+         color: #777;
+         width: 20%;
+         height: 92%;
+         float: left;
+     }
+     .left-column h2:last-of-type, .left-column h3:last-child {
+         color: #000;
+     }
+     .right-column {
+         width: 75%;
+         float: right;
+         padding-top: 1em;
+     }
+
+    </style>
+	</head>
+	<body>
+		<textarea id="source">
+class: center, middle, inverse
+# Scala types
+Beware!
+
+![](here-be-dragons.jpg)
+
+---
+## Scala types
+
+![](bosch.jpg)
+
+Hieronymus Bosch “A visual guide to the Scala language”  oil on oak panels, 1490-1510
+
+The left panel shows the functional features, the main one describes the type system, and the right the object oriented parts 
+
+<http://classicprogrammerpaintings.com/post/142321815809/hieronymus-bosch-a-visual-guide-to-the-scala>
+
+---
+## Scala types continuum
+
+![](scala-types-continuum.svg)
+
+???
+
+Дерево наследования.
+
+Null — тип null из Java.
+
+AnyRef == java.lang.Object в рантайме, тип всех ссылочных типов.
+
+AnyVal — тип всех примитивов.
+
+Nothing — наследует *все* типы, ненаселённый тип,
+к нему приводится, если тип не известен из контекста.
+
+Any — родитель *всех* типов, к ниму приводятся типы
+при приведении вверх, если другого общего типа ниже
+неизвестно.
+
+Scala приводит типы к ближайшему общему корню.
+
+---
+## Traits
+
+Trait = interface + abstract class + mixin
+
+```scala
+trait Actors {
+  val baseName = "project-actor-"
+  def lookup(id: String): ActorSelection = ???
+}
+
+trait SomeModelDAO[T] {
+  val collectionName: String
+  def insert(item: T)
+  def insert(items: Iterable[T]) = items.foreach(insert)
+}
+```
+
+---
+## Traits
+
+* Class can inherit one other class, but mix-in many traits.
+* Parent class must be the first one in inheritance chain.
+* Member overriding is explicit via `override` keyword.
+* Members of each next mixed in trait override previous trait's members.
+
+```scala
+trait T1 { def name = "T1" }
+trait T2 { def name = "T2" }
+class C1 { def name = "C1" }
+class C2 { def name = "C2" }
+class A extends C1 with T1
+
+// error: class C1 needs to be a trait to be mixed in
+// class A extends T1 with C1
+// class A extends C2 with C1
+
+class B extends C1 with T1 with T2
+new B().name // "T2"
+```
+
+---
+## Traits
+
+No cheating allowed for single class inheritance rule!
+
+```scala
+class A
+trait T extends A
+class B
+
+// error: illegal inheritance; superclass B
+//  is not a subclass of the superclass A
+//  of the mixin trait T
+// class C extends B with T
+
+// This works
+class C extends A with T
+```
+
+---
+class: inverse, center, middle
+# Algebraic types
+(school-level algebra inside)
+
+---
+## Algebraic types
+
+* Product types
+  * Class `class Cls(val x: A, val y: B, val z: C)`
+  * Case class `case class Cls(x: A, y: B, z: C)`
+  * Tuple `(A, B, C)`
+* Sum types
+  * Enums (via inheritance)
+
+---
+## Product types
+
+```scala
+// Int × Int × String, Int ⋂ Int ⋂ String
+case class Point(x: Int, y: Int, name: String)
+type Point = (Int, Int, String)
+
+type One = ()
+```
+
+???
+
+Напоминает декартово произведение, так как включает все возможные комбинации
+из значений заданного множества типов.
+Или конъюнкцию (булево И), так как должен содержать *все* части.
+Кортеж изморфен обычному классу.
+
+---
+## Sum types
+
+```scala
+// R + G + B, R ⋃ G ⋃ B
+sealed trait Colors
+case object Red extends Colors
+case object Green extends Colors
+case object Blue extends Colors
+
+type Zero = Nothing
+```
+
+???
+
+Напоминает сложение, так как включает объединение множеств всех возможных значений
+из заданного можества типов.
+Или дизъюнкцию (будево ИЛИ), так как может сожержать только один варинт из заданных.
+
+---
+## Algebraic types
+
+```scala
+// a*b + 3*c = 0
+
+// (A, B) | (C, C, C)
+
+sealed trait Sum
+case class One(a: A, b: B)
+case class Two(c1: C, c2: C, c3: C)
+```
+
+---
+## Algebraic types
+
+```scala
+// x * 1 = x
+// x * y = y * x
+
+(A, ()) ~ (A,)
+(A, B) ~ (B, A)
+
+```
+
+```scala
+// x + 0 = x
+// x + y = y + x
+
+sealed trait Sum
+case class A() extends Sum
+// case class Nothing extends Sum
+```
+
+```scala
+// a*(b + c) = a*b + a*c
+
+sealed trait Sum
+case class AB(a: A, b: B) extends Sum
+case class AC(a: A, b: C) extends Sum
+
+sealed trait Sum
+case class B() extends Sum
+case class C() extends Sum
+type ABC = (A, B, C)
+```
+
+---
+class: center, middle, inverse
+# Types, parameters
+and beyond
+
+---
+## Generics
+
+```scala
+trait BaseDAO[T <: BaseObject, I] {
+  def findById(id: I): Vector[T]
+  def insert(seq: Iterable[T])
+  def update(item: T)
+}
+
+sealed class Option[T] {
+  def getOrElse[U >: T](x: => U): U = ???
+}
+class None[T] extends Option[T]
+case class Some[T](x: T) extends Option[T]
+```
+
+---
+## Value types
+
+```scala
+trait Graph {
+  type Node
+  type Edge = (Node, Node)
+  type Weight <: Number
+}
+
+def follow(graph: Graph, edge: Graph#Edge): Graph#Node
+def findPath(graph: Graph)(start: graph.Node): Seq[graph.Node]
+```
+
+---
+## Existential types
+
+Imagine type parameters hell.
+
+```scala
+case class SomeComplexModel[T <: Number, U <: BaseModel](
+  counts: Seq[T],
+  children: Seq[U],
+  // ... and another 19 or so fields
+)
+```
+---
+## Existential types
+
+Existentials to the resque!
+
+```scala
+case class SomeComplexModel(
+  counts: Seq[T] forSome { type T <: Number },
+  children: Seq[U] forSome { type U <: BaseModel },
+  // ... still a lot of fields
+)
+
+You can think of them as inline value types.
+```
+
+---
+## Structural types
+
+Whole trait just for a single method?
+
+```scala
+trait LogHelper {
+  def log(s: String)
+}
+
+trait Config {
+  val dbName: String
+}
+
+class MyActor extends BaseActor {
+  def log[T <: LogHelper](s: String) = ???
+  def doWork[T <: Config] = ???
+}
+```
+
+---
+## Structural types
+
+No way!
+Meet duck-typing, Scala-way.
+
+```scala
+class MyActor extends Actor {
+  def log[T <: { def log(s: String) }](s: String) = ???
+  def doWork[T <: { val dbName: String }] = ???
+}
+
+```
+
+---
+## Structural types
+
+Early initialization block:
+
+```scala
+trait Pool {
+  val threadsNo: Int
+  private val pool = initialize(threadsNo)
+  def initialize(num: Int): Seq[Thread] = ???
+}
+
+//class Pool10 extends Pool {
+//  val threadsNo = 10
+//}
+
+class Pool10 extends { val threadsNo = 10 } with Pool
+```
+
+---
+class: middle, center
+
+![](coffee.jpg)
+
+
+---
+## Function types
+
+```scala
+def map[T, U](xs: Seq[T], f: T => U): Seq[U] = ???
+def fold[A, T](xs: Seq[T], f: (A, T) => A): A = ???
+
+// Call-by-name
+def run[T](cb: => T): T = ???
+```
+
+---
+## Variance
+
+```scala
+// На место Seq[A] можно передать
+// Seq[A1] forSome { type A1 <: A }
+trait Seq[+A]
+
+// На место Sink[T] можно передать
+// Sink[A] forSome { type T >: A }
+trait Sink[-T]
+
+// Здесь можно только Array[A],
+// Array[A1 :< A] и Array[T :> A] не пройдут
+class Array[A]
+
+// На место `A => B` можно передать `T => B` или `A => B1`,
+// где T >: A, B1 <: B
+trait Function[-A, +B]
+```
+
+???
+
+Ковариантность безопасна для немутабельных структур, потому что при чтении мы знаем, что там хранятся A,
+а всё, что наследует от A, тоже являются A, поэтому чтение безопасно. Но запись в ковариантное хранилище
+не безопасна в общем случае, т.к. если мы приведём `Array[A1]` к `Array[A]` и запишем туда A2, где `A1 <: A` и `A2 <: A`,
+получится, что `Array[A1]` хранит A2.
+
+Для write-only структур безопасна контравариантность. Пусть `Sink[A]` приведётся к `Sink[A1]`, где `A1 <: A`.
+Тогда в него можно будет записать объект типа A1, что нормально, ведь любой A1 явлется A.
+Но вот если из него начать читать, то контравариантность будет небезопасна, т.к. тогда при приведении `Sink[A]`
+к `Sink[A1]` мы сможем получить неожиданно A2 из хранилища A1.
+
+Таким образом read-write хранилища должны быть инвариантны.
+
+Фунции контраварианты для входных параметров потому, что если на место функции, которая принимает `String`, передать
+функцию, принимающую `Object`, то она сможет работать нормально, т.к. туда всё равно все будут передавать `String :> Object`.
+Функции инвариантны для выходных параметров потому, что если на место функции, которая возвращает `Object`, передать
+функцию, которая возврашает `String`, то поскольку `String :> Object`, тоже ничего не поломается, всё равно от туда ожидают
+любой Object.
+
+---
+class: inverse, middle, center
+
+## Thank you for your patience!
+
+![](mlp-twilight.png)
+
+---
+class: middle, center
+
+# Questions?
+
+
+		</textarea>
+		<script src="http://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+		<script>
+			var slideshow = remark.create();
+		</script>
+		<script></script>
+	</body>
+</html>
+
