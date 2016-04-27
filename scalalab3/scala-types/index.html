@@ -256,7 +256,7 @@ class: inverse, center, middle
 case class Point(x: Int, y: Int, name: String)
 type Point = (Int, Int, String)
 
-type One = ()
+type One = Unit
 ```
 
 ???
@@ -354,7 +354,7 @@ trait BaseDAO[T <: BaseObject, I] {
 sealed class Option[T] {
   def getOrElse[U >: T](x: => U): U = ???
 }
-class None[T] extends Option[T]
+object None extends Option[Nothing]
 case class Some[T](x: T) extends Option[T]
 ```
 
@@ -477,20 +477,20 @@ def run[T](cb: => T): T = ???
 ## Variance
 
 ```scala
-// На место Seq[A] можно передать
-// Seq[A1] forSome { type A1 <: A }
+// You can pass `Seq[A1] forSome { type A1 <: A }`
+// in place of Seq[A]
 trait Seq[+A]
 
-// На место Sink[T] можно передать
-// Sink[A] forSome { type T >: A }
+// You can pass `Sink[A] forSome { type T >: A }`
+// in place of Sink[T]
 trait Sink[-T]
 
-// Здесь можно только Array[A],
-// Array[A1 :< A] и Array[T :> A] не пройдут
+// You can pass Array[A] only,
+// no `Array[A1 :< A]` and `Array[T :> A]` are possible
 class Array[A]
 
-// На место `A => B` можно передать `T => B` или `A => B1`,
-// где T >: A, B1 <: B
+// You can pass `T => B` or `A => B1`
+// in place of `A => B`, where T >: A, B1 <: B
 trait Function[-A, +B]
 ```
 
