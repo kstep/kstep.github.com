@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Concurrent programming in Rust</title>
+    <style>
+    small {
+        font-size: 60%;
+    }
+    body {
+        font-family: 'Droid Serif';
+    }
+    h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: 400;
+        margin-bottom: 0;
+    }
+    img {
+        text-align: center;
+        max-width: 640px;
+        max-height: 480px;
+    }
+    .inverse h1 {
+        margin-top: 0;
+    }
+    .remark-slide-content h1 { font-size: 3em; }
+    .remark-slide-content h2 { font-size: 2em; }
+    .remark-slide-content h3 { font-size: 1.6em; }
+    .footnote {
+        position: absolute;
+        bottom: 3em;
+    }
+    li p { line-height: 1.25em; }
+    .red { color: #fa0000; }
+    .large { font-size: 2em; }
+    a, a > code {
+        color: rgb(249, 38, 114);
+        text-decoration: none;
+    }
+    code {
+        background: #e7e8e2;
+        border-radius: 5px;
+    }
+    .remark-code, .remark-inline-code { font-family: 'Noto Mono'; }
+    .remark-code-line-highlighted     { background-color: #373832; }
+    .pull-left {
+        float: left;
+        width: 47%;
+    }
+    .pull-right {
+        float: right;
+        width: 47%;
+    }
+    .pull-right ~ p {
+        clear: both;
+    }
+    #slideshow .slide .content code {
+        font-size: 0.8em;
+    }
+    #slideshow .slide .content pre code {
+        font-size: 0.9em;
+        padding: 15px;
+    }
+    .inverse {
+        background: #272822;
+        color: #777872;
+        text-shadow: 0 0 20px #333;
+    }
+    .inverse h1, .inverse h2 {
+        color: #f3f3f3;
+        line-height: 0.8em;
+    }
+
+    /* Slide-specific styling */
+    #slide-inverse .footnote {
+        bottom: 12px;
+        left: 20px;
+    }
+    #slide-how .slides {
+        font-size: 0.9em;
+        position: absolute;
+        top:  151px;
+        right: 140px;
+    }
+    #slide-how .slides h3 {
+        margin-top: 0.2em;
+    }
+    #slide-how .slides .first, #slide-how .slides .second {
+        padding: 1px 20px;
+        height: 90px;
+        width: 120px;
+        -moz-box-shadow: 0 0 10px #777;
+        -webkit-box-shadow: 0 0 10px #777;
+        box-shadow: 0 0 10px #777;
+    }
+    #slide-how .slides .first {
+        background: #fff;
+        position: absolute;
+        top: 20%;
+        left: 20%;
+        z-index: 1;
+    }
+    #slide-how .slides .second {
+        position: relative;
+        background: #fff;
+        z-index: 0;
+    }
+
+    /* Two-column layout */
+    .left-column {
+        color: #777;
+        width: 20%;
+        height: 92%;
+        float: left;
+    }
+    .left-column h2:last-of-type, .left-column h3:last-child {
+        color: #000;
+    }
+    .right-column {
+        width: 75%;
+        float: right;
+        padding-top: 1em;
+    }
+
+    table {
+        width: 100%;
+    }
+    </style>
+    </head>
+    <body>
+<textarea id="source">
+class: inverse, middle, center
+# Concurrency <small>&amp;</small> Parallelism
+# in <big>Rust</big>
+
+---
+## Parallelism vs. Concurrency
+
+<center><img src="concurrency-centric.png"></center>
+
+<small>See <http://yosefk.com/blog/parallelism-and-concurrency-need-different-tools.html></small>
+
+???
+
+1. Параллелизм вычислений
+  * конкуррентность: несколько вычислений идут независимо друг для друга,
+    могут выполнятся на одном и том же физическом процессоре, конкуррируют
+    за среду выполнения.
+  * пареллелизм: несколько вычислений идут одновременно в отдельных потоках,
+    требуют многопроцессорной системы, вычисления не конкуррируют за среду выполнения.
+2. Параллелизм данных
+  * конкуррентность: несколько вычислений выполняются в общей среде и могут управлять
+    общим изменяемым состоянием, конкурируют на доступ к ресурсам.
+  * параллелизм: несколько вычислений выполняются независимо друг от друга на разных
+    наборах данных, никак не пересекаются друг с другом, конкурренция отсутствует.
+
+---
+## Data races
+
+```rust
+use std::thread;
+
+fn main() {
+    let mut vec = Vec::new();
+
+    for n in 0..10 {
+        thread::spawn(move || {
+            vec.push(n);
+        });
+    }
+
+    println!("{:?}", vec);
+}
+```
+
+???
+
+В обычной ситуации (в случае с Си) здесь была бы гонка данных из-за одновременной модифицации
+массива из разных потоков.
+
+В Rust работает семантинка перемещения, которая гарантирует, что есть только один владелец с правом изменения.
+
+---
+## Data races
+
+```rust
+use std::thread;
+
+fn main() {
+    let mut vec = Vec::new();
+
+    for n in 0..10 {
+        // ./race.rs:7:23: 11:10 note: `vec` moved into
+        // closure environment here because it has
+        // type `collections::vec::Vec<i32>`,
+        // which is non-copyable
+        thread::spawn(move || {
+            vec.push(n);
+        });
+    }
+
+    println!("{:?}", vec);
+}
+```
+
+---
+## Building blocks: Mutex & Arc
+
+```rust
+use std::thread;
+use std::sync::{Arc, Mutex};
+
+fn main() {
+    let vec = Arc::new(Mutex::new(Vec::new()));
+
+    let jobs = (0..10).map(|n| {
+        let vec = vec.clone();
+        thread::spawn(move || {
+            vec.lock().unwrap().push(n);
+        })
+    }).collect::<Vec<_>>();
+
+    jobs.into_iter().fold((), |_, job| { job.join().unwrap(); });
+
+    println!("{:?}", vec);
+}
+```
+
+---
+## Building blocks: Atomics
+
+```rust
+use std::thread;
+use std::sync::atomic::{AtomicPtr, Ordering};
+use std::sync::Arc;
+use std::ptr;
+
+#[derive(Debug)]
+struct Cons<T> {
+    data: T,
+    next: *mut Cons<T>
+}
+
+#[derive(Debug)]
+struct List<T> {
+    head: AtomicPtr<Cons<T>>
+}
+```
+
+---
+## Building blocks: Atomics
+
+```rust
+impl<T> List<T> {
+    fn new() -> List<T> {
+        List { head: AtomicPtr::new(ptr::null_mut()) }
+    }
+
+    fn push(&self, item: T) {
+        let mut boxed = Box::into_raw(Box::new(Cons {
+            data: item, next: ptr::null_mut()
+        }));
+
+        loop {
+            let old_head = self.head.load(Ordering::Relaxed);
+            unsafe { (*boxed).next = old_head; }
+
+            if self.head.compare_and_swap(
+                    old_head, boxed,Ordering::SeqCst) == old_head {
+                break;
+            }
+        }
+    }
+}
+```
+
+---
+## Building blocks: Atomics
+
+```rust
+fn main() {
+    let list = Arc::new(List::new());
+
+    (0..10).map(|n| {
+        let list = list.clone();
+        thread::spawn(move || {
+            list.push(n);
+        })
+    }).fold((), |_, job| { job.join().unwrap(); });
+
+    println!("{:?}", list);
+}
+```
+
+---
+## Building blocks: Channels
+
+```rust
+use std::thread;
+use std::sync::mpsc::channel;
+
+fn main() {
+    let (tx, rx) = channel();
+
+    const N_JOBS: usize = 10;
+
+    let jobs = (0..N_JOBS).map(|n| {
+        let tx = tx.clone();
+        thread::spawn(move || {
+            for m in 0..n {
+                tx.send(m).unwrap();
+            }
+        })
+    }).collect::<Vec<_>>();
+
+    let sum = rx.iter().take(45).fold(0, |a, n| a + n);
+
+    jobs.into_iter().fold((), |_, job| { job.join().unwrap(); });
+
+    println!("sum = {}", sum);
+}
+```
+
+---
+## Send & Sync
+
+* Send: safe to move value between threads
+  * Thread-safe data transfer.
+
+* Sync: safe to read value simultanously
+  * Thread-safe aliasing, i.e. sharing reference
+    between threads.
+
+* Copy: memcpy()-able type
+  * Opt-in copy semantic, instead of default move
+    semantic.
+  * Automatically thread-safe, as it's always copied
+    in a bit-perfect manner when transfered.
+
+---
+## Libraries
+
+* Thread pool
+* Crossbeam
+* Rayon
+* Coroutine
+* Mio & friends
+* ...and others at crates.io
+
+---
+## Thread pool
+
+```rust
+extern crate threadpool;
+
+use std::sync::mpsc::channel;
+use threadpool::ThreadPool;
+
+fn main() {
+    let (tx, rx) = channel();
+
+    const N_WORKERS: usize = 4;
+    const N_JOBS: usize = 10;
+
+    let pool = ThreadPool::new(N_WORKERS);
+
+    for job_n in 0..N_JOBS {
+        let tx = tx.clone();
+        pool.execute(move || {
+            for m in 0..job_n {
+                tx.send(m).unwrap();
+            }
+        })
+    }
+
+    let sum = rx.iter().take(45).fold(0, |a, n| a + n);
+
+    println!("sum = {}", sum);
+}
+```
+
+---
+## Crossbeam
+
+```rust
+use std::thread;
+
+fn main() {
+    let vec = vec![1, 2, 3, 4, 5];
+    let mut jobs = Vec::new();
+
+    // error: `vec` does not live long enough
+    for x in &vec {
+        jobs.push(thread::spawn(move || {
+            println!("x = {}", x);
+        }));
+    }
+
+    jobs.into_iter().fold((), |_, job| { job.join().unwrap(); });
+}
+```
+
+---
+## Crossbeam
+
+```rust
+extern crate crossbeam;
+
+fn main() {
+    let vec = vec![1, 2, 3, 4, 5];
+
+    crossbeam::scope(|scope| {
+        for x in &vec {
+            scope.spawn(move || {
+                println!("x = {}", x);
+            });
+        }
+    });
+}
+```
+
+---
+## Crossbeam
+
+What about mutability?
+
+```rust
+extern crate crossbeam;
+
+fn main() {
+    let mut vec = vec![1, 2, 3, 4, 5];
+
+    crossbeam::scope(|mut scope| {
+        for x in &mut vec {
+            scope.spawn(move || {
+                *x += 1;
+                println!("x = {}", x);
+            });
+        }
+    });
+}
+```
+
+---
+## Crossbeam
+
+And what about mutable container?
+
+```rust
+extern crate crossbeam;
+
+fn main() {
+    let mut vec = vec![];
+
+    crossbeam::scope(|scope| {
+        for n in 0..10 {
+            let p = &mut vec;
+            scope.spawn(move || {
+                p.push(n);
+            });
+        }
+    });
+}
+```
+
+---
+## Rayon
+
+```rust
+#![feature(iter_arith)]
+
+fn main() {
+    let vec = vec![0..10];
+    let sum = vec.iter().map(|n| n * 2).sum();
+
+    println!("sum = {}", sum);
+}
+```
+
+---
+## Rayon
+
+Let's make it parallel!
+
+```rust
+extern crate rayon;
+use rayon::prelude::*;
+
+fn main() {
+    let vec = vec![0..10];
+    let sum = vec.par_iter().map(|n| n * 2).sum();
+
+    println!("sum = {}", sum);
+}
+```
+
+---
+## Coroutine
+
+```rust
+extern crate coroutine;
+
+use coroutine::asymmetric::Coroutine as coro;
+
+fn main() {
+    const N_JOBS: usize = 10;
+
+    let co = coro::spawn(|me| {
+        for n in 0..N_JOBS {
+            for m in 0..n {
+                me.yield_with(m);
+            }
+        }
+    });
+
+    let sum = co.fold(0, |a, n| a + n);
+
+    println!("sum = {}", sum);
+}
+```
+
+---
+## Mio
+
+```rust
+extern crate mio;
+
+use mio::tcp::*;
+
+const SERVER: mio::Token = mio::Token(0);
+
+struct Pong {
+    server: TcpListener,
+}
+
+impl mio::Handler for Pong {
+    type Timeout = ();
+    type Message = ();
+
+    fn ready(&mut self, event_loop: &mut mio::EventLoop<Pong>,
+      token: mio::Token, events: mio::EventSet) {
+        match token {
+            SERVER => { /*...*/ }
+            _ => panic!("Received unknown token"),
+        }
+    }
+}
+```
+
+---
+## Mio
+
+```rust
+
+fn main() {
+    let address = "0.0.0.0:6567".parse().unwrap();
+    let server = TcpListener::bind(&address).unwrap();
+
+    let mut event_loop = mio::EventLoop::new().unwrap();
+    event_loop.register(&server, SERVER);
+
+    println!("running pingpong server");
+    event_loop.run(&mut Pong { server: server });
+}
+```
+
+---
+## Mioco
+
+```rust
+extern crate mioco;
+
+fn main() {
+    mioco::start(|| -> io::Result<()> {
+        let addr = listend_addr();
+
+        let listener = try!(TcpListener::bind(&addr));
+
+        println!("Starting tcp echo server on {:?}",
+            try!(listener.local_addr()));
+
+        loop {
+            let mut conn = try!(listener.accept());
+
+            mioco::spawn(move || -> io::Result<()> {
+                let mut buf = [0u8; 1024 * 16];
+                loop {
+                    let size = try!(conn.read(&mut buf));
+                    if size == 0 {/* eof */ break; }
+                    let _ = try!(conn.write_all(&mut buf[0..size]));
+                }
+
+                Ok(())
+            });
+        }
+    }).unwrap().unwrap();
+}
+```
+
+---
+class: center, middle
+
+# That's all, folks!
+Thank you for your patience!
+
+---
+class: center, middle
+
+# Questions?
+
+
+</textarea>
+<script src="http://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create();</script>
+<script></script>
+    </body>
+</html>
+
