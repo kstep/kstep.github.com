@@ -2,3 +2,4 @@ name: //kstep blog
 rss: feed.xml
 description: K's blog on life and development
 link: http://kstep.me/
+posts: posts
