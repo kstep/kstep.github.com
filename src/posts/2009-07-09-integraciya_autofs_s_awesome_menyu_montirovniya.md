@@ -1,4 +1,5 @@
 title: "Интеграция autofs с awesome: меню монтировния"
+lang: ru
 date: 09 Jul 2009 00:00:00 +0300
 extends: default.liquid
 ---

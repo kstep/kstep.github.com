@@ -1,4 +1,5 @@
 title: "Какая же гадость, этот Ваш FTP"
+lang: ru
 date: 07 Nov 2009 00:00:00 +0200
 extends: default.liquid
 ---

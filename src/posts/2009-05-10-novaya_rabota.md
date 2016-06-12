@@ -1,4 +1,5 @@
 title: "Новая работа"
+lang: ru
 date: 10 May 2009 00:00:00 +0300
 extends: default.liquid
 tags: о жизни, p-nut, рабочее

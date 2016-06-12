@@ -1,4 +1,5 @@
 title: "Совещание"
+lang: ru
 date: 16 Oct 2009 00:00:00 +0300
 extends: default.liquid
 tags: рабочее, совещание, демотиваторы

@@ -1,4 +1,5 @@
 title: "Про уважение"
+lang: ru
 date: 19 Nov 2009 00:00:00 +0200
 extends: default.liquid
 ---

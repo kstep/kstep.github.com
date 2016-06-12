@@ -1,4 +1,5 @@
 title: "Лавка и кафе Лебедева в Москве"
+lang: ru
 date: 12 Jun 2009 00:00:00 +0300
 extends: default.liquid
 ---

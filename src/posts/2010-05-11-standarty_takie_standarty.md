@@ -1,4 +1,5 @@
 title: "Стандарты такие стандарты"
+lang: ru
 date: 11 May 2010 00:00:00 +0300
 extends: default.liquid
 tags: рабочее, стандарты, oauth

@@ -1,4 +1,5 @@
 title: "Выборка случайной записи в MySQL и PostgreSQL"
+lang: ru
 date: 03 Jun 2009 00:00:00 +0300
 extends: default.liquid
 tags: базы данных, постгря, SQL, мускул

@@ -1,4 +1,5 @@
 title: "Я уже в Краснодаре"
+lang: ru
 date: 17 Aug 2009 00:00:00 +0300
 extends: default.liquid
 ---

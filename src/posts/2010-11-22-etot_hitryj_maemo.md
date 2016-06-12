@@ -1,4 +1,5 @@
 title: "Этот хитрый маемо"
+lang: ru
 date: 22 Nov 2010 00:00:00 +0200
 extends: default.liquid
 tags: pulseaudio, глюки, maemo, n900

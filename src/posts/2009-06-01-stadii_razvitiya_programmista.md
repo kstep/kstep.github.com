@@ -1,4 +1,5 @@
 title: "Стадии развития программиста"
+lang: ru
 date: 01 Jun 2009 00:00:00 +0300
 extends: default.liquid
 tags: весёлости, цитаты, рабочее

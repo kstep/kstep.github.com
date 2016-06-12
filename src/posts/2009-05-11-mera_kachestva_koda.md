@@ -1,4 +1,5 @@
 title: "Мера качества кода"
+lang: ru
 date: 11 May 2009 00:00:00 +0300
 extends: default.liquid
 tags: весёлости, сцылко, программинг, картинки

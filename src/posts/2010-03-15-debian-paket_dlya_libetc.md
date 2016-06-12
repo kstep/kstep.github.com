@@ -1,4 +1,5 @@
 title: "Дебиан-пакет для libetc"
+lang: ru
 date: 15 Mar 2010 00:00:00 +0200
 extends: default.liquid
 tags: lib, debian, package, libetc, xdg, preload

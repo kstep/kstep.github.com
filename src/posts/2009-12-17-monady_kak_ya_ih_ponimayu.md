@@ -1,4 +1,5 @@
 title: "Монады как я их понимаю"
+lang: ru
 date: 17 Dec 2009 00:00:00 +0200
 extends: default.liquid
 ---

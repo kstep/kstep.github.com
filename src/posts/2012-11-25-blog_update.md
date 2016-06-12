@@ -1,4 +1,5 @@
 title: "Обновление блога"
+lang: ru
 date: 25 Nov 2012 00:00:00 +0300
 extends: default.liquid
 ---

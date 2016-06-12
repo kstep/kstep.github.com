@@ -1,4 +1,5 @@
 title: "НеРабочая неделя"
+lang: ru
 date: 04 Jun 2009 00:00:00 +0300
 extends: default.liquid
 tags: рабочее

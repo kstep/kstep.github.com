@@ -1,4 +1,5 @@
 title: "Windows 7 vs Ubuntu Karmic Koala"
+lang: ru
 date: 08 Feb 2010 00:00:00 +0200
 extends: default.liquid
 ---

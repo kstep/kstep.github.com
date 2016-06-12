@@ -1,4 +1,5 @@
 title: "Самолётики!"
+lang: ru
 date: 04 Aug 2009 00:00:00 +0300
 extends: default.liquid
 ---

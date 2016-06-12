@@ -1,4 +1,5 @@
 title: "Хотплаг по линуксовски"
+lang: ru
 date: 11 Jul 2009 00:00:00 +0300
 extends: default.liquid
 ---

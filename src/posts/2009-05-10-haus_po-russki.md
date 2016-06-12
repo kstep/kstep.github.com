@@ -1,4 +1,5 @@
 title: "Хаус по-русски"
+lang: ru
 date: 10 May 2009 00:00:00 +0300
 extends: default.liquid
 tags: весёлости, сцылко, сериалы, хаус, комиксы

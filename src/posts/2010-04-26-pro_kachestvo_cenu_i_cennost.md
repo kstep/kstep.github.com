@@ -1,4 +1,5 @@
 title: "Про качество, цену и ценность"
+lang: ru
 date: 26 Apr 2010 00:00:00 +0300
 extends: default.liquid
 tags: философское, мысли

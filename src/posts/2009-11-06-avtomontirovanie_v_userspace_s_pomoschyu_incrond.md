@@ -1,4 +1,5 @@
 title: "Автомонтирование в userspace с помощью incrond"
+lang: ru
 date: 06 Nov 2009 00:00:00 +0200
 extends: default.liquid
 ---

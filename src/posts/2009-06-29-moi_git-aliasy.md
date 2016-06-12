@@ -1,4 +1,5 @@
 title: "Мои git-алиасы"
+lang: ru
 date: 29 Jun 2009 00:00:00 +0300
 extends: default.liquid
 ---

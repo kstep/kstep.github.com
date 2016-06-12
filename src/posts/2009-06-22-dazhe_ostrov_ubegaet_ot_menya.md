@@ -1,4 +1,5 @@
 title: "Даже остров, даже остров убегает от меня..."
+lang: ru
 date: 22 Jun 2009 00:00:00 +0300
 extends: default.liquid
 ---

@@ -1,4 +1,5 @@
 title: "Схема линий пути к себе"
+lang: ru
 date: 22 Dec 2009 00:00:00 +0200
 extends: default.liquid
 tags: схемы, весёлости, картинки

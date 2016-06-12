@@ -10,7 +10,15 @@
 <h2>All posts</h2>
 <div class="row">
     {% for post in posts %}
-        <div class="col s6"><a href="{{ post.path }}"><div class="card-panel">{{ post.title }} <label>{{ post.date | date:"%a&nbsp;%d&nbsp;%b&nbsp;'%y" }}</label>{% if post.tags %}<br /><label>{{ post.tags }}</label>{% endif %}</div></a></div>
+        <div class="col s6">
+            <a href="{{ post.path }}">
+                <div class="card-panel">{{ post.title }}
+                    {% if post.lang %}<label>{% if post.lang == "en" %}🇺🇸{% endif %}{% if post.lang == "ru" %}🇷🇺{% endif %}</label>{% endif %}
+                    <label>{{ post.date | date:"%a&nbsp;%d&nbsp;%b&nbsp;'%y" }}</label>
+                    {% if post.tags %}<br /><label>{{ post.tags }}</label>{% endif %}
+                </div>
+            </a>
+        </div>
     {% endfor %}
 </div>
 </main>

@@ -1,4 +1,5 @@
 extends: default.liquid
+lang: ru
 date: 11 Dec 2012 00:00:00 +0300
 title: Блок try/finally в PHP
 tags: php, программинг

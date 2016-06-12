@@ -1,4 +1,5 @@
 title: "Корзина наше всё"
+lang: ru
 date: 01 Feb 2010 00:00:00 +0200
 extends: default.liquid
 tags: жизненное, pnut, disaster

@@ -1,4 +1,5 @@
 title: "Новое для меня"
+lang: ru
 date: 28 Oct 2009 00:00:00 +0200
 extends: default.liquid
 ---

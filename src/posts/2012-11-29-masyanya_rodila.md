@@ -1,4 +1,5 @@
 extends: default.liquid
+lang: ru
 date: 29 Nov 2012 00:00:00 +0300
 title: Масяня родила
 tags: видео, Масяня, жизненное

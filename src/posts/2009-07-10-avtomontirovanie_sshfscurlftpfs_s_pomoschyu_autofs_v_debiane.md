@@ -1,4 +1,5 @@
 title: "Автомонтирование sshfs/curlftpfs с помощью autofs в Debian'е"
+lang: ru
 date: 10 Jul 2009 00:00:00 +0300
 extends: default.liquid
 ---

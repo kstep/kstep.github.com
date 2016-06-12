@@ -1,4 +1,5 @@
 title: "Lisp/Scheme"
+lang: ru
 date: 21 Dec 2009 00:00:00 +0200
 extends: default.liquid
 ---

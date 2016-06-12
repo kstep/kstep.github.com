@@ -1,4 +1,5 @@
 title: "Первое правило <del>волше</del> программиста"
+lang: ru
 date: 15 Jul 2009 00:00:00 +0300
 extends: default.liquid
 ---

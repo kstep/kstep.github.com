@@ -1,4 +1,5 @@
 title: "Полезные лекарства"
+lang: ru
 date: 30 Dec 2009 00:00:00 +0200
 extends: default.liquid
 ---

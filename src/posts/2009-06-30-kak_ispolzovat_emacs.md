@@ -1,4 +1,5 @@
 title: "Как использовать emacs"
+lang: ru
 date: 30 Jun 2009 00:00:00 +0300
 extends: default.liquid
 ---

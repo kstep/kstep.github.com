@@ -1,4 +1,5 @@
 title: "Концы света"
+lang: ru
 date: 23 May 2011 00:00:00 +0300
 extends: default.liquid
 tags: конец света, стёб, юмор, картинки

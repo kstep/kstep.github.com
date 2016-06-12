@@ -1,4 +1,5 @@
 title: "Текущая ревизия/ветка git и svn в командной строке zsh"
+lang: ru
 date: 08 Jul 2009 00:00:00 +0300
 extends: default.liquid
 ---
