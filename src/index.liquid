@@ -10,7 +10,7 @@
 <h2>All posts</h2>
 <div class="row">
     {% for post in posts reversed %}
-    <div class="col s6"><a href="{{ post.path }}"><div class="card-panel">{{ post.title }} <label>{{ post.date }}</label></div></a></div>
+    <div class="col s6"><a href="{{ post.path }}"><div class="card-panel">{{ post.title }} <label>{{ post.date | date:"%a&nbsp;%d&nbsp;%b&nbsp;'%y" }}</label></div></a></div>
     {% endfor %}
 </div>
 </main>

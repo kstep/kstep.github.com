@@ -9,7 +9,7 @@
         </nav>
         <main class="container">
         <h2>{{ title }}</h2>
-        <div class="chip"><nobr><i class="material-icons">date_range</i> {{ date }}</nobr></div>
+        <div class="chip"><nobr><i class="material-icons">date_range</i> {{ date | date:"%a&nbsp;%d&nbsp;%b&nbsp;'%y" }}</nobr></div>
         {{ content }}
         </main>
 {% include "_layouts/footer.liquid" %}
