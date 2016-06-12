@@ -1,9 +1,7 @@
 title: "Developers"
 date: 15 Jun 2011 00:00:00 +0300
 extends: default.liquid
-tags:
-  - "humor"
-  - "translation"
+tags: humor, translation
 ---
 Any Russian developer after reading new code for a couple of minutes will raise from his seat and yell, telling to himself: "We need to rewrite all this f**king code!" Then he will turn doubtful at the second thought of time, this rewriting can take, and he will spend the rest of day, trying to convince himself it won't take too long. Just take some time to refactor this and that and he will have nice and logically correct code.
 

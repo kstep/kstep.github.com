@@ -1,9 +1,7 @@
 extends: default.liquid
 date: 12 Dec 2012 00:00:00 +0300
 title: Зачем нужно функциональное программирование? Зачем нужен Haskell?
-tags:
-    - переводы
-    - realworldhaskell
+tags: переводы, realworldhaskell
 ---
 
 ### От переводчика ###

@@ -10,6 +10,7 @@
         <main class="container">
         <h2>{{ title }}</h2>
         <div class="chip"><nobr><i class="material-icons">date_range</i> {{ date | date:"%a&nbsp;%d&nbsp;%b&nbsp;'%y" }}</nobr></div>
+        {% if tags %}<div class="chip"><nobr><i class="material-icons">label</i> {{ tags }}</nobr></div>{% endif %}
         {{ content }}
         </main>
 {% include "_layouts/footer.liquid" %}
