@@ -33,11 +33,11 @@ date: 13 Jun 2016 00:46:00 +0300
 [qemu]: https://github.com/dhruvvyas90/qemu-rpi-kernel
 
 Во-первых, многие пакеты (в частности разные GCC) подписаны PGP-ключами разработчиков. Проблема в том, что yaourt требует, чтобы
-рубличные части этих ключей были в локальном брелке пользователя и помеченные как доверенные, иначе ставить что-либо он отказывается.
+публичные части этих ключей были в локальном брелке пользователя и помеченные как доверенные, иначе ставить что-либо он отказывается.
 И он прав. Можно было бы во всех PKGBUILD-ах вручную убрать PGP-сигнатуры, но пакетов очень много, можно подзадолбаться, да и не правильно
 это, прямо скажем. В итоге я просто добавил нужные ключи себе в брелок и подписал их:
 
-```
+```bash
 gpg --recv-keys 25EF0A436C2A4AFF
 gpg --lsign 25EF0A436C2A4AFF
 
@@ -75,7 +75,7 @@ ar = "arm-linux-gnueabihf-ar"
 
 В-четвёртых, надо поставить растовские таргет и тулчейн для ARMv7. Сделать это с [rustup][] до обидного просто:
 
-```
+```bash
 rustup toolchain install stable-arm-unknown-linux-gnueabihf
 rustup target add armv7-unknown-linux-gnueabihf
 ```
@@ -86,14 +86,14 @@ rustup target add armv7-unknown-linux-gnueabihf
 а Rust в процессе компиляции нативных библиотек (вроде `openssl`, которая требуется куче пакетов) требует вызова `cc`.
 Я решил эту проблему созданием симлинки:
 
-```
+```bash
 cd /usr/bin
 sudo ln -s arm-linux-gnueabihf-gcc arm-linux-gnueabihf-cc
 ```
 
 После всех этих плясок я упёрся в такую ошибку:
 
-```
+```text
 $ cd ~/git/scripts
 $ cargo build --release --target armv7-unknown-linux-gnueabihf
    Compiling bitflags v0.5.0
@@ -137,7 +137,7 @@ note: Run with `RUST_BACKTRACE=1` for a backtrace.
 
 Эта сволочь пытается вызвать не тот `cc`. Что ж, пришлось подсказать:
 
-```
+```text
 $ CC=/usr/bin/arm-linux-gnueabihf-cc cargo build --release --target armv7-unknown-linux-gnueabihf
    Compiling xdg-basedir v1.0.0
    Compiling bitflags v0.3.3
@@ -145,7 +145,6 @@ $ CC=/usr/bin/arm-linux-gnueabihf-cc cargo build --release --target armv7-unknow
    Compiling syntex_syntax v0.31.0
    ...
    Compiling scripts v0.0.1 (file:///home/kstep/git/scripts)
-
 ```
 
 Ура! It's alive!

@@ -66,10 +66,10 @@ main {
 <li><a href="https://github.com/tavianator/arch-rpi-cross">С помощью скрипта для ArchLinux</a> — и вот тут пошло повеселее. Этот способ сработал, хоть и было пару нюансов по ходу дела.</li>
 </ul>
 <p>Во-первых, многие пакеты (в частности разные GCC) подписаны PGP-ключами разработчиков. Проблема в том, что yaourt требует, чтобы
-рубличные части этих ключей были в локальном брелке пользователя и помеченные как доверенные, иначе ставить что-либо он отказывается.
+публичные части этих ключей были в локальном брелке пользователя и помеченные как доверенные, иначе ставить что-либо он отказывается.
 И он прав. Можно было бы во всех PKGBUILD-ах вручную убрать PGP-сигнатуры, но пакетов очень много, можно подзадолбаться, да и не правильно
 это, прямо скажем. В итоге я просто добавил нужные ключи себе в брелок и подписал их:</p>
-<pre><code>gpg --recv-keys 25EF0A436C2A4AFF
+<pre><code class="language-bash">gpg --recv-keys 25EF0A436C2A4AFF
 gpg --lsign 25EF0A436C2A4AFF
 
 gpg --recv-keys 38DBBDC86092693E
@@ -97,17 +97,17 @@ ar = &quot;arm-linux-gnueabihf-ar&quot;
 <p>В принципе достаточно было бы описать конфиг только для <code>armv7-unknown-linux-gnueabihf</code>, потому что я пользовался только этим таргетом,
 но я решил сделать всё основательно и на совесть.</p>
 <p>В-четвёртых, надо поставить растовские таргет и тулчейн для ARMv7. Сделать это с <a href="https://github.com/rust-lang-nursery/rustup.rs">rustup</a> до обидного просто:</p>
-<pre><code>rustup toolchain install stable-arm-unknown-linux-gnueabihf
+<pre><code class="language-bash">rustup toolchain install stable-arm-unknown-linux-gnueabihf
 rustup target add armv7-unknown-linux-gnueabihf
 </code></pre>
 <p>Следующие грабли, на которые я наступил: в установленном этим способом тулчейне нет файла <code>arm-linux-gnueabihf-cc</code>,
 а Rust в процессе компиляции нативных библиотек (вроде <code>openssl</code>, которая требуется куче пакетов) требует вызова <code>cc</code>.
 Я решил эту проблему созданием симлинки:</p>
-<pre><code>cd /usr/bin
+<pre><code class="language-bash">cd /usr/bin
 sudo ln -s arm-linux-gnueabihf-gcc arm-linux-gnueabihf-cc
 </code></pre>
 <p>После всех этих плясок я упёрся в такую ошибку:</p>
-<pre><code>$ cd ~/git/scripts
+<pre><code class="language-text">$ cd ~/git/scripts
 $ cargo build --release --target armv7-unknown-linux-gnueabihf
    Compiling bitflags v0.5.0
    Compiling bitflags v0.4.0
