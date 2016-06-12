@@ -9,7 +9,7 @@
 <main class="container">
 <h2>All posts</h2>
 <div class="row">
-    {% for post in posts %}
+    {% for post in posts reversed %}
     <div class="col s6"><a href="{{ post.path }}"><div class="card-panel">{{ post.title }} <label>{{ post.date }}</label></div></a></div>
     {% endfor %}
 </div>
