@@ -34,8 +34,6 @@ John Goerzen**
 [rwh]: http://book.realworldhaskell.org/
 [license]: http://creativecommons.org/licenses/by-nc/3.0/
 
----
-
 ## У нас к тебе предложение! ##
 
 Haskell — очень обширный язык, и мы думаем, что его изучение даст вам очень
