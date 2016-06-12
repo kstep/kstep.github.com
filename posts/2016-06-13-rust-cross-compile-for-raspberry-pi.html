@@ -95,7 +95,46 @@ $ cargo build --release --target armv7-unknown-linux-gnueabihf
 Build failed, waiting for other jobs to finish...
 error: failed to run custom build command for `rust-crypto v0.2.35`
 Process didn't exit successfully: `/home/kstep/git/scripts/target/debug/build/rust-crypto-ee392cda555c7573/build-script-build` (exit code: 101)
+--- stdout
+TARGET = Some(&quot;armv7-unknown-linux-gnueabihf&quot;)
+OPT_LEVEL = Some(&quot;0&quot;)
+PROFILE = Some(&quot;debug&quot;)
+TARGET = Some(&quot;armv7-unknown-linux-gnueabihf&quot;)
+debug=true opt-level=0
+TARGET = Some(&quot;armv7-unknown-linux-gnueabihf&quot;)
+HOST = Some(&quot;x86_64-unknown-linux-gnu&quot;)
+CFLAGS_armv7-unknown-linux-gnueabihf = None
+CFLAGS_armv7_unknown_linux_gnueabihf = None
+TARGET_CFLAGS = None
+CFLAGS = None
+running: &quot;cc&quot; &quot;-O0&quot; &quot;-ffunction-sections&quot; &quot;-fdata-sections&quot; &quot;-g&quot; &quot;-fPIC&quot; &quot;-march=armv7-a&quot; &quot;-o&quot; &quot;/home/kstep/git/scripts/target/armv7-unknown-linux-gnueabihf/de
+bug/build/rust-crypto-ee392cda555c7573/out/src/util_helpers.o&quot; &quot;-c&quot; &quot;src/util_helpers.c&quot;
+ExitStatus(ExitStatus(256))
+
+
+command did not execute successfully, got: exit code: 1
+
+
+
+--- stderr
+src/util_helpers.c:1:0: error: bad value (armv7-a) for -march= switch
+ // Licensed under the Apache License, Version 2.0 &lt;LICENSE-APACHE or
+
+thread '&lt;main&gt;' panicked at 'explicit panic', /home/kstep/.cargo/registry/src/github.com-88ac128001ac3a9a/gcc-0.3.27/src/lib.rs:834
+note: Run with `RUST_BACKTRACE=1` for a backtrace.
 </code></pre>
+<p>Эта сволочь пытается вызвать не тот <code>cc</code>. Что ж, пришлось подсказать:</p>
+<pre><code class="language-text">$ CC=/usr/bin/arm-linux-gnueabihf-cc cargo build --release --target armv7-unknown-linux-gnueabihf
+   Compiling xdg-basedir v1.0.0
+   Compiling bitflags v0.3.3
+   Compiling rust-crypto v0.2.35
+   Compiling syntex_syntax v0.31.0
+   ...
+   Compiling scripts v0.0.1 (file:///home/kstep/git/scripts)
+</code></pre>
+<p>Ура! It's alive!</p>
+<p>После этого «скрипты» были скопированы из <code>target/armv7-unknown-linux-gnueabihf/release</code> на мою новенькую малинку и заработали с ходу.</p>
+<p>Занавес.</p>
 
         </main>
         <footer class="page-footer light-green lighten-2">
