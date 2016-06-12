@@ -1,0 +1,15 @@
+{% include "_layouts/header.liquid" %}
+        <nav class="light-green lighten-2" role="navigation">
+            <div class="nav-wrapper container">
+                <div class="col s12">
+                    <a class="breadcrumb" href="/">//kstep</a>
+                    <span class="breadcrumb">{{ title }}</span>
+                </div>
+            </div>
+        </nav>
+        <main class="container">
+        <h2>{{ title }}</h2>
+        <div class="chip"><nobr><i class="material-icons">date_range</i> {{ date }}</nobr></div>
+        {{ content }}
+        </main>
+{% include "_layouts/footer.liquid" %}
