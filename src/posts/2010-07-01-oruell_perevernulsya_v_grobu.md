@@ -1,5 +1,5 @@
 title: "Оруелл перевернулся в гробу"
-date: 2010-07-01
+date: 01 Jul 2010 00:00:00 +0300
 extends: default.liquid
 tags:
   - "интернет"

@@ -1,5 +1,5 @@
 title: "Windows 7 vs Ubuntu Karmic Koala"
-date: 2010-02-08
+date: 08 Feb 2010 00:00:00 +0200
 extends: default.liquid
 ---
 На прошедший жёнин день рождения подарил ей нетбук Lenovo S10-2:

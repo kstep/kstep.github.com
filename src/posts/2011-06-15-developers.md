@@ -1,5 +1,5 @@
 title: "Developers"
-date: 2011-06-15
+date: 15 Jun 2011 00:00:00 +0300
 extends: default.liquid
 tags:
   - "humor"

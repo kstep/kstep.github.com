@@ -1,5 +1,5 @@
 title: "Мера бесполезности фичи"
-date: 2010-02-15
+date: 15 Feb 2010 00:00:00 +0200
 extends: default.liquid
 tags:
   - "весёлости"

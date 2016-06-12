@@ -1,5 +1,5 @@
 title: "Обновление блога"
-date: 2012-11-25
+date: 25 Nov 2012 00:00:00 +0300
 extends: default.liquid
 ---
 

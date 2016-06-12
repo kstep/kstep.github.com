@@ -1,5 +1,5 @@
 title: "Про религию 2"
-date: 2009-08-11
+date: 11 Aug 2009 00:00:00 +0300
 extends: default.liquid
 tags:
   - "картинки"

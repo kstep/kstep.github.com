@@ -1,5 +1,5 @@
 title: "Стандарты такие стандарты"
-date: 2010-05-11
+date: 11 May 2010 00:00:00 +0300
 extends: default.liquid
 tags:
   - "рабочее"

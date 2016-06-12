@@ -1,5 +1,5 @@
 extends: default.liquid
-date: 2012-11-29
+date: 29 Nov 2012 00:00:00 +0300
 title: Масяня родила
 tags:
     - видео

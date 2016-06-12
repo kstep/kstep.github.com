@@ -1,5 +1,5 @@
 title: "Мои git-алиасы"
-date: 2009-06-29
+date: 29 Jun 2009 00:00:00 +0300
 extends: default.liquid
 ---
 Очень помогают :)

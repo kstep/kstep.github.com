@@ -1,5 +1,5 @@
 title: "Как использовать emacs"
-date: 2009-06-30
+date: 30 Jun 2009 00:00:00 +0300
 extends: default.liquid
 ---
 First, you need to remember where emacs is, using the rm (remember) command:

@@ -1,5 +1,5 @@
 title: "Хочу такие часы!"
-date: 2010-03-05
+date: 05 Mar 2010 00:00:00 +0200
 extends: default.liquid
 tags:
   - "design"

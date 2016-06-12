@@ -1,5 +1,5 @@
 title: "Дебиан-пакет для libetc"
-date: 2010-03-15
+date: 15 Mar 2010 00:00:00 +0200
 extends: default.liquid
 tags:
   - "lib"

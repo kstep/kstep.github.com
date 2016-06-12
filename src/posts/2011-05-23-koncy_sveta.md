@@ -1,5 +1,5 @@
 title: "Концы света"
-date: 2011-05-23
+date: 23 May 2011 00:00:00 +0300
 extends: default.liquid
 tags:
   - "конец света"

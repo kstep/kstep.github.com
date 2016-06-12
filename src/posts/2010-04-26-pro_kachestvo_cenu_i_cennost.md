@@ -1,5 +1,5 @@
 title: "Про качество, цену и ценность"
-date: 2010-04-26
+date: 26 Apr 2010 00:00:00 +0300
 extends: default.liquid
 tags:
   - "философское"

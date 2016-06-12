@@ -1,5 +1,5 @@
 title: "Схема линий пути к себе"
-date: 2009-12-22
+date: 22 Dec 2009 00:00:00 +0200
 extends: default.liquid
 tags:
   - "схемы"

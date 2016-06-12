@@ -1,5 +1,5 @@
 title: "Про религию"
-date: 2009-05-28
+date: 28 May 2009 00:00:00 +0300
 extends: default.liquid
 tags:
   - "комиксы"

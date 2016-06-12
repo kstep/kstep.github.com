@@ -1,5 +1,5 @@
 title: "Мера качества кода"
-date: 2009-05-11
+date: 11 May 2009 00:00:00 +0300
 extends: default.liquid
 tags:
   - "весёлости"

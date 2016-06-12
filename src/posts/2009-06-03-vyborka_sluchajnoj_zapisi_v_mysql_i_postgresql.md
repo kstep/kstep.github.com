@@ -1,5 +1,5 @@
 title: "Выборка случайной записи в MySQL и PostgreSQL"
-date: 2009-06-03
+date: 03 Jun 2009 00:00:00 +0300
 extends: default.liquid
 tags:
   - "базы данных"

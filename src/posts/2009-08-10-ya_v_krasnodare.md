@@ -1,5 +1,5 @@
 title: "Я в Краснодаре"
-date: 2009-08-10
+date: 10 Aug 2009 00:00:00 +0300
 extends: default.liquid
 ---
 Внимание!

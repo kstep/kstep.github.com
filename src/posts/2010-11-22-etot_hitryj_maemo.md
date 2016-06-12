@@ -1,5 +1,5 @@
 title: "Этот хитрый маемо"
-date: 2010-11-22
+date: 22 Nov 2010 00:00:00 +0200
 extends: default.liquid
 tags:
   - "pulseaudio"

@@ -1,5 +1,5 @@
 title: "Крокодил Гена"
-date: 2009-09-24
+date: 24 Sep 2009 00:00:00 +0300
 extends: default.liquid
 ---
 Ё — крокодил Гена
