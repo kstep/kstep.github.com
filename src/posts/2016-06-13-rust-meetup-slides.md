@@ -3,6 +3,8 @@ lang: en
 tags: rust, meetup, slides
 extends: default.liquid
 date: 13 Jun 2016 02:30:00 +0300
+excerpt: |
+    Slides from Minsk Rust Meetup (was on May 15th 2016)
 ---
 * <a href="http://vi-server.org/pub/rust.md">Rust Introduction</a> [<a href="http://vi-server.org/pub/rust.pdf">PDF</a>] (<a href="introduction.md">mirror</a>, <a href="introduction.pdf">PDF</a>), Vitalu Shukelo
 * <a href="parallelism-and-concurrency.html">Parallelism and Concurrency in Rust</a>, Konstantin Stepanov
