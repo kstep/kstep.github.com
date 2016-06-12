@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>//kstep blog</title>
+
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="/static/styles/materialize.min.css" />
+        <link rel="stylesheet" href="/static/styles/github.css" />
+
+<style>
+.chip i.material-icons {
+    padding-left: 0;
+    padding-right: 8px;
+    float: left;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.social-links img {
+    width: 16px;
+    height: 16px;
+    vertical-align: baseline;
+    margin-right: 5px;
+}
+</style>
+    </head>
+    <body>
+
+        <nav class="light-green lighten-2" role="navigation">
+            <div class="nav-wrapper container">
+                <div class="col s12">
+                    <a class="breadcrumb" href="/">//kstep</a>
+                    <span class="breadcrumb">Выборка случайной записи в MySQL и PostgreSQL</span>
+                </div>
+            </div>
+        </nav>
+        <main class="container">
+        <h2>Выборка случайной записи в MySQL и PostgreSQL</h2>
+        <div class="chip"><nobr><i class="material-icons">date_range</i> 2009-06-03</nobr></div>
+        <p>Довольно частая задача — выборка набора случайных записей из БД.</p>
+<p>Если погуглить можно найти кучу различных способов.</p>
+<p>Самый очевидный <code>SELECT * FROM table ORDER BY RAND();</code> не выдерживает никакой критики, так как на больших таблицах будет жутко тормозить по вполне очевидным причинам.</p>
+<p>Другой вариант — вытащить число записей <code>COUNT(*)</code>-ом, взять рандомное число от 1 до этого числа и организовать <code>LIMIT &lt;рамндом&gt;, 1</code>, но этот способ не катит, если нужно несколько записей: тут либо несколько запросов подряд делать надо, либо делать их же, но <code>UNION</code>-ом.</p>
+<p>В Гугле есть ещё несколько вариантов (попробуйте поискать сами, есть интересные для разных типов СУБД), но вариант, изобретённый в своё время мной, я там не нашёл, поэтому кладу его тут:</p>
+<pre><code class="language-sql">SELECT * FROM table WHERE RAND() &gt; 0.5 LIMIT 10;
+</code></pre>
+<p>Его фишка в том, что он в реальности намного быстрее, чем о том говорит <code>EXPLAIN</code>, и вот почему: выборка прекращается очень рано за счёт <code>LIMIT</code>-а, так что вся таблица выбираться не будет. Сортировки нет, поэтому будет простой скан без файл-сортинга (как в случае с <code>ORDER BY RAND()</code>, который к тому же мускулу придётся вычислить <strong>для каждой</strong> записи), а <code>RAND()</code> будет посчитан только для немногих записей, которые мускул успеет пройти до полного формирования результата запроса. Полный скан у нас будет в любом случае, раз нет особо выборки с участием индексов, но избавление от сортировки и вычисления функции для каждой строки — огромный шаг вперёд!</p>
+<p>У данного способа, однако, есть один недостаток: довольно низкое качество случайности выборки. По большому счёту этот запрос опирается на тезис о том, что если сортировка не задана, то мускул вернёт записи в неопределённом порядке, как попало, что я здесь принимаю за случайный порядок, а это на самом деле не совсем так: опыты показывают, что первыми возвращаются как правило последние изменённые записи (хотя я могу ошибаться, пусть гуру поправят), так что чем новее запись тем больше у неё шансов попасть в выборку. А записи ближе к центру и концу таблицы попадут в выборку с наименьшей вероятностью, стремящейся к нулю к последним записям. Это отчасти можно скомпенсировать оперируя числом, с которым сравнивается <code>RAND()</code> (в моём случае это 0.5): чем оно больше, тем «дальше» успеет пройти мускул до полного формирования нужной выборки.</p>
+<p>В общем, если вам нужно быстро выбрать несколько случайных записей из огромной таблицы и вас устраивает качество рандома, которое даёт этот запрос, то можете его смело использовать :) Он до сих пор трудится на благо человечетсва на одном из сайтов, к которым я приложил руку :)</p>
+<p>Кстати, впервые он был опробован на PostgreSQL-е, так что можете пользовать и на нём.</p>
+
+        </main>
+        <footer class="page-footer light-green lighten-2">
+            <div class="container">
+                <div class="row social-links">
+                    <div class="col s6">
+                        <h5 class="white-text">Author</h5>
+                        <p class="white-text">
+                        Konstantin Stepanov<br />
+                        Professional software developer since 2003 from Minsk, Belarus.<br />
+                        Now works at <a href="http://www.adform.com">Adform</a>.
+                        Writes professinally in Scala, hobby language is <a href="http://rust-lang.org">Rust</a>.<br />
+                        Blogs in Russian and English.<br />
+                        Email: <a href="mailto:me@kstep.me">me@kstep.me</a>.
+                        </p>
+                    </div>
+                    <div class="col s6">
+                        <h5 class="white-text">Links</h5>
+                        <div class="col s3">
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="https://twitter.com/kstepme"><img src="https://twitter.com/favicon.ico" /> Twitter</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://www.linkedin.com/pub/konstantin-stepanov/54/47/450"><img src="http://www.linkedin.com/favicon.ico" /> LinkedIn</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://kstepme.moikrug.ru/"><img src="http://moikrug.ru/favicon.ico" /> Мой Круг</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://welinux.ru/user/kstep/"><img src="http://welinux.ru/favicon.ico" /> WeLinux</a></li>
+                        </ul>
+                        </div>
+                        <div class="col s3">
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="https://github.com/kstep"><img src="http://github.com/favicon.ico" /> Github</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://www.ohloh.net/accounts/kstep"><img src="http://www.ohloh.net/favicon.ico" /> Ohloh</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://search.cpan.org/~kstepme/"><img src="http://search.cpan.org/favicon.ico" />CPAN</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://habrahabr.ru/users/kstep/"><img src="http://habrahabr.ru/favicon.ico" /> Habrahabr</a></li>
+                        </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-copyright">
+                <div class="container">
+                    &copy; <a href="https://github.com/kstep/kstep.github.com" class="white-text">2009&ndash;2015</a> Konstantin Stepanov
+                </div>
+            </div>
+
+            <script src="/static/highlight.pack.js"></script>
+            <script>hljs.initHighlightingOnLoad();</script>
+        </footer>
+
+    </body>
+</html>
+

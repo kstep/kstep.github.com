@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>//kstep blog</title>
+
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="/static/styles/materialize.min.css" />
+        <link rel="stylesheet" href="/static/styles/github.css" />
+
+<style>
+.chip i.material-icons {
+    padding-left: 0;
+    padding-right: 8px;
+    float: left;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.social-links img {
+    width: 16px;
+    height: 16px;
+    vertical-align: baseline;
+    margin-right: 5px;
+}
+</style>
+    </head>
+    <body>
+
+        <nav class="light-green lighten-2" role="navigation">
+            <div class="nav-wrapper container">
+                <div class="col s12">
+                    <a class="breadcrumb" href="/">//kstep</a>
+                    <span class="breadcrumb">Python vs PHP: мама Анархия или?..</span>
+                </div>
+            </div>
+        </nav>
+        <main class="container">
+        <h2>Python vs PHP: мама Анархия или?..</h2>
+        <div class="chip"><nobr><i class="material-icons">date_range</i> 2009-08-10</nobr></div>
+        <p>В связи с тем, что появился шанс всерьёз попробовать свои силы в Питоне, в срочном порядке перечитываю доки по оному. Долго вкуривал <a href="http://www.python.org/download/releases/2.2/descrintro/#metaclasses">фишку с метаклассами</a>. С одной фразой я согласен чуть более, чем полностью:</p>
+<blockquote>
+<p>In the past, the subject of metaclasses in Python has caused hairs to raise and even brains to explode.</p>
+</blockquote>
+<p>Это действительно взрыв мозга. Кроме метаклассов меня в Питоне после ПХП порадовали:</p>
+<ul>
+<li>возможность перегружать операторы типа сложения, вычитания, умножения и т.д., хотя и сделано это немного извращённо, ИМХО, по сравнению с C++ и Ruby,</li>
+<li>множественное наследование,</li>
+<li>нормальные свойства, к которым можно присобачивать методы-аксессоры и писать по-нормальному obj.prop = &quot;value&quot;, а не obj.setProp(&quot;value&quot;), как следствие возможность делать read-only свойства,</li>
+<li>декораторы функций, благодаря которым язык можно расширять просто крышесносящими способами.</li>
+</ul>
+<p>Однако есть вещи, которые в Питоне меня несколько напрягают, а именно:</p>
+<ul>
+<li>необходимость явно передавать инстанс класса как первый аргумент метода (хотя в этом есть положительная сторона: его можно назвать не чётко зарезервированным именем типа $this, а в принципе как угодно, что есть + ещё одна степень свободы программиста, лишь бы она не переросла в расхлябанность и невнимательность, но это совсем другая история),</li>
+<li>отсутствие нормального разграничения уровней доступа к свойствам и методам, т.е. нормальных private и protected нет (хотя private там и реализовано соглашением по именованию методов и классов — они должны начинаться на «__» чтобы быть признанными приватными, но это очень просто обходиться, т.к. внутри эти методосвойства просто переименовываются в _имяКласса__имяМетодоСвойства, что порождает две проблемы: 1) в Питоне можно объявлять класс-потомок с тем же именем, что и класс предок, так что эти методы друг друга в итоге перекроют и будет кирдык, 2) приватность легко обходится прямым обращением к методам по этому хитрому имени; что же до protected, то его предлагается реализовать самому с помощью подручных средств, то есть метаклассов и декораторов... если при этом не произойдёт коллапс мозга программиста, конечно).</li>
+</ul>
+<p>В общем даже после ПХП от Питона впечатления такие, что там стоит какая-то анархия. И это при том, что синтаксис языка построен так, что либо ты пишешь красиво, либо оно вообще не работает.</p>
+<p>Итоговая мысль: Питон — воплощённая свобода программерской мысли в красивой одёжке. Но ей ещё надо научиться пользоваться, иначе рискуешь сам себе прострелить ногу. Или что похуже...</p>
+
+        </main>
+        <footer class="page-footer light-green lighten-2">
+            <div class="container">
+                <div class="row social-links">
+                    <div class="col s6">
+                        <h5 class="white-text">Author</h5>
+                        <p class="white-text">
+                        Konstantin Stepanov<br />
+                        Professional software developer since 2003 from Minsk, Belarus.<br />
+                        Now works at <a href="http://www.adform.com">Adform</a>.
+                        Writes professinally in Scala, hobby language is <a href="http://rust-lang.org">Rust</a>.<br />
+                        Blogs in Russian and English.<br />
+                        Email: <a href="mailto:me@kstep.me">me@kstep.me</a>.
+                        </p>
+                    </div>
+                    <div class="col s6">
+                        <h5 class="white-text">Links</h5>
+                        <div class="col s3">
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="https://twitter.com/kstepme"><img src="https://twitter.com/favicon.ico" /> Twitter</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://www.linkedin.com/pub/konstantin-stepanov/54/47/450"><img src="http://www.linkedin.com/favicon.ico" /> LinkedIn</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://kstepme.moikrug.ru/"><img src="http://moikrug.ru/favicon.ico" /> Мой Круг</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://welinux.ru/user/kstep/"><img src="http://welinux.ru/favicon.ico" /> WeLinux</a></li>
+                        </ul>
+                        </div>
+                        <div class="col s3">
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="https://github.com/kstep"><img src="http://github.com/favicon.ico" /> Github</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://www.ohloh.net/accounts/kstep"><img src="http://www.ohloh.net/favicon.ico" /> Ohloh</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://search.cpan.org/~kstepme/"><img src="http://search.cpan.org/favicon.ico" />CPAN</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://habrahabr.ru/users/kstep/"><img src="http://habrahabr.ru/favicon.ico" /> Habrahabr</a></li>
+                        </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-copyright">
+                <div class="container">
+                    &copy; <a href="https://github.com/kstep/kstep.github.com" class="white-text">2009&ndash;2015</a> Konstantin Stepanov
+                </div>
+            </div>
+
+            <script src="/static/highlight.pack.js"></script>
+            <script>hljs.initHighlightingOnLoad();</script>
+        </footer>
+
+    </body>
+</html>
+

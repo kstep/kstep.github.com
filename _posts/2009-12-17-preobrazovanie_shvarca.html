@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>//kstep blog</title>
+
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="/static/styles/materialize.min.css" />
+        <link rel="stylesheet" href="/static/styles/github.css" />
+
+<style>
+.chip i.material-icons {
+    padding-left: 0;
+    padding-right: 8px;
+    float: left;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.social-links img {
+    width: 16px;
+    height: 16px;
+    vertical-align: baseline;
+    margin-right: 5px;
+}
+</style>
+    </head>
+    <body>
+
+        <nav class="light-green lighten-2" role="navigation">
+            <div class="nav-wrapper container">
+                <div class="col s12">
+                    <a class="breadcrumb" href="/">//kstep</a>
+                    <span class="breadcrumb">Преобразование Шварца</span>
+                </div>
+            </div>
+        </nav>
+        <main class="container">
+        <h2>Преобразование Шварца</h2>
+        <div class="chip"><nobr><i class="material-icons">date_range</i> 2009-12-17</nobr></div>
+        <p>Преобразование Шварца (<a href="http://en.wikipedia.org/wiki/Schwartzian_transform">Schwartzian transform</a>) — перловая идиома для ускорения сортировки массива при условии, что условие сортировки требует выполнение достаточно дорогого кода. По сути идея в том, чтобы заранее вычислить «ключ» сортировки для каждого элемента массива и потом отсортировать по этому ключу. Представляет собой разновидность кеширования или <a href="http://en.wikipedia.org/wiki/Memoization">мемоизации</a>.</p>
+<p>Пишу здесь потому, что по-русски в вики про него страницы нет.</p>
+<p>Сама идеома:</p>
+<pre><code class="language-perl">@sorted = map  { $_-&gt;[0] }
+          sort { $a-&gt;[1] cmp $b-&gt;[1] }
+          map  { [$_, foo($_)] }
+               @unsorted;
+</code></pre>
+<p>Смысл: сперва каждый элемент неотсортированного массива с помощью map дополняется вычисленным значением ключа сортировки (функцией foo()), при этом используются анонимные двухэлементные массивы для сохранения и исходного значения элементов массива, и вычисленного ключа. Затем происходит собственно сортировка по вычисленным ключам, а в конце идёт «развёртка» анонимных массивов. Т.к. после последней операции ссылок на временные анонимные массивы не остаётся, то они сразу (ну или почти сразу) попадают в руки сборщика мусора, так что памяти используется не так много, как если бы мы использовали дополнительный временный массив для хранения вычисленных значений ключей сортировки. То есть использоваться-то памяти будет примерно столько же, но освобождаться она будет очень быстро.</p>
+<p>Пример: сортировка списка файлов по их времени модификации. Если сортировать сразу, без этой идиомы, то будет сделана куча вызовов stat для каждого элемента массива, т.к. число сравнений изначально неизвестно. С использованием идиомы дорогая операция stat будет гарантированно вызвана единственный раз для каждого имени файла из массива, а сортировка будет проводиться с простым и быстрым сравнением целых чисел (unix timestamp'ов в данном случае).</p>
+
+        </main>
+        <footer class="page-footer light-green lighten-2">
+            <div class="container">
+                <div class="row social-links">
+                    <div class="col s6">
+                        <h5 class="white-text">Author</h5>
+                        <p class="white-text">
+                        Konstantin Stepanov<br />
+                        Professional software developer since 2003 from Minsk, Belarus.<br />
+                        Now works at <a href="http://www.adform.com">Adform</a>.
+                        Writes professinally in Scala, hobby language is <a href="http://rust-lang.org">Rust</a>.<br />
+                        Blogs in Russian and English.<br />
+                        Email: <a href="mailto:me@kstep.me">me@kstep.me</a>.
+                        </p>
+                    </div>
+                    <div class="col s6">
+                        <h5 class="white-text">Links</h5>
+                        <div class="col s3">
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="https://twitter.com/kstepme"><img src="https://twitter.com/favicon.ico" /> Twitter</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://www.linkedin.com/pub/konstantin-stepanov/54/47/450"><img src="http://www.linkedin.com/favicon.ico" /> LinkedIn</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://kstepme.moikrug.ru/"><img src="http://moikrug.ru/favicon.ico" /> Мой Круг</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://welinux.ru/user/kstep/"><img src="http://welinux.ru/favicon.ico" /> WeLinux</a></li>
+                        </ul>
+                        </div>
+                        <div class="col s3">
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="https://github.com/kstep"><img src="http://github.com/favicon.ico" /> Github</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://www.ohloh.net/accounts/kstep"><img src="http://www.ohloh.net/favicon.ico" /> Ohloh</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://search.cpan.org/~kstepme/"><img src="http://search.cpan.org/favicon.ico" />CPAN</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://habrahabr.ru/users/kstep/"><img src="http://habrahabr.ru/favicon.ico" /> Habrahabr</a></li>
+                        </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-copyright">
+                <div class="container">
+                    &copy; <a href="https://github.com/kstep/kstep.github.com" class="white-text">2009&ndash;2015</a> Konstantin Stepanov
+                </div>
+            </div>
+
+            <script src="/static/highlight.pack.js"></script>
+            <script>hljs.initHighlightingOnLoad();</script>
+        </footer>
+
+    </body>
+</html>
+

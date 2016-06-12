@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>//kstep blog</title>
+
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="/static/styles/materialize.min.css" />
+        <link rel="stylesheet" href="/static/styles/github.css" />
+
+<style>
+.chip i.material-icons {
+    padding-left: 0;
+    padding-right: 8px;
+    float: left;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.social-links img {
+    width: 16px;
+    height: 16px;
+    vertical-align: baseline;
+    margin-right: 5px;
+}
+</style>
+    </head>
+    <body>
+
+        <nav class="light-green lighten-2" role="navigation">
+            <div class="nav-wrapper container">
+                <div class="col s12">
+                    <a class="breadcrumb" href="/">//kstep</a>
+                    <span class="breadcrumb">Автомонтирование sshfs/curlftpfs с помощью autofs в Debian'е</span>
+                </div>
+            </div>
+        </nav>
+        <main class="container">
+        <h2>Автомонтирование sshfs/curlftpfs с помощью autofs в Debian'е</h2>
+        <div class="chip"><nobr><i class="material-icons">date_range</i> 2009-07-10</nobr></div>
+        <p>Решил настроить автомонтирование удалённых серверов. Начал с sshfs, с ним оказалось всё до обидного просто: буквально по третей ссылке в гугле по запросу «<a href="http://www.google.com.by/search?hl=ru&amp;safe=off&amp;client=firefox-a&amp;rls=org.mozilla%3Aen-US%3Aofficial&amp;hs=k5M&amp;q=sshfs+autofs&amp;btnG=%D0%9F%D0%BE%D0%B8%D1%81%D0%BA&amp;meta=">sshfs autofs</a>» была найдена <a href="http://www.tjansson.dk/?p=84">замечательная статья</a>, по которой всё работает. Заодно решил наладить и curlftpfs. В том же гугле была найдена <a href="http://lukaszproszek.blogspot.com/2008/05/automounting-ftpfs-using-curlftpfs-and.html">другая статья</a>, но предлагаемое решение мне категорически не понравилось: оно строиться на скриптах-обёртках вокруг curlftpfs, что очень, на мой взгляд, некузяво.</p>
+<p>Тут резко вспоминаем, что autofs может настраиваться не только статическими файлами с маппингом каталог-устройство, но и с помощью скриптов. Для этого надо сделать следующее:</p>
+<ol>
+<li>в файле /etc/auto.master как обычно прописываем:</li>
+</ol>
+<pre><code>/remote/ftp /etc/auto.ftp   uid=1001,gid=1001,--timeout=30,--ghost
+</code></pre>
+<ol start="2">
+<li>этот файл /etc/auto.ftp делаем исполнимым:</li>
+</ol>
+<pre><code>chmod a+x /etc/auto.ftp
+</code></pre>
+<ol start="3">
+<li>пишем в нём скрипт для маппинга.</li>
+</ol>
+<p>Скрипту в первом параметре передаётся «ключ», то есть каталог в который юзер пытается перейти в каталоге под управлением autofs (первая колонка в стандартном файле маппинга autofs), скрипт должен на стандартный вывод вывести два поля разделённых пробельным симоволом: строка с опциями монтирования и строка, определяющая объект монтирования (например устройство), то есть по сути два остальных поля в стандартном файле маппинга.</p>
+<p>Чтобы не плодить сущностей был создан один единственный унверсальный скрипт /etc/auto.remote:</p>
+<pre><code class="language-bash">#!/bin/sh
+
+key=&quot;$1&quot;
+opts=&quot;-fstype=fuse,rw,nodev,nosuid,nonempty,noatime,allow_other&quot;
+
+case $0 in
+*.ssh) proto=&quot;sshfs&quot;; key=&quot;$key\\\\:&quot; ;;
+*.ftp) proto=&quot;curlftpfs&quot; ;;
+*) exit 1 ;;
+esac
+
+echo &quot;$opts&quot; &quot;:$proto\\\\#$key&quot;
+</code></pre>
+<p>После чего на этот скрипт были проброшены линки:</p>
+<pre><code class="language-bash">ln -s /etc/auto.remote /etc/auto.ssh
+ln -s /etc/auto.remote /etc/auto.ftp
+</code></pre>
+<p>Этот скрипт позволяет автоматически монтировать ssh и ftp хосты (в зависимости от того, под каким именем он был вызван). Единственное, о чём не стоит забывать, что выполняется монтирование autofs'ом от имени рута, так что все ftp-пароли в ~/.netrc, настройки коннекта ssh в ~/.ssh/config и соответствующие ssh-ключики должны быть продублированы в доме рута (по умолчанию /root) со всеми вытекающими... За то в результате мы получаем прозрачное монтирование-размонтирование удалённых ftp и ssh хостов: просто нужно зайти в соответствующий каталог и оно само автомагически подключится (или не подключится :), а после некоторого времени без доступа к этому каталогу (в примере указано 30 секунд, см. параметр --timeout), оно само же и отключится. Пользуйтесь на здоровье!</p>
+<p>P.S. Перед всеми этими упражнениями строго рекомендуется изучить маны по autofs, auto.master, curlftpfs, sshfs, ssh и netrc!</p>
+<p>P.P.S. Дебиановские пакеты, заюзанные для настойки всего этого (пользую Debian Squeeze): autofs5 curlftpfs sshfs.</p>
+
+        </main>
+        <footer class="page-footer light-green lighten-2">
+            <div class="container">
+                <div class="row social-links">
+                    <div class="col s6">
+                        <h5 class="white-text">Author</h5>
+                        <p class="white-text">
+                        Konstantin Stepanov<br />
+                        Professional software developer since 2003 from Minsk, Belarus.<br />
+                        Now works at <a href="http://www.adform.com">Adform</a>.
+                        Writes professinally in Scala, hobby language is <a href="http://rust-lang.org">Rust</a>.<br />
+                        Blogs in Russian and English.<br />
+                        Email: <a href="mailto:me@kstep.me">me@kstep.me</a>.
+                        </p>
+                    </div>
+                    <div class="col s6">
+                        <h5 class="white-text">Links</h5>
+                        <div class="col s3">
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="https://twitter.com/kstepme"><img src="https://twitter.com/favicon.ico" /> Twitter</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://www.linkedin.com/pub/konstantin-stepanov/54/47/450"><img src="http://www.linkedin.com/favicon.ico" /> LinkedIn</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://kstepme.moikrug.ru/"><img src="http://moikrug.ru/favicon.ico" /> Мой Круг</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://welinux.ru/user/kstep/"><img src="http://welinux.ru/favicon.ico" /> WeLinux</a></li>
+                        </ul>
+                        </div>
+                        <div class="col s3">
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="https://github.com/kstep"><img src="http://github.com/favicon.ico" /> Github</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://www.ohloh.net/accounts/kstep"><img src="http://www.ohloh.net/favicon.ico" /> Ohloh</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://search.cpan.org/~kstepme/"><img src="http://search.cpan.org/favicon.ico" />CPAN</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://habrahabr.ru/users/kstep/"><img src="http://habrahabr.ru/favicon.ico" /> Habrahabr</a></li>
+                        </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-copyright">
+                <div class="container">
+                    &copy; <a href="https://github.com/kstep/kstep.github.com" class="white-text">2009&ndash;2015</a> Konstantin Stepanov
+                </div>
+            </div>
+
+            <script src="/static/highlight.pack.js"></script>
+            <script>hljs.initHighlightingOnLoad();</script>
+        </footer>
+
+    </body>
+</html>
+

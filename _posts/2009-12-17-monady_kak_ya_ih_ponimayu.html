@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>//kstep blog</title>
+
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="/static/styles/materialize.min.css" />
+        <link rel="stylesheet" href="/static/styles/github.css" />
+
+<style>
+.chip i.material-icons {
+    padding-left: 0;
+    padding-right: 8px;
+    float: left;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.social-links img {
+    width: 16px;
+    height: 16px;
+    vertical-align: baseline;
+    margin-right: 5px;
+}
+</style>
+    </head>
+    <body>
+
+        <nav class="light-green lighten-2" role="navigation">
+            <div class="nav-wrapper container">
+                <div class="col s12">
+                    <a class="breadcrumb" href="/">//kstep</a>
+                    <span class="breadcrumb">Монады как я их понимаю</span>
+                </div>
+            </div>
+        </nav>
+        <main class="container">
+        <h2>Монады как я их понимаю</h2>
+        <div class="chip"><nobr><i class="material-icons">date_range</i> 2009-12-17</nobr></div>
+        <p>Проблема Хаскела (да и большинства других функциональных языков) в том, что в нём отсутствует такое понятие, как side-effect. Глобальных переменных нет как класса, а сохранять состояние между вызовами функций надо. Кроме того, будучи языком функциональным, а по сути описательным, а не императивным, функции в нём выполняются в неопределённом порядке, что поднимает ещё и задачу flow-control'а.</p>
+<p>Вот из-за этого и пришлось вводить понятие монады. Монады нужны именно для контроля хода выполнения программы с сохранением и передачей общего состояние системы между вызовами различных функций.</p>
+<p>В императивных языках большинство монадических операций (проход массива, контроль исключений, работа в потоком ввода-вывода) выполняется встроенными средствами языка и не требует введения понятия монады, но это не значит, что они совершенно бесполезны для императивного программиста. Как минимум знание монад расширяет сознание =), не говоря уже о том, что этот подход может рано или поздно пригодиться.</p>
+<p>Теперь к конкретике. Монада определяет:</p>
+<ol>
+<li>способ хранения состояния системы между вызовами (контейнер, по сути описание класса),</li>
+<li>функцию для «подъёма» значения в монаду, по сути конструктор класса,</li>
+<li>функтор, определяющий стратегию вызова заданных функций: очерёдность и порядок передачи в них (и сбора из них) сохранённого в монаде состояния (так называемый функтор связывания, или стратегия связывания — binding), который связывает заданный инстанс монадического класса с заданной функцией, а на выходе имеет новый инстанс монадического класса. По сути он связывает инстанс монадического класса (первый свой параметр) с заданной фукнцией (второй свой параметр), при этом функции передаётся сохранённое в инстансе монадического класса значение (состояние), а результат выполнения функции должен быть приведён к тому же монадическому классу.</li>
+</ol>
+<p>Пусть есть класс MonadContainer с конструктором mreturn(x). Тогда у него должен быть метод MonadContainer.mbind(func), который вызывает функцию func(x), а результатом своим либо берёт результат выполнения этой функции (тогда она должна возвращать значение с помощью MonadContainer.mreturn(x)), либо сам должен оборачивать результат выполнения func(x) в MonadContainer.mreturn() и возвращать его.</p>
+<p>Математически получается, что монада как бы описывает некое поле значений, над которым определён заданный базовый набор действий и выполняются некоторые аксиомы:</p>
+<ol>
+<li>если поднять значение в монаду (и получить монадический инстанс), а затем применить стратегию связывания полученного инстанса с заданной функцией, то получим результат, эквивалентный вызову заданной функции с заданным значением в качестве параметра:</li>
+</ol>
+<pre><code class="language-ruby">m = MonadContainer.mreturn(123)
+n1 = m.mbind do |x|
+    x*2
+end
+
+n2 = MonadContainer.mreturn(123 * 2)
+
+assert n1 == n2
+</code></pre>
+<ol start="2">
+<li>если взять инстанс монадического тип (класс) и применить к нему стратегию связывания с конструктором класса, то получим этот же инстанс:</li>
+</ol>
+<pre><code class="language-ruby">m = MonadContainer.mreturn(123)
+
+n = m.mbind do |x|
+    MonadContainer.mreturn(x)
+end
+
+assert m == n
+</code></pre>
+<ol start="3">
+<li>если взять монадический инстанс и применить к нему стратегию свзязываения с заданной функцией, а затем к результату ещё раз применить стратегию связывания с иной функцией, то результат будет эквивалентен вычислению первой заданной функции от изначально поднятого в монаду значения и применения к результату стратегии связывания с иной функцией:</li>
+</ol>
+<pre><code class="language-ruby">m = MonadContainer.mreturn(123)
+
+n1 = m.mbind do |x|
+    x*2
+end.mbind do |x|
+    x*3
+end
+
+n2 = m.mbind do |x|
+    MonadContainer.mreturn(x*2).mbind do |x|
+        x*3
+    end
+end
+
+assert n1 == n2
+</code></pre>
+<p>С точки зрения простого программиста монада — это такой абстрактный тип данных (или класс в терминах ООП) с определённым интерфейсом, соответствующим вышеприведённым тест-кейсам.</p>
+<p>Из 1 и 2 следует, что монадический тип должен полностью сохранять исходное значение при подъёме его в монаду (создании инстанса класса-контейнера), а применение стратегии связывания монады с конструктором монады должно приводить просто к вызову конструктора монады от сохранённого в монадическом типе значения.</p>
+<p>Понятие монадического нуля аналогично понятию нуля в алгебре при условии что стратегия связывания аналогична умножению, то есть попытка связать монадический ноль с любой функцией приводит к получению монадического нуля. С точки зрения программиста монадический ноль — это просто пустое значение, т.е. 0 для чисел, пустая &quot;&quot; строка для строк или пустой массив [] для массивов.</p>
+<pre><code class="language-ruby">mz = MonadContainer.mzero
+n = mz.mbind do |x|
+    x*2
+end
+
+assert n == mz
+</code></pre>
+<p>Аддитивная монада определяет такое поле, над которым определена операция сложения, при этом любое сложение монады с монадическим нулём даёт в итоге эту монаду. Математики тут говорят о моноидах.</p>
+<pre><code class="language-ruby">mz = MonadContainer.mzero
+m = MonadContainer.mreturn(123)
+n = mz.mplus(m)
+
+assert n == m
+</code></pre>
+
+        </main>
+        <footer class="page-footer light-green lighten-2">
+            <div class="container">
+                <div class="row social-links">
+                    <div class="col s6">
+                        <h5 class="white-text">Author</h5>
+                        <p class="white-text">
+                        Konstantin Stepanov<br />
+                        Professional software developer since 2003 from Minsk, Belarus.<br />
+                        Now works at <a href="http://www.adform.com">Adform</a>.
+                        Writes professinally in Scala, hobby language is <a href="http://rust-lang.org">Rust</a>.<br />
+                        Blogs in Russian and English.<br />
+                        Email: <a href="mailto:me@kstep.me">me@kstep.me</a>.
+                        </p>
+                    </div>
+                    <div class="col s6">
+                        <h5 class="white-text">Links</h5>
+                        <div class="col s3">
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="https://twitter.com/kstepme"><img src="https://twitter.com/favicon.ico" /> Twitter</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://www.linkedin.com/pub/konstantin-stepanov/54/47/450"><img src="http://www.linkedin.com/favicon.ico" /> LinkedIn</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://kstepme.moikrug.ru/"><img src="http://moikrug.ru/favicon.ico" /> Мой Круг</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://welinux.ru/user/kstep/"><img src="http://welinux.ru/favicon.ico" /> WeLinux</a></li>
+                        </ul>
+                        </div>
+                        <div class="col s3">
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="https://github.com/kstep"><img src="http://github.com/favicon.ico" /> Github</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://www.ohloh.net/accounts/kstep"><img src="http://www.ohloh.net/favicon.ico" /> Ohloh</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://search.cpan.org/~kstepme/"><img src="http://search.cpan.org/favicon.ico" />CPAN</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://habrahabr.ru/users/kstep/"><img src="http://habrahabr.ru/favicon.ico" /> Habrahabr</a></li>
+                        </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-copyright">
+                <div class="container">
+                    &copy; <a href="https://github.com/kstep/kstep.github.com" class="white-text">2009&ndash;2015</a> Konstantin Stepanov
+                </div>
+            </div>
+
+            <script src="/static/highlight.pack.js"></script>
+            <script>hljs.initHighlightingOnLoad();</script>
+        </footer>
+
+    </body>
+</html>
+

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>//kstep blog</title>
+
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="/static/styles/materialize.min.css" />
+        <link rel="stylesheet" href="/static/styles/github.css" />
+
+<style>
+.chip i.material-icons {
+    padding-left: 0;
+    padding-right: 8px;
+    float: left;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.social-links img {
+    width: 16px;
+    height: 16px;
+    vertical-align: baseline;
+    margin-right: 5px;
+}
+</style>
+    </head>
+    <body>
+
+        <nav class="light-green lighten-2" role="navigation">
+            <div class="nav-wrapper container">
+                <div class="col s12">
+                    <a class="breadcrumb" href="/">//kstep</a>
+                    <span class="breadcrumb">Developers</span>
+                </div>
+            </div>
+        </nav>
+        <main class="container">
+        <h2>Developers</h2>
+        <div class="chip"><nobr><i class="material-icons">date_range</i> 2011-06-15</nobr></div>
+        <p>Any Russian developer after reading new code for a couple of minutes will raise from his seat and yell, telling to himself: &quot;We need to rewrite all this f**king code!&quot; Then he will turn doubtful at the second thought of time, this rewriting can take, and he will spend the rest of day, trying to convince himself it won't take too long. Just take some time to refactor this and that and he will have nice and logically correct code.</p>
+<p>The next morning Russian, fresh and content, will report to his manager: he needs a day to rewrite all the code. Yes, just a day and no more. Two days max, if take into account all risks. Manager will give him a week, and a six months later the task will be resolved. Until another Russian developer sees the code.</p>
+<p>Meanwhile in four other cubicles four Chinese developers don't stop working for a minute. They manage to come to office earlier than Russian developer, leave office later and do about one third of Russian developer's work. These fantastic four men don't write any new code for a long-long time, they just maintain old code, written by Indian developer and rewritten twice by two Russian developers. Bugs not just live there, no. There is their sweet nest. This nest replicates itself all the time, using best Chinese development method of code reuse - copy-and-paste. This way bugs crawl in all directions via static variables and variables passed by reference (Chinese developer can't resist the inconvenience of not being able to change external variables, passed into his function from modules, written by Russian developer).</p>
+<p>When Russian developer remembers about this Chinese function, he loses the gift of English-speaking and starts to talk strange mix of Russian and Chinese. He already rewritten this module, Chinese developers work on, in his daydreams, but he has no time to make this dream come true. Chinese developers has serious bugs in their to-do list, and managers know it and hurry them up all the time. Chinese developers pass these bugs to each other, because they know: if they try to fix them, new even more serious bugs will appear. And they are right about it. There is only one man, who can tell how and where static variable change their values - the Indian developer. But he is in deep meditation.</p>
+<p>That's why when all the four employees get fired... And who can be fired else, anyway? Russian developer has not rewritten his module yet, Indian developer - the most valuable man in the company - takes very small attention to the project, but when he does, everybody understand - nobody knows software architecture better then he does. So, when four Chinese developers got fired, their code can take one of two fates. The first one - it's passed to Russian developers and will be rewritten. The second one - it will go to Canadian developer.</p>
+<p>Oh, Canadian developer is a special case. Not giving a minute for doubt he will rush into attack like a White Knight, trying to track down and kill mighty Chinese Bug. This Bug lives in the module for three years, and Chinese developers already reported it fixed for four times (one time for each of developer), but it always comes back, like a Batman to his Gotham City. So, Canadian developer will do the thing, Chinese developers couldn't do for a many years. Using his trustworthy debugger he will track down the place, where static variable got its value of -1 instead of correct 0, and create new variable with correct value by this place. The bug will die in this battle.</p>
+<p>But the win will come with a great price. All project will crash, including module just rewritten by Russian developer. This fact will put Russian developer into deep depression for two days and after this time he will make very predictable conclusion: the overall design was incorrect, and <em>everything</em> must be rewritten from scratch. We need a week to accomplish this task. Yes, just a week, no more.</p>
+<p>Brave Canadian developer will rush in, trying to fix everything, but everything will get worse (but who can tell it will?) All this hustle will make Indian developer leave his meditation, and he will give genius decision - branch the code out. According to him, company will support two versions of the product: the one working with the Bug, and the other one crashing without the Bug. As this plan is proposed, Russian developer will break his ruler over the table and swear at his wife at home, but won't say a word in opposition at the meeting.</p>
+<p>Fortunately, it doesn't bother company's profit, because the product is sold well anyway. That's why managers are so content and don't stop telling developers, they are chosen as they are the best of the best. And they have already proven this fact, as they release their product at least sometimes.</p>
+<p>Source: <a href="http://sokol-egor.blogspot.com/">http://sokol-egor.blogspot.com/</a></p>
+<p><disqus name="kstep" /></p>
+
+        </main>
+        <footer class="page-footer light-green lighten-2">
+            <div class="container">
+                <div class="row social-links">
+                    <div class="col s6">
+                        <h5 class="white-text">Author</h5>
+                        <p class="white-text">
+                        Konstantin Stepanov<br />
+                        Professional software developer since 2003 from Minsk, Belarus.<br />
+                        Now works at <a href="http://www.adform.com">Adform</a>.
+                        Writes professinally in Scala, hobby language is <a href="http://rust-lang.org">Rust</a>.<br />
+                        Blogs in Russian and English.<br />
+                        Email: <a href="mailto:me@kstep.me">me@kstep.me</a>.
+                        </p>
+                    </div>
+                    <div class="col s6">
+                        <h5 class="white-text">Links</h5>
+                        <div class="col s3">
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="https://twitter.com/kstepme"><img src="https://twitter.com/favicon.ico" /> Twitter</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://www.linkedin.com/pub/konstantin-stepanov/54/47/450"><img src="http://www.linkedin.com/favicon.ico" /> LinkedIn</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://kstepme.moikrug.ru/"><img src="http://moikrug.ru/favicon.ico" /> Мой Круг</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://welinux.ru/user/kstep/"><img src="http://welinux.ru/favicon.ico" /> WeLinux</a></li>
+                        </ul>
+                        </div>
+                        <div class="col s3">
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="https://github.com/kstep"><img src="http://github.com/favicon.ico" /> Github</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://www.ohloh.net/accounts/kstep"><img src="http://www.ohloh.net/favicon.ico" /> Ohloh</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://search.cpan.org/~kstepme/"><img src="http://search.cpan.org/favicon.ico" />CPAN</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://habrahabr.ru/users/kstep/"><img src="http://habrahabr.ru/favicon.ico" /> Habrahabr</a></li>
+                        </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-copyright">
+                <div class="container">
+                    &copy; <a href="https://github.com/kstep/kstep.github.com" class="white-text">2009&ndash;2015</a> Konstantin Stepanov
+                </div>
+            </div>
+
+            <script src="/static/highlight.pack.js"></script>
+            <script>hljs.initHighlightingOnLoad();</script>
+        </footer>
+
+    </body>
+</html>
+

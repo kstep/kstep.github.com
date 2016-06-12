@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>//kstep blog</title>
+
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="/static/styles/materialize.min.css" />
+        <link rel="stylesheet" href="/static/styles/github.css" />
+
+<style>
+.chip i.material-icons {
+    padding-left: 0;
+    padding-right: 8px;
+    float: left;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.social-links img {
+    width: 16px;
+    height: 16px;
+    vertical-align: baseline;
+    margin-right: 5px;
+}
+</style>
+    </head>
+    <body>
+
+        <nav class="light-green lighten-2" role="navigation">
+            <div class="nav-wrapper container">
+                <div class="col s12">
+                    <a class="breadcrumb" href="/">//kstep</a>
+                    <span class="breadcrumb">Блок try/finally в PHP</span>
+                </div>
+            </div>
+        </nav>
+        <main class="container">
+        <h2>Блок try/finally в PHP</h2>
+        <div class="chip"><nobr><i class="material-icons">date_range</i> 2012-12-11</nobr></div>
+        <p>Несмотря на мою нелюбовь к PHP, время от времени приходится к нему возвращаться, испытывая при этом различные неудобства из-за отсутствия элементарных вещей.</p>
+<p>С замыканиями в PHP, слава Б-гу, уже разобрались, а вот блоков <code>try/finally</code> до сих пор не видно (хотя вроде как <a href="http://habrahabr.ru/post/149314/">обещают</a> в 5.5, но до него дожить ещё надо).</p>
+<p>Я не буду опускаться по обсуждения, нужен ли <code>finally</code>, это абсолютно пустые споры, которые ведут люди, никогда не писавшие ни на чём, кроме PHP, пытающиеся доказать превосходство своей платформы. Я же, следуя принципу «bottom-up» программирования и светлым заветам <a href="http://www.stevemcconnell.com/cc.htm">МакКоннела</a>, реализовал свою версию блока <code>try/finally</code>.</p>
+<p>Что я сделал, так это смешал принцип <a href="http://ru.wikipedia.org/wiki/RAII">RAII</a> из С++ и использование замыканий из функционального программирования. Получился такой вот метр колючей проволоки:</p>
+<pre><code class="language-php">&lt;?php
+class ensure {
+
+    public function __invokeStatic() {
+        $args = func_get_args();
+        $try = array_shift($args);
+        return new self($try, $args);
+    }
+
+    private $state;
+    private $error;
+    public function __construct($try, $args) {
+        try {
+            $this-&gt;state = call_user_func_array($try, $args);
+
+        } catch (Exception $e) {
+            $this-&gt;error = $e;
+        }
+    }
+
+    private $errorError;
+    public function except($error, $callback) {
+        if ($this-&gt;error and is_a($this-&gt;error, $error)) {
+            $error = $this-&gt;error;
+            $this-&gt;error = null;
+
+            try {
+                $callback($error);
+            } catch (Exception $e) {
+                $this-&gt;errorError = $e;
+            }
+        }
+
+        return $this;
+    }
+
+    public function finally($callback) {
+        $callback($this-&gt;state);
+        $this-&gt;finish();
+        return $this;
+    }
+
+    public function finish() {
+        $error = false;
+        if ($this-&gt;error) {
+            $error = $this-&gt;error;
+            $this-&gt;error = null;
+        } elseif ($this-&gt;errorError) {
+            $error = $this-&gt;errorError;
+            $this-&gt;errorError = null;
+        }
+
+        if ($error) {
+            throw $error;
+        }
+
+        return $this;
+    }
+
+    public function __destruct() {
+        $this-&gt;finish();
+    }
+}
+</code></pre>
+<p>Что же мы получили в итоге? А получили мы фактически новую версию блока <code>try/catch/finally</code>, которую можно использовать вместо стандартного <code>try/catch</code>:</p>
+<pre><code class="language-php">&lt;?php
+ensure(function () {
+    $fh = fopen(&quot;logfile.txt&quot;, &quot;a&quot;);
+    fwrite($fh, &quot;Log data\n&quot;);
+    return $fh;
+})
+-&gt;except('Exception', function ($e) {
+    echo &quot;Error happened: &quot; . $e-&gt;getMessage();
+})
+-&gt;finally(function ($fh) {
+    fclose($fh);
+});
+</code></pre>
+<p>«Блок» <code>finally</code> будет выполнен всегда, в не зависимости от ошибок, произошедших в «блоке» <code>try</code>, «блоки» <code>catch</code> будут работать как обычно. Однако необработанные исключения, возникшие в блоках <code>try</code> и <code>catch</code>, никуда не потеряются и будут вызваны после выполнения <code>finally</code>.</p>
+<p>Если же <code>finally</code> нет, то по идее нужно вызвать <code>finish()</code> в конце, но даже если программист забудет это сделать, то сработает принцип <strong>RAII</strong>, так что в худшем случае накопненные необработанные исключения выскочат в конце функции.</p>
+<p>Кроме того с помощью этого же механизма можно передавать состояние обратки блока кода из одной функции в другую, но это уже совсем другая история.</p>
+<p><disqus name="kstep" /></p>
+
+        </main>
+        <footer class="page-footer light-green lighten-2">
+            <div class="container">
+                <div class="row social-links">
+                    <div class="col s6">
+                        <h5 class="white-text">Author</h5>
+                        <p class="white-text">
+                        Konstantin Stepanov<br />
+                        Professional software developer since 2003 from Minsk, Belarus.<br />
+                        Now works at <a href="http://www.adform.com">Adform</a>.
+                        Writes professinally in Scala, hobby language is <a href="http://rust-lang.org">Rust</a>.<br />
+                        Blogs in Russian and English.<br />
+                        Email: <a href="mailto:me@kstep.me">me@kstep.me</a>.
+                        </p>
+                    </div>
+                    <div class="col s6">
+                        <h5 class="white-text">Links</h5>
+                        <div class="col s3">
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="https://twitter.com/kstepme"><img src="https://twitter.com/favicon.ico" /> Twitter</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://www.linkedin.com/pub/konstantin-stepanov/54/47/450"><img src="http://www.linkedin.com/favicon.ico" /> LinkedIn</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://kstepme.moikrug.ru/"><img src="http://moikrug.ru/favicon.ico" /> Мой Круг</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://welinux.ru/user/kstep/"><img src="http://welinux.ru/favicon.ico" /> WeLinux</a></li>
+                        </ul>
+                        </div>
+                        <div class="col s3">
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="https://github.com/kstep"><img src="http://github.com/favicon.ico" /> Github</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://www.ohloh.net/accounts/kstep"><img src="http://www.ohloh.net/favicon.ico" /> Ohloh</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://search.cpan.org/~kstepme/"><img src="http://search.cpan.org/favicon.ico" />CPAN</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://habrahabr.ru/users/kstep/"><img src="http://habrahabr.ru/favicon.ico" /> Habrahabr</a></li>
+                        </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-copyright">
+                <div class="container">
+                    &copy; <a href="https://github.com/kstep/kstep.github.com" class="white-text">2009&ndash;2015</a> Konstantin Stepanov
+                </div>
+            </div>
+
+            <script src="/static/highlight.pack.js"></script>
+            <script>hljs.initHighlightingOnLoad();</script>
+        </footer>
+
+    </body>
+</html>
+

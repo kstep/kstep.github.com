@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>//kstep blog</title>
+
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="/static/styles/materialize.min.css" />
+        <link rel="stylesheet" href="/static/styles/github.css" />
+
+<style>
+.chip i.material-icons {
+    padding-left: 0;
+    padding-right: 8px;
+    float: left;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.social-links img {
+    width: 16px;
+    height: 16px;
+    vertical-align: baseline;
+    margin-right: 5px;
+}
+</style>
+    </head>
+    <body>
+
+        <nav class="light-green lighten-2" role="navigation">
+            <div class="nav-wrapper container">
+                <div class="col s12">
+                    <a class="breadcrumb" href="/">//kstep</a>
+                    <span class="breadcrumb">Pearlwall</span>
+                </div>
+            </div>
+        </nav>
+        <main class="container">
+        <h2>Pearlwall</h2>
+        <div class="chip"><nobr><i class="material-icons">date_range</i> 2011-04-12</nobr></div>
+        <pre><code class="language-perl">use strict;
+
+package Pearlwall;
+use base 'Exporter';
+our @EXPORT = qw(iface port net mode oneof from to filter mangle nat raw flush with by user group marked list forwarding chain record on off);
+
+my $_table = '';
+my $_dry_run = 0;
+
+BEGIN {
+
+    no strict 'refs';
+
+    sub apply($)
+    {
+        my $command = &quot;iptables -t $Pearlwall::_table $_[0]&quot;;
+        if ($Pearlwall::_dry_run)
+        {
+            print &quot;$command\\n&quot;;
+        }
+        else
+        {
+            system $command;
+        }
+    }
+
+    sub list
+    {
+        print &quot;Table $Pearlwall::_table:\\n&quot;;
+        apply &quot;-v -L &quot; . ($_[0]||'');
+        print &quot;\\n&quot;;
+    }
+
+    sub parse_opts
+    {
+        my ($opts, $pfx) = @_;
+        $pfx ||= '';
+        return join(&quot; &quot;, map { my ($a, $b) = ($pfx.$_, $opts-&gt;{$_}); $a =~ s/_/-/g; &quot;--$a &quot; . ($b == 1? '': $b) } keys %{$opts});
+    }
+
+    my %bare_actions = qw(deny DROP allow ACCEPT mask MASQUERADE);
+    my %opts_actions = qw(forbid REJECT mark MARK throw REDIRECT pass SNAT);
+    while (my ($name, $action) = each(%bare_actions))
+    {
+        *{&quot;main::$name&quot;} = sub { apply &quot;$_[0] $action&quot;; return $_[0]; };
+    }
+    while (my ($name, $action) = each(%opts_actions))
+    {
+        *{&quot;main::$name&quot;} = sub { my $a = pop; apply &quot;$a $action &quot; . parse_opts({@_}) ; return $a; };
+    }
+    sub record
+    {
+        my $filter = pop;
+        my $opts = parse_opts({@_}, 'log-');
+        apply &quot;$filter LOG $opts&quot;;
+        return $filter;
+    }
+
+    my %chain_names = qw(input INPUT output OUTPUT forward FORWARD before_route PREROUTING after_route POSTROUTING);
+    while (my ($name, $chain) = each(%chain_names))
+    {
+        *{&quot;main::$name&quot;} = sub { return @_? &quot; -A $chain &quot;.join(&quot; &quot;, @_).&quot; -j &quot;: &quot; -P $chain &quot;; };
+    }
+    sub chain($;$)
+    {
+        my $chainname = shift;
+        if (@_) {
+            if ($_[0]) {
+                apply &quot;-E $chainname $_[0]&quot;;
+            } else {
+                apply &quot;-X $chainname&quot;;
+            }
+        } else {
+            apply &quot;-N $chainname&quot;;
+            bless sub { return @_? &quot; -A $chainname &quot;.join(&quot; &quot;, @_).&quot; -j &quot;: &quot; -P $chainname &quot;; }, $chainname;
+        }
+    }
+
+    foreach my $proto (qw(tcp udp udplite icmp esp ah sctp all))
+    {
+        *{&quot;main::$proto&quot;} = sub { return Pearlwall::Inversible-&gt;new(&quot; -p $proto &quot;), @_; };
+    }
+
+    sub by($)
+    {
+        return &quot; --reject-with $_[0] &quot;;
+    }
+    sub with($)
+    {
+        return Pearlwall::MarkMask-&gt;new($_[0]);
+    }
+
+    sub flush(;$)
+    {
+        apply &quot; -F &quot; . ($_[0]||'');
+    }
+
+    sub iface($)
+    {
+        return Pearlwall::Iface-&gt;new($_[0]);
+    }
+    sub mode($)
+    {
+        my $mode = uc(shift);
+        return Pearlwall::Inversible-&gt;new(&quot; --state $mode &quot;, &quot; -m state &quot;);
+    }
+    sub port($)
+    {
+        return Pearlwall::Port-&gt;new($_[0]);
+    }
+    sub net($)
+    {
+        return Pearlwall::Network-&gt;new($_[0]);
+    }
+    sub user($)
+    {
+        return Pearlwall::Inversible-&gt;new(&quot; --uid-owner $_[0] &quot;, &quot; -m owner &quot;);
+    }
+    sub group($)
+    {
+        return Pearlwall::Inversible-&gt;new(&quot; --gid-owner $_[0] &quot;, &quot; -m owner &quot;);
+    }
+    sub marked($)
+    {
+        return Pearlwall::Inversible-&gt;new(&quot; --mark $_[0] &quot;, &quot; -m mark &quot;);
+    }
+
+    sub oneof(@)
+    {
+        return join(',', @_);
+    }
+
+    sub from(@)
+    {
+        return join &quot; &quot;, map { UNIVERSAL::isa($_, 'Pearlwall::Object')? $_-&gt;from(): $_ } @_;
+    }
+    sub to(@)
+    {
+        return join &quot; &quot;, map { UNIVERSAL::isa($_, 'Pearlwall::Object')? $_-&gt;to(): $_ } @_;
+    }
+
+    sub filter(&amp;)
+    {
+        local $Pearlwall::_table = 'filter';
+        $_[0]-&gt;();
+    }
+    sub mangle(&amp;)
+    {
+        local $Pearlwall::_table = 'mangle';
+        $_[0]-&gt;();
+    }
+    sub nat(&amp;)
+    {
+        local $Pearlwall::_table = 'nat';
+        $_[0]-&gt;();
+    }
+    sub raw(&amp;)
+    {
+        local $Pearlwall::_table = 'raw';
+        $_[0]-&gt;();
+    }
+
+    sub forwarding($)
+    {
+        open my $fh, &quot;&gt;&quot;, &quot;/proc/sys/net/ipv4/ip_forward&quot;;
+        print $fh 0+(!!$_[0]);
+        close $fh;
+    }
+
+    sub on()
+    {
+        return 1;
+    }
+    sub off()
+    {
+        return 0;
+    }
+}
+
+1;
+
+package Pearlwall::Inversible;
+
+use overload
+    '!' =&gt; sub {
+        $_[0]-&gt;[1] = !$_[0]-&gt;[1];
+        return $_[0];
+    },
+    '&quot;&quot;' =&gt; sub {
+        return $_[0]-&gt;[2] . ($_[0]-&gt;[1]? '!': '') . $_[0]-&gt;[0];
+    };
+
+sub new
+{
+    my $class = shift;
+    my $self = [ shift, 0, shift||'' ];
+    bless $self, $class;
+}
+
+1;
+
+package Pearlwall::Object;
+use base 'Pearlwall::Inversible';
+
+sub from
+{
+    return $_[0]-&gt;[2] . ($_[0]-&gt;[1]? '!': '') . $_[0]-&gt;_from();
+}
+
+sub to
+{
+    return $_[0]-&gt;[2] . ($_[0]-&gt;[1]? '!': '') . $_[0]-&gt;_to();
+}
+
+1;
+
+package Pearlwall::Iface;
+use base 'Pearlwall::Object';
+
+sub _from
+{
+    return &quot; -i $_[0]-&gt;[0] &quot;;
+}
+
+sub _to
+{
+    return &quot; -o $_[0]-&gt;[0] &quot;;
+}
+
+1;
+
+package Pearlwall::Port;
+use base 'Pearlwall::Object';
+
+sub _from
+{
+    return &quot; --sport $_[0]-&gt;[0] &quot;;
+}
+
+sub _to
+{
+    return &quot; --dport $_[0]-&gt;[0] &quot;;
+}
+
+1;
+
+package Pearlwall::Network;
+use base 'Pearlwall::Object';
+
+sub _from
+{
+    return &quot; -s $_[0]-&gt;[0] &quot;;
+}
+
+sub _to
+{
+    return &quot; -d  $_[0]-&gt;[0] &quot;;
+}
+
+1;
+
+package Pearlwall::MarkMask;
+
+use overload '&quot;&quot;' =&gt; sub {
+        return &quot;$_[0]-&gt;[1] $_[0]-&gt;[0]$_[0]-&gt;[2]&quot;;
+    },
+    '/' =&gt; sub {
+        $_[0]-&gt;[2] = &quot;/$_[1]&quot;;
+        return $_[0];
+    },
+    '|' =&gt; sub {
+        $_[0]-&gt;[1] = 'set-mark';
+        $_[0]-&gt;[2] = &quot;/$_[1]&quot;;
+        return $_[0];
+    },
+    '^' =&gt; sub {
+        $_[0]-&gt;[1] = 'set-xmark';
+        $_[0]-&gt;[2] = &quot;/$_[1]&quot;;
+        return $_[0];
+    },
+    '~' =&gt; sub {
+        $_[0]-&gt;[1] = 'set-xmark';
+        $_[0]-&gt;[2] = &quot;&quot;;
+        return $_[0];
+    },
+    '&amp;' =&gt; sub {
+        $_[0]-&gt;[0] = $_[1];
+        $_[0]-&gt;[1] = 'and-mark';
+        $_[0]-&gt;[2] = &quot;&quot;;
+        return $_[0];
+    };
+
+sub new
+{
+    my $class = shift;
+    my $self = [ shift, 'set-mark', '' ];
+    bless $self, $class;
+}
+
+1;
+</code></pre>
+
+        </main>
+        <footer class="page-footer light-green lighten-2">
+            <div class="container">
+                <div class="row social-links">
+                    <div class="col s6">
+                        <h5 class="white-text">Author</h5>
+                        <p class="white-text">
+                        Konstantin Stepanov<br />
+                        Professional software developer since 2003 from Minsk, Belarus.<br />
+                        Now works at <a href="http://www.adform.com">Adform</a>.
+                        Writes professinally in Scala, hobby language is <a href="http://rust-lang.org">Rust</a>.<br />
+                        Blogs in Russian and English.<br />
+                        Email: <a href="mailto:me@kstep.me">me@kstep.me</a>.
+                        </p>
+                    </div>
+                    <div class="col s6">
+                        <h5 class="white-text">Links</h5>
+                        <div class="col s3">
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="https://twitter.com/kstepme"><img src="https://twitter.com/favicon.ico" /> Twitter</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://www.linkedin.com/pub/konstantin-stepanov/54/47/450"><img src="http://www.linkedin.com/favicon.ico" /> LinkedIn</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://kstepme.moikrug.ru/"><img src="http://moikrug.ru/favicon.ico" /> Мой Круг</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://welinux.ru/user/kstep/"><img src="http://welinux.ru/favicon.ico" /> WeLinux</a></li>
+                        </ul>
+                        </div>
+                        <div class="col s3">
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="https://github.com/kstep"><img src="http://github.com/favicon.ico" /> Github</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://www.ohloh.net/accounts/kstep"><img src="http://www.ohloh.net/favicon.ico" /> Ohloh</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://search.cpan.org/~kstepme/"><img src="http://search.cpan.org/favicon.ico" />CPAN</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://habrahabr.ru/users/kstep/"><img src="http://habrahabr.ru/favicon.ico" /> Habrahabr</a></li>
+                        </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-copyright">
+                <div class="container">
+                    &copy; <a href="https://github.com/kstep/kstep.github.com" class="white-text">2009&ndash;2015</a> Konstantin Stepanov
+                </div>
+            </div>
+
+            <script src="/static/highlight.pack.js"></script>
+            <script>hljs.initHighlightingOnLoad();</script>
+        </footer>
+
+    </body>
+</html>
+

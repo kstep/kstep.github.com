@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>//kstep blog</title>
+
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="/static/styles/materialize.min.css" />
+        <link rel="stylesheet" href="/static/styles/github.css" />
+
+<style>
+.chip i.material-icons {
+    padding-left: 0;
+    padding-right: 8px;
+    float: left;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.social-links img {
+    width: 16px;
+    height: 16px;
+    vertical-align: baseline;
+    margin-right: 5px;
+}
+</style>
+    </head>
+    <body>
+
+        <nav class="light-green lighten-2" role="navigation">
+            <div class="nav-wrapper container">
+                <div class="col s12">
+                    <a class="breadcrumb" href="/">//kstep</a>
+                    <span class="breadcrumb">Новое для меня</span>
+                </div>
+            </div>
+        </nav>
+        <main class="container">
+        <h2>Новое для меня</h2>
+        <div class="chip"><nobr><i class="material-icons">date_range</i> 2009-10-28</nobr></div>
+        <p>За последнее время узнал для себя много нового и вот решил зафиксировать для себя эти знания.</p>
+<h3>rsync</h3>
+<p>До этого как-то обходился scp для удалённого копирования, а сейчас встала такая задача: перенести множество файлов с одного компа на другой в несколько приёмов, чтобы каждый раз копировались только те, которые не скопировались ранее.</p>
+<p>Дело в том, что мой старый ноут от HP, какое-то время пребывавший в полуразрушенном состоянии, решено было отдать жене. В связи с чем на последних выходных он был полностью разобран, внутренности почищены, кулер смазан, проложена свежая термопаста, а сломанная петля от крышки заменена на кустарную втулку (держиться — и то хорошо).</p>
+<p>В результате осталось много лишних винтиков, но ни один из них для оставшихся двух отверстий в дне ноута не подошёл =) Хотя вроде ничего пока не отваливается.</p>
+<p>Жена хотела Висту, но её под рукой не оказалось, поэтому поставил хрюшу с вистотемой.</p>
+<p>Но это всё лирическое отступление. А rsync тут понадобился потому, что раньше на винте-стошестидесятке стоял Дебиан (кто бы сумневался), и на эксттришном разделе оставалась куча дорогих сердцу файлов, в частности фильмов. Выбрасывать всё это хозяйство было жалко, поэтому всё это дело было перекинуто по сетке на новый ноут (благо место позволяло). В первый вечер это хозяйство лилось по вайфаю через scp. Лилось всю ночь. И недолилось. Вумные люди могли бы сказать, что надо было просто достать винт и подрубить его через юсбшный адаптер к новому компу, но мне 1) не хотелось опять мучить старика отвёрткой, 2) хотелось повозиться с сеткой =). Поэтому на второй вечер из загашника был вытащен кросс-кабель, компы получили гордые адреса 192.168.2.1 и ...2.2, а для копирования заюзал rsync вот так:</p>
+<pre><code>$ rsync -avu 192.168.2.1:movies ~/movies
+</code></pre>
+<p>Естественно было запущена не одна такая команда, а целая куча для разных оставшихся недоперетащенных каталогов, чтоб уж точно утилизовать весь канал =)</p>
+<p>Так что это был первый раз, когда я узнал о такой замечательной вещи, как rsync. А раньше-то я, дурак, думал, что это древняя альтернатива scp, которая теперь нафиг не нужна. Оказалось — я дурак, а rsync — классная штука-то.</p>
+<h3>Внутренности ноутбука</h3>
+<p>Собственно про уже описанную сборку-разборку ноута. Это был первый раз, когда я таким занимался =) Стационарные компы, естественно, курочил много, но вот до потрошков ноута мои ручки как-то никак не доходили. Дошли =) Впечатления как от старых совецких конструкторов, только гораздо круче =) Эх, ностальгия.</p>
+<h3>Python</h3>
+<p>Ковырять я его ковырял когда-то, ни душа к нему особо не лежала, потому ни в какие тоноксти никогда не вникал. А тут так сложилось, что получил работу на нём родимом. Сознание начало расширяться после вкуривания метаклассов. И продолжает, таки, расширяться...</p>
+<h3>mutt/exim/procmail/fetchmail</h3>
+<p>Нельзя сказать, что до этого я всех их не знал. Знал. По именам. Реально ковырял только exim, mutt посмотрел и закрыл. Как, впрочем, было когда-то с vimом и vimpertatorом. Собственно настроить хождение почты из командной строки через свой ручной почтовый сервак мечтал давно, а вот сейчас дошли руки.</p>
+<p>В результате у меня вся почта получается через fetchmail, который отдаёт её eximу, а тот через procmail раскладывает её по папочкам. А посылается через smarthost, которым у меня назначен SMTPшник этого хостинга.</p>
+<p>Настроить exim в Дебиане на поверку оказалось до обидного просто. Я-то предвкушал долгие вечера вкуривания мануалов и экспериментов с eximом, а упёрлось всё в dpkg-reconfigure exim4 и ввод нескольких параметров в диалоговые окошки. Файлы конфигурации eximа в Дебина оккуратно разложены по папочкам: роутеры отдельно, авторизаторы отдельно, транспорты отдельно — всё как у людей, аккуратно и понятно по именам. Сам допилил только авторизацию, да и то всего-то нужно было прописать SMTPшный логинопароль в /etc/exim4/passwd.client. В общем одно расстройство, а не конфигурация, даже разбираться не в чем. Хотя конфиги eximа я таки почитал и сделал для себя выводы о его настройках.</p>
+
+        </main>
+        <footer class="page-footer light-green lighten-2">
+            <div class="container">
+                <div class="row social-links">
+                    <div class="col s6">
+                        <h5 class="white-text">Author</h5>
+                        <p class="white-text">
+                        Konstantin Stepanov<br />
+                        Professional software developer since 2003 from Minsk, Belarus.<br />
+                        Now works at <a href="http://www.adform.com">Adform</a>.
+                        Writes professinally in Scala, hobby language is <a href="http://rust-lang.org">Rust</a>.<br />
+                        Blogs in Russian and English.<br />
+                        Email: <a href="mailto:me@kstep.me">me@kstep.me</a>.
+                        </p>
+                    </div>
+                    <div class="col s6">
+                        <h5 class="white-text">Links</h5>
+                        <div class="col s3">
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="https://twitter.com/kstepme"><img src="https://twitter.com/favicon.ico" /> Twitter</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://www.linkedin.com/pub/konstantin-stepanov/54/47/450"><img src="http://www.linkedin.com/favicon.ico" /> LinkedIn</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://kstepme.moikrug.ru/"><img src="http://moikrug.ru/favicon.ico" /> Мой Круг</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://welinux.ru/user/kstep/"><img src="http://welinux.ru/favicon.ico" /> WeLinux</a></li>
+                        </ul>
+                        </div>
+                        <div class="col s3">
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="https://github.com/kstep"><img src="http://github.com/favicon.ico" /> Github</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://www.ohloh.net/accounts/kstep"><img src="http://www.ohloh.net/favicon.ico" /> Ohloh</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://search.cpan.org/~kstepme/"><img src="http://search.cpan.org/favicon.ico" />CPAN</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://habrahabr.ru/users/kstep/"><img src="http://habrahabr.ru/favicon.ico" /> Habrahabr</a></li>
+                        </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-copyright">
+                <div class="container">
+                    &copy; <a href="https://github.com/kstep/kstep.github.com" class="white-text">2009&ndash;2015</a> Konstantin Stepanov
+                </div>
+            </div>
+
+            <script src="/static/highlight.pack.js"></script>
+            <script>hljs.initHighlightingOnLoad();</script>
+        </footer>
+
+    </body>
+</html>
+

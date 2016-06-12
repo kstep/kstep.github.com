@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>//kstep blog</title>
+
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="/static/styles/materialize.min.css" />
+        <link rel="stylesheet" href="/static/styles/github.css" />
+
+<style>
+.chip i.material-icons {
+    padding-left: 0;
+    padding-right: 8px;
+    float: left;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.social-links img {
+    width: 16px;
+    height: 16px;
+    vertical-align: baseline;
+    margin-right: 5px;
+}
+</style>
+    </head>
+    <body>
+
+        <nav class="light-green lighten-2" role="navigation">
+            <div class="nav-wrapper container">
+                <div class="col s12">
+                    <a class="breadcrumb" href="/">//kstep</a>
+                    <span class="breadcrumb">Дебиан-пакет для libetc</span>
+                </div>
+            </div>
+        </nav>
+        <main class="container">
+        <h2>Дебиан-пакет для libetc</h2>
+        <div class="chip"><nobr><i class="material-icons">date_range</i> 2010-03-15</nobr></div>
+        <p>Вот прочител про замечательную либу <a href="http://ordiluc.net/fs/libetc/">libetc</a> на <a href="http://welinux.ru/post/2534/">welinux-е</a>. Смысл её в том, что она, будучи запрелоадена внесением пути к ней в LD_PRELOAD, редиректит запросы к каталогофайлам ~/.* (где обычно конфиги) в $XDG_CONFIG_HOME/*, таким образом обеспечивая совместимость старых прог со стандартом XDG.</p>
+<p>Там не всё гладко с общесистемными демонами и статически слинкованными прогами (подробнее см. ссылки выше), но в результате всё равно подавляющее большинство конфигов оказывается в одном каталге ~/.config, что вполне впечатляет. В частности домашний каталог становится чище и облегчаются бекапы конфигов.</p>
+<p>Дебиановского пакета навскидку не нашёл, потому собрал свой. LD_PRELOAD, впрочем, придётся ставить самому, например в ~/.profile:</p>
+<pre><code class="language-bash">export LD_PRELOAD=/usr/lib/libetc.so.0
+</code></pre>
+<p>В /etc/profile (или куда-то туда) не рекомендуется, т.к. хрен его знает, как себя может повести какой-нить демон с этой либой при прелоаде.</p>
+<p>Пакеты собирал впервые по манулам:</p>
+<ul>
+<li><a href="http://www.debian.org/doc/manuals/maint-guide/ch-start.ru.html">http://www.debian.org/doc/manuals/maint-guide/ch-start.ru.html</a></li>
+<li><a href="http://welinux.ru/post/2497/">http://welinux.ru/post/2497/</a></li>
+</ul>
+<p>Так что сильно не бейте, лучше укажите на ошибки.</p>
+<p>Сами пакеты:</p>
+<ul>
+<li><a href="../../../download/66">libetc1_0.4-1_i386.deb</a></li>
+<li><a href="../../../download/67">libetc-dev_0.4-1_i386.deb</a></li>
+</ul>
+<p>Для amd64 от <a href="http://welinux.ru/user/digiwhite">digiwhite</a> (<a href="http://welinux.ru/post/2534/#cmnt45573">источник</a>):</p>
+<ul>
+<li><a href="../../../download/68">libetc_0.4-1_amd64.deb</a></li>
+</ul>
+
+        </main>
+        <footer class="page-footer light-green lighten-2">
+            <div class="container">
+                <div class="row social-links">
+                    <div class="col s6">
+                        <h5 class="white-text">Author</h5>
+                        <p class="white-text">
+                        Konstantin Stepanov<br />
+                        Professional software developer since 2003 from Minsk, Belarus.<br />
+                        Now works at <a href="http://www.adform.com">Adform</a>.
+                        Writes professinally in Scala, hobby language is <a href="http://rust-lang.org">Rust</a>.<br />
+                        Blogs in Russian and English.<br />
+                        Email: <a href="mailto:me@kstep.me">me@kstep.me</a>.
+                        </p>
+                    </div>
+                    <div class="col s6">
+                        <h5 class="white-text">Links</h5>
+                        <div class="col s3">
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="https://twitter.com/kstepme"><img src="https://twitter.com/favicon.ico" /> Twitter</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://www.linkedin.com/pub/konstantin-stepanov/54/47/450"><img src="http://www.linkedin.com/favicon.ico" /> LinkedIn</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://kstepme.moikrug.ru/"><img src="http://moikrug.ru/favicon.ico" /> Мой Круг</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://welinux.ru/user/kstep/"><img src="http://welinux.ru/favicon.ico" /> WeLinux</a></li>
+                        </ul>
+                        </div>
+                        <div class="col s3">
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="https://github.com/kstep"><img src="http://github.com/favicon.ico" /> Github</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://www.ohloh.net/accounts/kstep"><img src="http://www.ohloh.net/favicon.ico" /> Ohloh</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://search.cpan.org/~kstepme/"><img src="http://search.cpan.org/favicon.ico" />CPAN</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://habrahabr.ru/users/kstep/"><img src="http://habrahabr.ru/favicon.ico" /> Habrahabr</a></li>
+                        </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-copyright">
+                <div class="container">
+                    &copy; <a href="https://github.com/kstep/kstep.github.com" class="white-text">2009&ndash;2015</a> Konstantin Stepanov
+                </div>
+            </div>
+
+            <script src="/static/highlight.pack.js"></script>
+            <script>hljs.initHighlightingOnLoad();</script>
+        </footer>
+
+    </body>
+</html>
+

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>//kstep blog</title>
+
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="/static/styles/materialize.min.css" />
+        <link rel="stylesheet" href="/static/styles/github.css" />
+
+<style>
+.chip i.material-icons {
+    padding-left: 0;
+    padding-right: 8px;
+    float: left;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.social-links img {
+    width: 16px;
+    height: 16px;
+    vertical-align: baseline;
+    margin-right: 5px;
+}
+</style>
+    </head>
+    <body>
+
+        <nav class="light-green lighten-2" role="navigation">
+            <div class="nav-wrapper container">
+                <div class="col s12">
+                    <a class="breadcrumb" href="/">//kstep</a>
+                    <span class="breadcrumb">Интеграция autofs с awesome: меню монтировния</span>
+                </div>
+            </div>
+        </nav>
+        <main class="container">
+        <h2>Интеграция autofs с awesome: меню монтировния</h2>
+        <div class="chip"><nobr><i class="material-icons">date_range</i> 2009-07-09</nobr></div>
+        <p>Во-первых нам потребуется библиотека posix, т.к. иначе не проверить существования файла и его тип:</p>
+<pre><code class="language-lua">assert(package.loadlib(&quot;/usr/lib/lua/5.1/posix.so&quot;, &quot;luaopen_posix&quot;))()
+</code></pre>
+<p>Ставиться она из пакета liblua5.1-posix1.</p>
+<p>Дальше описываем такую функцию:</p>
+<pre><code class="language-lua">function mounts_menu()
+    local Automisc = '/etc/auto.misc'
+    local Mounts = '/proc/mounts'
+    local line
+
+    local automisc = {}
+    local stat
+    for line in io.lines(Automisc) do
+        if not (line:sub(1,1) == '#' or line:find(&quot;^%s*$&quot;)) then
+            local dir, opts, dev = line:match(&quot;^(%S+)%s+(%S+)%s+(%S+)&quot;)
+            if dev and dev:sub(1,1) == ':' then
+                dev = dev:sub(2)
+                stat = posix.stat(dev)
+                if stat and stat.type == 'block device' then
+                    automisc[dev] = dir
+                end
+            end
+        end
+    end
+
+    local mounts = {}
+    local autofsdir
+    for line in io.lines(Mounts) do
+        local dev, dir, ft = line:match(&quot;^(%S+)%s+(%S+)%s+(%S+)&quot;)
+        if ft == 'autofs' then autofsdir = dir end
+        if automisc[dev] then
+            mounts[dev] = dir
+        end
+    end
+
+    local items = {}
+    local dev, dir
+    for dev, dir in pairs(automisc) do
+        line = (&quot;%s %s/%s\  \   %s&quot;):format(mounts[dev] and &quot;*&quot; or &quot; &quot;, autofsdir, dir, dev)
+        local func
+        if mounts[dev] then
+            func = function () os.execute(&quot;sudo umount &quot;..autofsdir..&quot;/&quot;..dir) end
+        else
+            func = function () os.execute(&quot;ls &quot;..autofsdir..&quot;/&quot;..dir) end
+        end
+
+        local item = { line, func }
+        table.insert(items, item)
+    end
+
+    local menu = awful.menu.new({ items = items, width = 300 })
+    return menu
+end
+</code></pre>
+<p>Возвращает она объект меню со списком доступных через autofs устройст, смонтированные устройства будут помечены звёздочкой. Использование:</p>
+<pre><code class="language-lua">mounts_menu():show()
+</code></pre>
+<p>Работает с awesome v3.3.1-2-gd61ca1b (Bionic).</p>
+<p>Тот же список, полученный с помощью perl:</p>
+<pre><code class="language-perl">#!/usr/bin/perl
+
+use strict;
+
+my $AUTOMISC=&quot;/etc/auto.misc&quot;;
+my $MOUNTS=&quot;/proc/mounts&quot;;
+
+my %autofs = ();
+open FIN, '&lt;', $AUTOMISC;
+while (&lt;FIN&gt;)
+{
+    chomp;
+    next if /^#/ or /^\\s*$/;
+
+    my ($dir, $opts, $dev) = split /\\s+/;
+    next unless $dev =~ /^:/;
+    $dev = substr($dev, 1);
+
+    next unless -b $dev;
+    $autofs{$dev} = $dir;
+}
+close FIN;
+
+my %mounts = ();
+my $autofsdir;
+open FIN, '&lt;', $MOUNTS;
+while (&lt;FIN&gt;)
+{
+    chomp;
+    my ($dev, $dir, $type) = split /\\s+/;
+    $autofsdir = $dir if $type eq 'autofs';
+    next unless exists $autofs{$dev};
+    $mounts{$dev} = $dir;
+}
+close FIN;
+
+foreach my $dev (sort keys %autofs)
+{
+    my $ismounted = exists $mounts{$dev};
+    printf &quot;%s\ %s/%s\  %s\\n&quot;, $ismounted? &quot;*&quot;: &quot; &quot;, $autofsdir, $autofs{$dev}, $dev;
+}
+</code></pre>
+
+        </main>
+        <footer class="page-footer light-green lighten-2">
+            <div class="container">
+                <div class="row social-links">
+                    <div class="col s6">
+                        <h5 class="white-text">Author</h5>
+                        <p class="white-text">
+                        Konstantin Stepanov<br />
+                        Professional software developer since 2003 from Minsk, Belarus.<br />
+                        Now works at <a href="http://www.adform.com">Adform</a>.
+                        Writes professinally in Scala, hobby language is <a href="http://rust-lang.org">Rust</a>.<br />
+                        Blogs in Russian and English.<br />
+                        Email: <a href="mailto:me@kstep.me">me@kstep.me</a>.
+                        </p>
+                    </div>
+                    <div class="col s6">
+                        <h5 class="white-text">Links</h5>
+                        <div class="col s3">
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="https://twitter.com/kstepme"><img src="https://twitter.com/favicon.ico" /> Twitter</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://www.linkedin.com/pub/konstantin-stepanov/54/47/450"><img src="http://www.linkedin.com/favicon.ico" /> LinkedIn</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://kstepme.moikrug.ru/"><img src="http://moikrug.ru/favicon.ico" /> Мой Круг</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://welinux.ru/user/kstep/"><img src="http://welinux.ru/favicon.ico" /> WeLinux</a></li>
+                        </ul>
+                        </div>
+                        <div class="col s3">
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="https://github.com/kstep"><img src="http://github.com/favicon.ico" /> Github</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://www.ohloh.net/accounts/kstep"><img src="http://www.ohloh.net/favicon.ico" /> Ohloh</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://search.cpan.org/~kstepme/"><img src="http://search.cpan.org/favicon.ico" />CPAN</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://habrahabr.ru/users/kstep/"><img src="http://habrahabr.ru/favicon.ico" /> Habrahabr</a></li>
+                        </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-copyright">
+                <div class="container">
+                    &copy; <a href="https://github.com/kstep/kstep.github.com" class="white-text">2009&ndash;2015</a> Konstantin Stepanov
+                </div>
+            </div>
+
+            <script src="/static/highlight.pack.js"></script>
+            <script>hljs.initHighlightingOnLoad();</script>
+        </footer>
+
+    </body>
+</html>
+
