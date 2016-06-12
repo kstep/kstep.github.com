@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <title>//kstep blog</title>
+
+        <link href="/feed.xml" rel="alternate" type="application/rss+xml" />
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="/static/styles/materialize.min.css" />
+        <link rel="stylesheet" href="/static/styles/github.css" />
+
+<style>
+.chip i.material-icons {
+    padding-left: 0;
+    padding-right: 8px;
+    float: left;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.social-links img {
+    width: 16px;
+    height: 16px;
+    vertical-align: baseline;
+    margin-right: 5px;
+}
+</style>
+    </head>
+    <body>
+
+        <nav class="light-green lighten-2" role="navigation">
+            <div class="nav-wrapper container">
+                <div class="col s12">
+                    <a class="breadcrumb" href="/">//kstep</a>
+                    <span class="breadcrumb">Кросс-компиляция Rust под Raspberry Pi в ArchLinux</span>
+                </div>
+            </div>
+        </nav>
+        <main class="container">
+        <h2>Кросс-компиляция Rust под Raspberry Pi в ArchLinux</h2>
+        <div class="chip"><nobr><i class="material-icons">date_range</i> Mon&nbsp;13&nbsp;Jun&nbsp;'16</nobr></div>
+        <div class="chip"><nobr><i class="material-icons">label</i> raspberry pi, rust, cross-compilation</nobr></div>
+        <div class="chip"><nobr><i class="material-icons">language</i> ru</nobr></div>
+        <p>Намедни мне наконец-то приехала <a href="https://www.raspberrypi.org/products/raspberry-pi-3-model-b/">Raspberry Pi 3</a> на замену старому гудящему ноутбуку в качестве домашнего сервера.
+Поскольку вся серверная автоматизация была мной <a href="https://github.com/kstep/rust-scripts">переписана на Rust</a>, встала задача собрать всё это чудо
+под ARM. В качестве системы по-умолчанию у меня везде используется <a href="https://www.archlinux.org/">ArchLinux</a>, Raspberry Pi <a href="https://archlinuxarm.org/platforms/armv8/broadcom/raspberry-pi-3">не стала исключением</a>.</p>
+<p>Нагружать слабую малинку компиляцией под себя же я не стал, соответственно компилировать решено было на моём ноутбуке
+(с арчем, само собой). Я перепробовал следующие способы:</p>
+<ul>
+<li><a href="https://github.com/Ogeon/rust-on-raspberry-pi/blob/master/DOCKER.md">Кросс-компиляция со средой в докере</a> — не взлетело, сборка контейнера постоянно валилась по самым разным причинам:
+то сеть отваливалась, то память кончалась. В итоге забил.</li>
+<li><a href="https://github.com/Ogeon/rust-on-raspberry-pi/blob/master/MANUAL.md">По мануалу</a> с <a href="https://github.com/Ogeon/rust-on-raspberry-pi">той же репы</a> — слишком искусственно, не хотелось ставить пакеты без PKGBUILD-ов и возиться
+со своими PKGBUILD-ами.</li>
+<li>В QEMU с <a href="https://github.com/dhruvvyas90/qemu-rpi-kernel">помощью эмуляции ARMv7</a> — ядро, похоже, протухло и устарело. При попытке загрузить с ним система
+в панике висла (<code>Attempted to kill init!</code>). Собирать это ядро ручками мне совсем не улыбалось, тем более что оригинальный
+сайт со всеми инструкциями давно умер (https://xecdesign.com/downloads/linux-qemu/kernel-qemu).</li>
+<li><a href="https://github.com/tavianator/arch-rpi-cross">С помощью скрипта для ArchLinux</a> — и вот тут пошло повеселее. Этот способ сработал, хоть и было пару нюансов по ходу дела.</li>
+</ul>
+<p>Во-первых, многие пакеты (в частности разные GCC) подписаны PGP-ключами разработчиков. Проблема в том, что yaourt требует, чтобы
+рубличные части этих ключей были в локальном брелке пользователя и помеченные как доверенные, иначе ставить что-либо он отказывается.
+И он прав. Можно было бы во всех PKGBUILD-ах вручную убрать PGP-сигнатуры, но пакетов очень много, можно подзадолбаться, да и не правильно
+это, прямо скажем. В итоге я просто добавил нужные ключи себе в брелок и подписал их:</p>
+<pre><code>gpg --recv-keys 25EF0A436C2A4AFF
+gpg --lsign 25EF0A436C2A4AFF
+
+gpg --recv-keys 38DBBDC86092693E
+gpg --lsign 38DBBDC86092693E
+
+gpg --recv-keys 79BE3E4300411886
+gpg --lsign 79BE3E4300411886
+</code></pre>
+<p>Возможно, что когда вы будете ставить эти пакеты, разработчики поменяют ключи, так что у вас сигнатуры будут отличаться.
+Мне же понадобилось поставить именно эти ключики.</p>
+<p>После этого всё поставилось как по маслу, только нужно было отвечать «да» на вопросы о замене пакетов по ходу установки
+(<code>gcc-stage1</code> заменяется <code>gcc-stage2</code>, а тот, в свою очередь, заменяется <code>gcc</code>).</p>
+<p>Во-вторых, мне понадобились дополнительные библиотеки под ARM, в частности libssl и libz, которые вместе с GCC не собираются.
+Можно было бы их с сырцов собрать под ARM вручную, но я просто тупо скопировал все <code>*.so</code> и <code>*.a</code> файлы из <code>/usr/lib</code> самого
+Raspberry Pi в мой тулчейн в <code>/usr/arm-linux-gnueabihf/lib</code> и закрыл этот вопрос.</p>
+<p>В-третьих, нужно было настроить Cargo. Это просто, надо только в <code>~/.cargo/config</code> добавить такие строки:</p>
+<pre><code class="language-toml">[target.armv7-unknown-linux-gnueabihf]
+linker = &quot;arm-linux-gnueabihf-gcc&quot;
+ar = &quot;arm-linux-gnueabihf-ar&quot;
+
+[target.arm-unknown-linux-gnueabihf]
+linker = &quot;arm-linux-gnueabihf-gcc&quot;
+ar = &quot;arm-linux-gnueabihf-ar&quot;
+</code></pre>
+<p>В принципе достаточно было бы описать конфиг только для <code>armv7-unknown-linux-gnueabihf</code>, потому что я пользовался только этим таргетом,
+но я решил сделать всё основательно и на совесть.</p>
+<p>В-четвёртых, надо поставить растовские таргет и тулчейн для ARMv7. Сделать это с <a href="https://github.com/rust-lang-nursery/rustup.rs">rustup</a> до обидного просто:</p>
+<pre><code>rustup toolchain install stable-arm-unknown-linux-gnueabihf
+rustup target add armv7-unknown-linux-gnueabihf
+</code></pre>
+<p>Следующие грабли, на которые я наступил: в установленном этим способом тулчейне нет файла <code>arm-linux-gnueabihf-cc</code>,
+а Rust в процессе компиляции нативных библиотек (вроде <code>openssl</code>, которая требуется куче пакетов) требует вызова <code>cc</code>.
+Я решил эту проблему созданием симлинки:</p>
+<pre><code>cd /usr/bin
+sudo ln -s arm-linux-gnueabihf-gcc arm-linux-gnueabihf-cc
+</code></pre>
+<p>После всех этих плясок я упёрся в такую ошибку:</p>
+<pre><code>$ cd ~/git/scripts
+$ cargo build --release --target armv7-unknown-linux-gnueabihf
+   Compiling bitflags v0.5.0
+   Compiling bitflags v0.4.0
+   Compiling encoding_index_tests v0.1.4
+   Compiling unicode-normalization v0.1.2
+   Compiling num-traits v0.1.32
+   ...
+
+Build failed, waiting for other jobs to finish...
+error: failed to run custom build command for `rust-crypto v0.2.35`
+Process didn't exit successfully: `/home/kstep/git/scripts/target/debug/build/rust-crypto-ee392cda555c7573/build-script-build` (exit code: 101)
+</code></pre>
+
+        </main>
+        <footer class="page-footer light-green lighten-2">
+            <div class="container">
+                <div class="row social-links">
+                    <div class="col s6">
+                        <h5 class="white-text">Author</h5>
+                        <p class="white-text">
+                        Konstantin Stepanov<br />
+                        Professional software developer since 2003 from Minsk, Belarus.<br />
+                        Now works at <a href="http://www.adform.com">Adform</a>.
+                        Writes professinally in Scala, hobby language is <a href="http://rust-lang.org">Rust</a>.<br />
+                        Blogs in Russian and English.<br />
+                        Email: <a href="mailto:me@kstep.me">me@kstep.me</a>.
+                        </p>
+                    </div>
+                    <div class="col s6">
+                        <h5 class="white-text">Links</h5>
+                        <div class="col s3">
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="https://twitter.com/kstepme"><img src="https://twitter.com/favicon.ico" /> Twitter</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://www.linkedin.com/pub/konstantin-stepanov/54/47/450"><img src="http://www.linkedin.com/favicon.ico" /> LinkedIn</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://kstepme.moikrug.ru/"><img src="http://moikrug.ru/favicon.ico" /> Мой Круг</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://welinux.ru/user/kstep/"><img src="http://welinux.ru/favicon.ico" /> WeLinux</a></li>
+                        </ul>
+                        </div>
+                        <div class="col s3">
+                        <ul>
+                            <li><a class="grey-text text-lighten-3" href="https://github.com/kstep"><img src="http://github.com/favicon.ico" /> Github</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://www.ohloh.net/accounts/kstep"><img src="http://www.ohloh.net/favicon.ico" /> Ohloh</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://search.cpan.org/~kstepme/"><img src="http://search.cpan.org/favicon.ico" />CPAN</a></li>
+                            <li><a class="grey-text text-lighten-3" href="http://habrahabr.ru/users/kstep/"><img src="http://habrahabr.ru/favicon.ico" /> Habrahabr</a></li>
+                        </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-copyright">
+                <div class="container">
+                    &copy; <a href="https://github.com/kstep/kstep.github.com" class="white-text">2009&ndash;2016</a> Konstantin Stepanov
+                </div>
+            </div>
+
+            <script src="/static/highlight.pack.js"></script>
+            <script>hljs.initHighlightingOnLoad();</script>
+        </footer>
+
+    </body>
+</html>
+
