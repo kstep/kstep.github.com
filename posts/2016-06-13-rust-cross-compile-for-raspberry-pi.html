@@ -31,6 +31,14 @@
 <p>Намедни мне наконец-то приехала <a href="https://www.raspberrypi.org/products/raspberry-pi-3-model-b/">Raspberry Pi 3</a> на замену старому гудящему ноутбуку в качестве домашнего сервера.
 Поскольку вся серверная автоматизация была мной <a href="https://github.com/kstep/rust-scripts">переписана на Rust</a>, встала задача собрать всё это чудо
 под ARM. В качестве системы по-умолчанию у меня везде используется <a href="https://www.archlinux.org/">ArchLinux</a>, Raspberry Pi <a href="https://archlinuxarm.org/platforms/armv8/broadcom/raspberry-pi-3">не стала исключением</a>.</p>
+<p>Стоит учесть одну особенность установки конкретно ArchLinux на Raspberry Pi 3. Сама третья малинка основана на процессоре ARMv8
+64-битной архитектуры (AArch64), но пока что образа ArchLinux под эту архитектуру для малинки нет, так что приходится перебиваться
+образом для второй малинки под ARMv7, так что и собираю я под ARMv7. Пруф с <a href="https://archlinuxarm.org/platforms/armv8/broadcom/raspberry-pi-3">офсайта</a>:</p>
+<blockquote>
+<p><strong>Note:</strong> The current installation uses the 32-bit Raspberry Pi 2 armv7h root filesystem. This will be changing eventually to use our AArch64 repository to take full advantage of the ARMv8 Cortex-A53 cores. If you want an AArch64 system, consider the <a href="https://archlinuxarm.org/platforms/armv8/amlogic/odroid-c2">ODROID-C2</a>.</p>
+</blockquote>
+<p>Почему же тогда малинка, а не рекомендованный <a href="http://www.hardkernel.com/main/products/prdt_info.php">ODROID-C2</a>?
+Потому что банально у малинки больше сообщество, так что найти мануалы, решения и ответы на вопросы проще.</p>
 <p>Нагружать слабую малинку компиляцией под себя же я не стал, соответственно компилировать решено было на моём ноутбуке
 (с арчем, само собой). Я перепробовал следующие способы:</p>
 <ul>
