@@ -31,7 +31,8 @@ main .card .card-content .card-title {
     width: 16px;
     height: 16px;
     vertical-align: baseline;
-    margin-right: 5px;
+    margin-right: 8px;
+    background: white;
 }
 
 footer a {
