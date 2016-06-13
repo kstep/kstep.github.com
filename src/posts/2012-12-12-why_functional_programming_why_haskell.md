@@ -3,6 +3,7 @@ lang: ru
 date: 12 Dec 2012 00:00:00 +0300
 title: Зачем нужно функциональное программирование? Зачем нужен Haskell?
 tags: переводы, realworldhaskell
+comments: true
 ---
 
 ### От переводчика ###
@@ -193,5 +194,3 @@ minima k xs = take k (sort xs)
 ---
 
 Оригинал: <http://book.realworldhaskell.org/read/why-functional-programming-why-haskell.html>
-
-<disqus name="kstep" />

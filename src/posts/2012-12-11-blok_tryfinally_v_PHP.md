@@ -3,6 +3,7 @@ lang: ru
 date: 11 Dec 2012 00:00:00 +0300
 title: Блок try/finally в PHP
 tags: php, программинг
+comments: true
 ---
 
 Несмотря на мою нелюбовь к PHP, время от времени приходится к нему возвращаться, испытывая при этом различные неудобства из-за отсутствия элементарных вещей.
@@ -105,6 +106,4 @@ ensure(function () {
 [1]: http://habrahabr.ru/post/149314/
 [cc]: http://www.stevemcconnell.com/cc.htm
 [raii]: http://ru.wikipedia.org/wiki/RAII
-
-<disqus name="kstep" />
 
