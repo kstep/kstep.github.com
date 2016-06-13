@@ -12,28 +12,30 @@
         <link rel="stylesheet" href="/static/styles/custom.css" />
     </head>
     <body>
-
-        <nav class="light-green lighten-2" role="navigation">
+        <nav class="light-green darken-1" role="navigation">
             <div class="nav-wrapper container">
                 <div class="col s12">
-                    <a class="breadcrumb" href="/">//kstep</a>
-                    <span class="breadcrumb">Обновление блога</span>
+                    
+                    <a class="brand-logo" href="/">//kstep</a>
+                    
                 </div>
             </div>
         </nav>
         <main class="container">
-        <h2>Обновление блога</h2>
-        <div class="chip"><nobr><i class="material-icons">date_range</i> Sun&nbsp;25&nbsp;Nov&nbsp;'12</nobr></div>
-        
-        <div class="chip"><nobr><i class="material-icons">language</i> ru</nobr></div>
-        <p>Коротенько так. После того, как последний раз закончился хостинг на <strong>hoster.by</strong>, я решил не продлевать контракт, так что старый сайт на моём движке <a href="http://github.com/kstep/pnut">p-nut</a> был удалён. Сам <strong>p-nut</strong> я забросил уже довольно давно, с тех пор я отошёл от своих собственных проектов, потому что на них банально не хватали ни времени, ни сил. Да и неинтересен мне стал PHP с тех пор, равно как и идея создать движок на нём. Тем более, что идея сайта как набора статических страниц с формами, которые генерятся исключительно на сервере, на данном этапе развития интернета, ИМХО, безбожно устарела. Мы живём в век сервисов, где на первый план выходят открытое API и интероперабельность ресурсов. Нынче имеет смысл в первую очередь строить бекенд с абстрактным API, и уже потом прикручивать к нему клиента, будь то мобильное приложение или веб-сайт. Веб-сайты в такой среде превращаются в самостоятельные веб-приложения, обращающиеся через XHR к тем же API-вызовам, что и мобильные и десктоп-приложения. Так что все движки и фреймворки, всё ещё работающие по старой схеме «сгенерировать HTML-страницу — получить данные от браузера — сохранить данные — сгенерировать HTML-страницу» рано или поздно вымрут за ненадобностью.</p>
+
+<h2>Обновление блога</h2>
+<div class="chip"><nobr><i class="material-icons">date_range</i> Sun&nbsp;25&nbsp;Nov&nbsp;'12</nobr></div>
+
+<div class="chip"><nobr><i class="material-icons">language</i> ru</nobr></div>
+<p>Коротенько так. После того, как последний раз закончился хостинг на <strong>hoster.by</strong>, я решил не продлевать контракт, так что старый сайт на моём движке <a href="http://github.com/kstep/pnut">p-nut</a> был удалён. Сам <strong>p-nut</strong> я забросил уже довольно давно, с тех пор я отошёл от своих собственных проектов, потому что на них банально не хватали ни времени, ни сил. Да и неинтересен мне стал PHP с тех пор, равно как и идея создать движок на нём. Тем более, что идея сайта как набора статических страниц с формами, которые генерятся исключительно на сервере, на данном этапе развития интернета, ИМХО, безбожно устарела. Мы живём в век сервисов, где на первый план выходят открытое API и интероперабельность ресурсов. Нынче имеет смысл в первую очередь строить бекенд с абстрактным API, и уже потом прикручивать к нему клиента, будь то мобильное приложение или веб-сайт. Веб-сайты в такой среде превращаются в самостоятельные веб-приложения, обращающиеся через XHR к тем же API-вызовам, что и мобильные и десктоп-приложения. Так что все движки и фреймворки, всё ещё работающие по старой схеме «сгенерировать HTML-страницу — получить данные от браузера — сохранить данные — сгенерировать HTML-страницу» рано или поздно вымрут за ненадобностью.</p>
 <p>К чести сказать, мой <strong>p-nut</strong> с его гибкой архитектурой при желании можно было бы переделать в API-бекенд без особой костылизации, но мне он уже абсолютно неинтересен, потому не буду врать, что в нём что-то изменится в обозримом будущем. Да и не используется он сейчас нигде, а проталкивать и раскручивать его при нынешней конкуренции слишком напряжно, тем более, сами понимаете, унылый PHP лишний раз вспоминать совсем не комильфо.</p>
 <p>Итого, возвращаясь к нашим баранам, полтора года спустя я решил всё же оживить блог, но в этот раз сделать его по-новому. Хостится он теперь на <a href="https://github.com/kstep/kstep.github.com">github-е</a>, соответственно генерится <a href="http://jekyllrb.com/">Jekyll-ом</a> и отдаётся в виде статической HTML-страницы. А вся динамика работает полностью на JavaScript-е и крутится вокруг <a href="http://angularjs.org/">AngularJS</a>. Про <strong>AngularJS</strong> можно говорить долго, этот фреймворк достоин отдельного поста, потому про него пока ничего не скажу, но поглядеть на него весьма рекомендую.</p>
 <p>Собственно на этом всё.</p>
 <p><disqus name="kstep" /></p>
 
+</main>
         </main>
-        <footer class="page-footer light-green lighten-2">
+        <footer class="page-footer light-green darken-1">
             <div class="container">
                 <div class="row social-links">
                     <div class="col s6">
@@ -41,28 +43,28 @@
                         <p class="white-text">
                         Konstantin Stepanov<br />
                         Professional software developer since 2003 from Minsk, Belarus.<br />
-                        Now works at <a href="http://www.adform.com">Adform</a>.
-                        Writes professinally in Scala, hobby language is <a href="http://rust-lang.org">Rust</a>.<br />
+                        Now works at <a class="white-text" href="http://www.adform.com">Adform</a>.
+                        Writes professinally in Scala, hobby language is <a class="white-text" href="http://rust-lang.org">Rust</a>.<br />
                         Blogs in Russian and English.<br />
-                        Email: <a href="mailto:me@kstep.me">me@kstep.me</a>.
+                        Email: <a class="white-text" href="mailto:me@kstep.me">me@kstep.me</a>.
                         </p>
                     </div>
                     <div class="col s6">
                         <h5 class="white-text">Links</h5>
                         <div class="col s3">
                         <ul>
-                            <li><a class="grey-text text-lighten-3" href="https://twitter.com/kstepme"><img src="https://twitter.com/favicon.ico" /> Twitter</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://www.linkedin.com/pub/konstantin-stepanov/54/47/450"><img src="http://www.linkedin.com/favicon.ico" /> LinkedIn</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://kstepme.moikrug.ru/"><img src="http://moikrug.ru/favicon.ico" /> Мой Круг</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://welinux.ru/user/kstep/"><img src="http://welinux.ru/favicon.ico" /> WeLinux</a></li>
+                            <li><a class="white-text" href="https://twitter.com/kstepme"><img src="https://twitter.com/favicon.ico" /> Twitter</a></li>
+                            <li><a class="white-text" href="http://www.linkedin.com/pub/konstantin-stepanov/54/47/450"><img src="http://www.linkedin.com/favicon.ico" /> LinkedIn</a></li>
+                            <li><a class="white-text" href="http://kstepme.moikrug.ru/"><img src="http://moikrug.ru/favicon.ico" /> Мой Круг</a></li>
+                            <li><a class="white-text" href="http://welinux.ru/user/kstep/"><img src="http://welinux.ru/favicon.ico" /> WeLinux</a></li>
                         </ul>
                         </div>
                         <div class="col s3">
                         <ul>
-                            <li><a class="grey-text text-lighten-3" href="https://github.com/kstep"><img src="http://github.com/favicon.ico" /> Github</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://www.ohloh.net/accounts/kstep"><img src="http://www.ohloh.net/favicon.ico" /> Ohloh</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://search.cpan.org/~kstepme/"><img src="http://search.cpan.org/favicon.ico" />CPAN</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://habrahabr.ru/users/kstep/"><img src="http://habrahabr.ru/favicon.ico" /> Habrahabr</a></li>
+                            <li><a class="white-text" href="https://github.com/kstep"><img src="http://github.com/favicon.ico" /> Github</a></li>
+                            <li><a class="white-text" href="http://www.ohloh.net/accounts/kstep"><img src="http://www.ohloh.net/favicon.ico" /> Ohloh</a></li>
+                            <li><a class="white-text" href="http://search.cpan.org/~kstepme/"><img src="http://search.cpan.org/favicon.ico" />CPAN</a></li>
+                            <li><a class="white-text" href="http://habrahabr.ru/users/kstep/"><img src="http://habrahabr.ru/favicon.ico" /> Habrahabr</a></li>
                         </ul>
                         </div>
                     </div>

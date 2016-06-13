@@ -33,3 +33,7 @@ main .card .card-content .card-title {
     vertical-align: baseline;
     margin-right: 5px;
 }
+
+footer a {
+    text-decoration: underline;
+}

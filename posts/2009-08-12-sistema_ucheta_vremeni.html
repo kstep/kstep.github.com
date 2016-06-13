@@ -12,21 +12,22 @@
         <link rel="stylesheet" href="/static/styles/custom.css" />
     </head>
     <body>
-
-        <nav class="light-green lighten-2" role="navigation">
+        <nav class="light-green darken-1" role="navigation">
             <div class="nav-wrapper container">
                 <div class="col s12">
-                    <a class="breadcrumb" href="/">//kstep</a>
-                    <span class="breadcrumb">Система учёта времени или Как не надо управлять сотрудниками</span>
+                    
+                    <a class="brand-logo" href="/">//kstep</a>
+                    
                 </div>
             </div>
         </nav>
         <main class="container">
-        <h2>Система учёта времени или Как не надо управлять сотрудниками</h2>
-        <div class="chip"><nobr><i class="material-icons">date_range</i> Wed&nbsp;12&nbsp;Aug&nbsp;'09</nobr></div>
-        
-        <div class="chip"><nobr><i class="material-icons">language</i> ru</nobr></div>
-        <p>В одной фирме (не будем тыкать пальцем) принята такая система учёта времени на основе интранет-ресурса, что при приходе на работу нужно обязательно залогиниться и нажать кнопку «Я тут», чтобы отметился приход на работу. Если забудешь, получится опаздание, а за опаздания в фирме ебут.</p>
+
+<h2>Система учёта времени или Как не надо управлять сотрудниками</h2>
+<div class="chip"><nobr><i class="material-icons">date_range</i> Wed&nbsp;12&nbsp;Aug&nbsp;'09</nobr></div>
+
+<div class="chip"><nobr><i class="material-icons">language</i> ru</nobr></div>
+<p>В одной фирме (не будем тыкать пальцем) принята такая система учёта времени на основе интранет-ресурса, что при приходе на работу нужно обязательно залогиниться и нажать кнопку «Я тут», чтобы отметился приход на работу. Если забудешь, получится опаздание, а за опаздания в фирме ебут.</p>
 <p>Естественно каждый раз лезть на этот «ресурс» чтобы отметиться мало того что лень, так и банально жалко времени. Не говоря уже о том, что они сами напрашивались на то, чтобы их немного «поломали». Поэтому с помощью двух скриптов и крона была сооружена противомозгоебическая система, позволяющая избежать ежемесячной ёбли мозгов по поводу времени прихода на работу.</p>
 <p>Суть системы учёта времени, если опускаться до уровня программной реализации, сводиться к посылке одного POST-запроса к серверу для логина, если юзер ещё не залогинился, либо к посылке одного GET-запроса в противном случае, при этом авторизация проходит по кукисам. Перл в помощь:</p>
 <pre><code class="language-perl">#!/usr/bin/perl
@@ -135,8 +136,9 @@ $FIND $LOCKFILE -mmin -1440 2&gt; /dev/null | $GREP -q $LOCKFILE || $LOGIN &amp;
 <p>Кстати, такая методика случайного запуска скрипта в некий промежуток времени по крону может быть полезна и в других случаях.</p>
 <p>В общем эта противомозгоебическая система написанная на коленке успешно и беспалевно проработала почти всё время моей работы в этой фирме. Может эти скрипты пригодятся кому-то ещё =)</p>
 
+</main>
         </main>
-        <footer class="page-footer light-green lighten-2">
+        <footer class="page-footer light-green darken-1">
             <div class="container">
                 <div class="row social-links">
                     <div class="col s6">
@@ -144,28 +146,28 @@ $FIND $LOCKFILE -mmin -1440 2&gt; /dev/null | $GREP -q $LOCKFILE || $LOGIN &amp;
                         <p class="white-text">
                         Konstantin Stepanov<br />
                         Professional software developer since 2003 from Minsk, Belarus.<br />
-                        Now works at <a href="http://www.adform.com">Adform</a>.
-                        Writes professinally in Scala, hobby language is <a href="http://rust-lang.org">Rust</a>.<br />
+                        Now works at <a class="white-text" href="http://www.adform.com">Adform</a>.
+                        Writes professinally in Scala, hobby language is <a class="white-text" href="http://rust-lang.org">Rust</a>.<br />
                         Blogs in Russian and English.<br />
-                        Email: <a href="mailto:me@kstep.me">me@kstep.me</a>.
+                        Email: <a class="white-text" href="mailto:me@kstep.me">me@kstep.me</a>.
                         </p>
                     </div>
                     <div class="col s6">
                         <h5 class="white-text">Links</h5>
                         <div class="col s3">
                         <ul>
-                            <li><a class="grey-text text-lighten-3" href="https://twitter.com/kstepme"><img src="https://twitter.com/favicon.ico" /> Twitter</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://www.linkedin.com/pub/konstantin-stepanov/54/47/450"><img src="http://www.linkedin.com/favicon.ico" /> LinkedIn</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://kstepme.moikrug.ru/"><img src="http://moikrug.ru/favicon.ico" /> Мой Круг</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://welinux.ru/user/kstep/"><img src="http://welinux.ru/favicon.ico" /> WeLinux</a></li>
+                            <li><a class="white-text" href="https://twitter.com/kstepme"><img src="https://twitter.com/favicon.ico" /> Twitter</a></li>
+                            <li><a class="white-text" href="http://www.linkedin.com/pub/konstantin-stepanov/54/47/450"><img src="http://www.linkedin.com/favicon.ico" /> LinkedIn</a></li>
+                            <li><a class="white-text" href="http://kstepme.moikrug.ru/"><img src="http://moikrug.ru/favicon.ico" /> Мой Круг</a></li>
+                            <li><a class="white-text" href="http://welinux.ru/user/kstep/"><img src="http://welinux.ru/favicon.ico" /> WeLinux</a></li>
                         </ul>
                         </div>
                         <div class="col s3">
                         <ul>
-                            <li><a class="grey-text text-lighten-3" href="https://github.com/kstep"><img src="http://github.com/favicon.ico" /> Github</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://www.ohloh.net/accounts/kstep"><img src="http://www.ohloh.net/favicon.ico" /> Ohloh</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://search.cpan.org/~kstepme/"><img src="http://search.cpan.org/favicon.ico" />CPAN</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://habrahabr.ru/users/kstep/"><img src="http://habrahabr.ru/favicon.ico" /> Habrahabr</a></li>
+                            <li><a class="white-text" href="https://github.com/kstep"><img src="http://github.com/favicon.ico" /> Github</a></li>
+                            <li><a class="white-text" href="http://www.ohloh.net/accounts/kstep"><img src="http://www.ohloh.net/favicon.ico" /> Ohloh</a></li>
+                            <li><a class="white-text" href="http://search.cpan.org/~kstepme/"><img src="http://search.cpan.org/favicon.ico" />CPAN</a></li>
+                            <li><a class="white-text" href="http://habrahabr.ru/users/kstep/"><img src="http://habrahabr.ru/favicon.ico" /> Habrahabr</a></li>
                         </ul>
                         </div>
                     </div>

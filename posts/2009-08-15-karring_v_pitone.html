@@ -12,21 +12,22 @@
         <link rel="stylesheet" href="/static/styles/custom.css" />
     </head>
     <body>
-
-        <nav class="light-green lighten-2" role="navigation">
+        <nav class="light-green darken-1" role="navigation">
             <div class="nav-wrapper container">
                 <div class="col s12">
-                    <a class="breadcrumb" href="/">//kstep</a>
-                    <span class="breadcrumb">Карринг в Питоне</span>
+                    
+                    <a class="brand-logo" href="/">//kstep</a>
+                    
                 </div>
             </div>
         </nav>
         <main class="container">
-        <h2>Карринг в Питоне</h2>
-        <div class="chip"><nobr><i class="material-icons">date_range</i> Sat&nbsp;15&nbsp;Aug&nbsp;'09</nobr></div>
-        
-        <div class="chip"><nobr><i class="material-icons">language</i> ru</nobr></div>
-        <p>Карринг — термин из <a href="http://ru.wikipedia.org/wiki/%D0%9B%D1%8F%D0%BC%D0%B1%D0%B4%D0%B0_%D0%B8%D1%81%D1%87%D0%B8%D1%81%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5">λ-исчисления</a>. Назван по имени <a href="http://ru.wikipedia.org/wiki/%D0%9A%D0%B0%D1%80%D1%80%D0%B8,_%D0%A5%D0%B0%D1%81%D0%BA%D0%B5%D0%BB%D0%BB">Хаскелла Карри</a> и обозначает операцию преобразования функции многих переменных в функцию одной переменной, которая возвращает функцию n-1 переменной. Это если упрощённо. Если сложнее, то она задаёт операцию развёртки <a href="http://ru.wikipedia.org/wiki/%D0%90%D1%80%D0%BD%D0%BE%D1%81%D1%82%D1%8C">n-арной</a> λ-функции на цепочку унарных, при n &gt; 1.</p>
+
+<h2>Карринг в Питоне</h2>
+<div class="chip"><nobr><i class="material-icons">date_range</i> Sat&nbsp;15&nbsp;Aug&nbsp;'09</nobr></div>
+
+<div class="chip"><nobr><i class="material-icons">language</i> ru</nobr></div>
+<p>Карринг — термин из <a href="http://ru.wikipedia.org/wiki/%D0%9B%D1%8F%D0%BC%D0%B1%D0%B4%D0%B0_%D0%B8%D1%81%D1%87%D0%B8%D1%81%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5">λ-исчисления</a>. Назван по имени <a href="http://ru.wikipedia.org/wiki/%D0%9A%D0%B0%D1%80%D1%80%D0%B8,_%D0%A5%D0%B0%D1%81%D0%BA%D0%B5%D0%BB%D0%BB">Хаскелла Карри</a> и обозначает операцию преобразования функции многих переменных в функцию одной переменной, которая возвращает функцию n-1 переменной. Это если упрощённо. Если сложнее, то она задаёт операцию развёртки <a href="http://ru.wikipedia.org/wiki/%D0%90%D1%80%D0%BD%D0%BE%D1%81%D1%82%D1%8C">n-арной</a> λ-функции на цепочку унарных, при n &gt; 1.</p>
 <p>В качестве тренировки решил написать свою функцию-декоратор на Питоне, реализующую карринг.</p>
 <p>Собственно она:</p>
 <pre><code class="language-python">def curry(n):
@@ -56,8 +57,9 @@ print obj.calc()(2)(2)(2)(2)(2)
 <p>Можно было бы использовать анализ *args на длину и избежать использования отдельного счётчика, но тогда принимать решение о конце рекурсии пришлось бы уже в самой внутренней λ-функции-обёртке, то есть во всей длинющей цепочке функций на каждый вызов добавилось бы ещё по одному выражению if, что не есть хорошо. Кроме того явное задание глубины развёртки придаёт такому подходу дополнительную гибкость.</p>
 <p>Ещё стоит заметить, что при вызове развёрнутого метода надо дополнительно делать первый вызов без аргументов. На самом деле при этом в метод неявно передаётся ссылка на инстанс класса self. Если этого вызова не будет, то метод не получит этой ссылки и не сможет нормально отработать. В принципе это можно учесть либо в самом декораторе <code>curry()</code>, либо добавив ещё один декоратор дополнительно преобразовывающий скаррированный метод объекта. Пусть это будет домашним заданием читателя: меня в этом решении пока всё устраивает =)</p>
 
+</main>
         </main>
-        <footer class="page-footer light-green lighten-2">
+        <footer class="page-footer light-green darken-1">
             <div class="container">
                 <div class="row social-links">
                     <div class="col s6">
@@ -65,28 +67,28 @@ print obj.calc()(2)(2)(2)(2)(2)
                         <p class="white-text">
                         Konstantin Stepanov<br />
                         Professional software developer since 2003 from Minsk, Belarus.<br />
-                        Now works at <a href="http://www.adform.com">Adform</a>.
-                        Writes professinally in Scala, hobby language is <a href="http://rust-lang.org">Rust</a>.<br />
+                        Now works at <a class="white-text" href="http://www.adform.com">Adform</a>.
+                        Writes professinally in Scala, hobby language is <a class="white-text" href="http://rust-lang.org">Rust</a>.<br />
                         Blogs in Russian and English.<br />
-                        Email: <a href="mailto:me@kstep.me">me@kstep.me</a>.
+                        Email: <a class="white-text" href="mailto:me@kstep.me">me@kstep.me</a>.
                         </p>
                     </div>
                     <div class="col s6">
                         <h5 class="white-text">Links</h5>
                         <div class="col s3">
                         <ul>
-                            <li><a class="grey-text text-lighten-3" href="https://twitter.com/kstepme"><img src="https://twitter.com/favicon.ico" /> Twitter</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://www.linkedin.com/pub/konstantin-stepanov/54/47/450"><img src="http://www.linkedin.com/favicon.ico" /> LinkedIn</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://kstepme.moikrug.ru/"><img src="http://moikrug.ru/favicon.ico" /> Мой Круг</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://welinux.ru/user/kstep/"><img src="http://welinux.ru/favicon.ico" /> WeLinux</a></li>
+                            <li><a class="white-text" href="https://twitter.com/kstepme"><img src="https://twitter.com/favicon.ico" /> Twitter</a></li>
+                            <li><a class="white-text" href="http://www.linkedin.com/pub/konstantin-stepanov/54/47/450"><img src="http://www.linkedin.com/favicon.ico" /> LinkedIn</a></li>
+                            <li><a class="white-text" href="http://kstepme.moikrug.ru/"><img src="http://moikrug.ru/favicon.ico" /> Мой Круг</a></li>
+                            <li><a class="white-text" href="http://welinux.ru/user/kstep/"><img src="http://welinux.ru/favicon.ico" /> WeLinux</a></li>
                         </ul>
                         </div>
                         <div class="col s3">
                         <ul>
-                            <li><a class="grey-text text-lighten-3" href="https://github.com/kstep"><img src="http://github.com/favicon.ico" /> Github</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://www.ohloh.net/accounts/kstep"><img src="http://www.ohloh.net/favicon.ico" /> Ohloh</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://search.cpan.org/~kstepme/"><img src="http://search.cpan.org/favicon.ico" />CPAN</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://habrahabr.ru/users/kstep/"><img src="http://habrahabr.ru/favicon.ico" /> Habrahabr</a></li>
+                            <li><a class="white-text" href="https://github.com/kstep"><img src="http://github.com/favicon.ico" /> Github</a></li>
+                            <li><a class="white-text" href="http://www.ohloh.net/accounts/kstep"><img src="http://www.ohloh.net/favicon.ico" /> Ohloh</a></li>
+                            <li><a class="white-text" href="http://search.cpan.org/~kstepme/"><img src="http://search.cpan.org/favicon.ico" />CPAN</a></li>
+                            <li><a class="white-text" href="http://habrahabr.ru/users/kstep/"><img src="http://habrahabr.ru/favicon.ico" /> Habrahabr</a></li>
                         </ul>
                         </div>
                     </div>

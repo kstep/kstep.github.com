@@ -1,12 +1,4 @@
 {% include "_layouts/header.liquid" %}
-<nav class="light-green lighten-2" role="navigation">
-    <div class="nav-wrapper container">
-        <div class="col s12">
-            <span class="brand-logo" href="">//kstep</span>
-        </div>
-    </div>
-</nav>
-<main class="container">
 <h2>All posts</h2>
 <div class="row">
     {% for post in posts %}
@@ -23,5 +15,4 @@
             </a></div>
     {% endfor %}
 </div>
-</main>
 {% include "_layouts/footer.liquid" %}

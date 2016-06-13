@@ -12,21 +12,22 @@
         <link rel="stylesheet" href="/static/styles/custom.css" />
     </head>
     <body>
-
-        <nav class="light-green lighten-2" role="navigation">
+        <nav class="light-green darken-1" role="navigation">
             <div class="nav-wrapper container">
                 <div class="col s12">
-                    <a class="breadcrumb" href="/">//kstep</a>
-                    <span class="breadcrumb">Автомонтирование в userspace с помощью incrond</span>
+                    
+                    <a class="brand-logo" href="/">//kstep</a>
+                    
                 </div>
             </div>
         </nav>
         <main class="container">
-        <h2>Автомонтирование в userspace с помощью incrond</h2>
-        <div class="chip"><nobr><i class="material-icons">date_range</i> Fri&nbsp;06&nbsp;Nov&nbsp;'09</nobr></div>
-        
-        <div class="chip"><nobr><i class="material-icons">language</i> ru</nobr></div>
-        <p><a href="/#!/2009/07/10/avtomontirovanie_sshfscurlftpfs_s_pomoschyu_autofs_v_debiane.html">Раньше</a> я писал, как можно динамически монтировать устройства и хосты с помощью autofs. Этот способ не лишён недостатков, основной из которых — монтирование всегда из-под рута. А значит надо ставить рута в известность о своих паролях-ключах (то есть держать копию ~/.ssh и ~/.netrc в ~root), что далеко не всегда удобно, а кроме того вредно с точки зрения безопасности. Не говоря уже о том, что этот метод работает только если ты единственный, кто сидит за этим компом.</p>
+
+<h2>Автомонтирование в userspace с помощью incrond</h2>
+<div class="chip"><nobr><i class="material-icons">date_range</i> Fri&nbsp;06&nbsp;Nov&nbsp;'09</nobr></div>
+
+<div class="chip"><nobr><i class="material-icons">language</i> ru</nobr></div>
+<p><a href="/#!/2009/07/10/avtomontirovanie_sshfscurlftpfs_s_pomoschyu_autofs_v_debiane.html">Раньше</a> я писал, как можно динамически монтировать устройства и хосты с помощью autofs. Этот способ не лишён недостатков, основной из которых — монтирование всегда из-под рута. А значит надо ставить рута в известность о своих паролях-ключах (то есть держать копию ~/.ssh и ~/.netrc в ~root), что далеко не всегда удобно, а кроме того вредно с точки зрения безопасности. Не говоря уже о том, что этот метод работает только если ты единственный, кто сидит за этим компом.</p>
 <p>Решение мне <a href="http://welinux.ru/post/1779/#cmnt29144">подсказал</a> <a href="http://muhas.ru/">muhas</a>, и звучит оно просто — inotify.</p>
 <p>Для моих же целей я посчитал, что лучшим решением будет использовать incrond. Это разновидность крона, которая запускает команды по событиям в файловой системе, а для слежения за файлам использует libinotify.</p>
 <p>Нам потребуется: пакет incron (apt-get install incron), sshfs/curlftpfs (или ещё какие демоны-монтировщики, смотря что будем монтировать) и немного настроить инкрон.</p>
@@ -53,8 +54,9 @@
 <p>IN_NO_LOOP не даёт монтировать каталог второй раз, до тех пор пока он не размонтируется. Реально этот флаг не даёт инкрону продолжать следить за файлом-каталогом до тех пор, пока не завершиться запущенный процесс-обработчик. А так как curlftpfs и sshfs по дефолту становятся демонами, то я им даю флаг -f, чтобы они оставались на виду и не демонизировались, не давая тем самым инкрону запускать себя второй раз.</p>
 <p>Собственно вот, эта связка прекрасно работает у меня на данный момент =)</p>
 
+</main>
         </main>
-        <footer class="page-footer light-green lighten-2">
+        <footer class="page-footer light-green darken-1">
             <div class="container">
                 <div class="row social-links">
                     <div class="col s6">
@@ -62,28 +64,28 @@
                         <p class="white-text">
                         Konstantin Stepanov<br />
                         Professional software developer since 2003 from Minsk, Belarus.<br />
-                        Now works at <a href="http://www.adform.com">Adform</a>.
-                        Writes professinally in Scala, hobby language is <a href="http://rust-lang.org">Rust</a>.<br />
+                        Now works at <a class="white-text" href="http://www.adform.com">Adform</a>.
+                        Writes professinally in Scala, hobby language is <a class="white-text" href="http://rust-lang.org">Rust</a>.<br />
                         Blogs in Russian and English.<br />
-                        Email: <a href="mailto:me@kstep.me">me@kstep.me</a>.
+                        Email: <a class="white-text" href="mailto:me@kstep.me">me@kstep.me</a>.
                         </p>
                     </div>
                     <div class="col s6">
                         <h5 class="white-text">Links</h5>
                         <div class="col s3">
                         <ul>
-                            <li><a class="grey-text text-lighten-3" href="https://twitter.com/kstepme"><img src="https://twitter.com/favicon.ico" /> Twitter</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://www.linkedin.com/pub/konstantin-stepanov/54/47/450"><img src="http://www.linkedin.com/favicon.ico" /> LinkedIn</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://kstepme.moikrug.ru/"><img src="http://moikrug.ru/favicon.ico" /> Мой Круг</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://welinux.ru/user/kstep/"><img src="http://welinux.ru/favicon.ico" /> WeLinux</a></li>
+                            <li><a class="white-text" href="https://twitter.com/kstepme"><img src="https://twitter.com/favicon.ico" /> Twitter</a></li>
+                            <li><a class="white-text" href="http://www.linkedin.com/pub/konstantin-stepanov/54/47/450"><img src="http://www.linkedin.com/favicon.ico" /> LinkedIn</a></li>
+                            <li><a class="white-text" href="http://kstepme.moikrug.ru/"><img src="http://moikrug.ru/favicon.ico" /> Мой Круг</a></li>
+                            <li><a class="white-text" href="http://welinux.ru/user/kstep/"><img src="http://welinux.ru/favicon.ico" /> WeLinux</a></li>
                         </ul>
                         </div>
                         <div class="col s3">
                         <ul>
-                            <li><a class="grey-text text-lighten-3" href="https://github.com/kstep"><img src="http://github.com/favicon.ico" /> Github</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://www.ohloh.net/accounts/kstep"><img src="http://www.ohloh.net/favicon.ico" /> Ohloh</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://search.cpan.org/~kstepme/"><img src="http://search.cpan.org/favicon.ico" />CPAN</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://habrahabr.ru/users/kstep/"><img src="http://habrahabr.ru/favicon.ico" /> Habrahabr</a></li>
+                            <li><a class="white-text" href="https://github.com/kstep"><img src="http://github.com/favicon.ico" /> Github</a></li>
+                            <li><a class="white-text" href="http://www.ohloh.net/accounts/kstep"><img src="http://www.ohloh.net/favicon.ico" /> Ohloh</a></li>
+                            <li><a class="white-text" href="http://search.cpan.org/~kstepme/"><img src="http://search.cpan.org/favicon.ico" />CPAN</a></li>
+                            <li><a class="white-text" href="http://habrahabr.ru/users/kstep/"><img src="http://habrahabr.ru/favicon.ico" /> Habrahabr</a></li>
                         </ul>
                         </div>
                     </div>

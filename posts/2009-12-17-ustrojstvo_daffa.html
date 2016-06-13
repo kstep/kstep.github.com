@@ -12,21 +12,22 @@
         <link rel="stylesheet" href="/static/styles/custom.css" />
     </head>
     <body>
-
-        <nav class="light-green lighten-2" role="navigation">
+        <nav class="light-green darken-1" role="navigation">
             <div class="nav-wrapper container">
                 <div class="col s12">
-                    <a class="breadcrumb" href="/">//kstep</a>
-                    <span class="breadcrumb">Устройство Даффа</span>
+                    
+                    <a class="brand-logo" href="/">//kstep</a>
+                    
                 </div>
             </div>
         </nav>
         <main class="container">
-        <h2>Устройство Даффа</h2>
-        <div class="chip"><nobr><i class="material-icons">date_range</i> Thu&nbsp;17&nbsp;Dec&nbsp;'09</nobr></div>
-        
-        <div class="chip"><nobr><i class="material-icons">language</i> ru</nobr></div>
-        <p>Последнее время занимаюсь самосовершенствованием: пытаюсь постигнуть дао монад. Получается с переменным успехом: на интуитивом уровне вроде понял, но мне этого мало, хочу понять их устройство на более глубоком уровне, чтобы не просто их использовать, но и понимать, как они работают. А пока копался в доках на вики и прочих источниках, наткнулся на ссылку о «<a href="http://ru.wikipedia.org/wiki/%D0%A3%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2%D0%BE_%D0%94%D0%B0%D1%84%D1%84%D0%B0">Duff's device</a>».</p>
+
+<h2>Устройство Даффа</h2>
+<div class="chip"><nobr><i class="material-icons">date_range</i> Thu&nbsp;17&nbsp;Dec&nbsp;'09</nobr></div>
+
+<div class="chip"><nobr><i class="material-icons">language</i> ru</nobr></div>
+<p>Последнее время занимаюсь самосовершенствованием: пытаюсь постигнуть дао монад. Получается с переменным успехом: на интуитивом уровне вроде понял, но мне этого мало, хочу понять их устройство на более глубоком уровне, чтобы не просто их использовать, но и понимать, как они работают. А пока копался в доках на вики и прочих источниках, наткнулся на ссылку о «<a href="http://ru.wikipedia.org/wiki/%D0%A3%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2%D0%BE_%D0%94%D0%B0%D1%84%D1%84%D0%B0">Duff's device</a>».</p>
 <p>Википедию прочитать, думаю, под силу каждому, но цель этого поста скорее зафиксировать полученное знание и понимание концепции мной самим, чтобы потом не забыть =)</p>
 <p>Если кратко: устройство Даффа — это обобщение оптимизации циклов путём их развёртки. Проблема развёртки цикла с неизвестным числом повторов n в том, что при заданной глубине развёртки m существует n mod m «остаточных» итераций, которые надо обработать как особый случай. Дафф нашёл очень <a href="http://www.lysator.liu.se/c/duffs-device.html">элегантное решение</a> этой задачи на C:</p>
 <pre><code class="language-c">send(to, from, count)
@@ -50,8 +51,9 @@ register count;
 <p>Как это работает: цикл из count повторов разворачивается на n равных кусков по 8 операций в каждом, а остаток операций в n mod 8 штук выполняется через switch: при первой проходе мы попадаем на один из case'ов в зависимости от этого остатка и сразу выполняем нужное остаточное число операций, а потом цикл while() работает своим обычным образом, пропуская все куски, на которые разбит исходный цикл.</p>
 <p>За подробностями, почему так сделано и почему *to не инкрементируется — см. ссылки. Если кратко: to это не просто ссылка на адрес в памяти, а ссылка на адрес в IO-памяти, а цель всего кода — передать устройству с портом ввода-вывода по адресу to набора из count команд из памяти начиная с адреса from.</p>
 
+</main>
         </main>
-        <footer class="page-footer light-green lighten-2">
+        <footer class="page-footer light-green darken-1">
             <div class="container">
                 <div class="row social-links">
                     <div class="col s6">
@@ -59,28 +61,28 @@ register count;
                         <p class="white-text">
                         Konstantin Stepanov<br />
                         Professional software developer since 2003 from Minsk, Belarus.<br />
-                        Now works at <a href="http://www.adform.com">Adform</a>.
-                        Writes professinally in Scala, hobby language is <a href="http://rust-lang.org">Rust</a>.<br />
+                        Now works at <a class="white-text" href="http://www.adform.com">Adform</a>.
+                        Writes professinally in Scala, hobby language is <a class="white-text" href="http://rust-lang.org">Rust</a>.<br />
                         Blogs in Russian and English.<br />
-                        Email: <a href="mailto:me@kstep.me">me@kstep.me</a>.
+                        Email: <a class="white-text" href="mailto:me@kstep.me">me@kstep.me</a>.
                         </p>
                     </div>
                     <div class="col s6">
                         <h5 class="white-text">Links</h5>
                         <div class="col s3">
                         <ul>
-                            <li><a class="grey-text text-lighten-3" href="https://twitter.com/kstepme"><img src="https://twitter.com/favicon.ico" /> Twitter</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://www.linkedin.com/pub/konstantin-stepanov/54/47/450"><img src="http://www.linkedin.com/favicon.ico" /> LinkedIn</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://kstepme.moikrug.ru/"><img src="http://moikrug.ru/favicon.ico" /> Мой Круг</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://welinux.ru/user/kstep/"><img src="http://welinux.ru/favicon.ico" /> WeLinux</a></li>
+                            <li><a class="white-text" href="https://twitter.com/kstepme"><img src="https://twitter.com/favicon.ico" /> Twitter</a></li>
+                            <li><a class="white-text" href="http://www.linkedin.com/pub/konstantin-stepanov/54/47/450"><img src="http://www.linkedin.com/favicon.ico" /> LinkedIn</a></li>
+                            <li><a class="white-text" href="http://kstepme.moikrug.ru/"><img src="http://moikrug.ru/favicon.ico" /> Мой Круг</a></li>
+                            <li><a class="white-text" href="http://welinux.ru/user/kstep/"><img src="http://welinux.ru/favicon.ico" /> WeLinux</a></li>
                         </ul>
                         </div>
                         <div class="col s3">
                         <ul>
-                            <li><a class="grey-text text-lighten-3" href="https://github.com/kstep"><img src="http://github.com/favicon.ico" /> Github</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://www.ohloh.net/accounts/kstep"><img src="http://www.ohloh.net/favicon.ico" /> Ohloh</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://search.cpan.org/~kstepme/"><img src="http://search.cpan.org/favicon.ico" />CPAN</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://habrahabr.ru/users/kstep/"><img src="http://habrahabr.ru/favicon.ico" /> Habrahabr</a></li>
+                            <li><a class="white-text" href="https://github.com/kstep"><img src="http://github.com/favicon.ico" /> Github</a></li>
+                            <li><a class="white-text" href="http://www.ohloh.net/accounts/kstep"><img src="http://www.ohloh.net/favicon.ico" /> Ohloh</a></li>
+                            <li><a class="white-text" href="http://search.cpan.org/~kstepme/"><img src="http://search.cpan.org/favicon.ico" />CPAN</a></li>
+                            <li><a class="white-text" href="http://habrahabr.ru/users/kstep/"><img src="http://habrahabr.ru/favicon.ico" /> Habrahabr</a></li>
                         </ul>
                         </div>
                     </div>

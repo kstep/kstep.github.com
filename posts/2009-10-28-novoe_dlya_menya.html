@@ -12,21 +12,22 @@
         <link rel="stylesheet" href="/static/styles/custom.css" />
     </head>
     <body>
-
-        <nav class="light-green lighten-2" role="navigation">
+        <nav class="light-green darken-1" role="navigation">
             <div class="nav-wrapper container">
                 <div class="col s12">
-                    <a class="breadcrumb" href="/">//kstep</a>
-                    <span class="breadcrumb">Новое для меня</span>
+                    
+                    <a class="brand-logo" href="/">//kstep</a>
+                    
                 </div>
             </div>
         </nav>
         <main class="container">
-        <h2>Новое для меня</h2>
-        <div class="chip"><nobr><i class="material-icons">date_range</i> Wed&nbsp;28&nbsp;Oct&nbsp;'09</nobr></div>
-        
-        <div class="chip"><nobr><i class="material-icons">language</i> ru</nobr></div>
-        <p>За последнее время узнал для себя много нового и вот решил зафиксировать для себя эти знания.</p>
+
+<h2>Новое для меня</h2>
+<div class="chip"><nobr><i class="material-icons">date_range</i> Wed&nbsp;28&nbsp;Oct&nbsp;'09</nobr></div>
+
+<div class="chip"><nobr><i class="material-icons">language</i> ru</nobr></div>
+<p>За последнее время узнал для себя много нового и вот решил зафиксировать для себя эти знания.</p>
 <h3>rsync</h3>
 <p>До этого как-то обходился scp для удалённого копирования, а сейчас встала такая задача: перенести множество файлов с одного компа на другой в несколько приёмов, чтобы каждый раз копировались только те, которые не скопировались ранее.</p>
 <p>Дело в том, что мой старый ноут от HP, какое-то время пребывавший в полуразрушенном состоянии, решено было отдать жене. В связи с чем на последних выходных он был полностью разобран, внутренности почищены, кулер смазан, проложена свежая термопаста, а сломанная петля от крышки заменена на кустарную втулку (держиться — и то хорошо).</p>
@@ -46,8 +47,9 @@
 <p>В результате у меня вся почта получается через fetchmail, который отдаёт её eximу, а тот через procmail раскладывает её по папочкам. А посылается через smarthost, которым у меня назначен SMTPшник этого хостинга.</p>
 <p>Настроить exim в Дебиане на поверку оказалось до обидного просто. Я-то предвкушал долгие вечера вкуривания мануалов и экспериментов с eximом, а упёрлось всё в dpkg-reconfigure exim4 и ввод нескольких параметров в диалоговые окошки. Файлы конфигурации eximа в Дебина оккуратно разложены по папочкам: роутеры отдельно, авторизаторы отдельно, транспорты отдельно — всё как у людей, аккуратно и понятно по именам. Сам допилил только авторизацию, да и то всего-то нужно было прописать SMTPшный логинопароль в /etc/exim4/passwd.client. В общем одно расстройство, а не конфигурация, даже разбираться не в чем. Хотя конфиги eximа я таки почитал и сделал для себя выводы о его настройках.</p>
 
+</main>
         </main>
-        <footer class="page-footer light-green lighten-2">
+        <footer class="page-footer light-green darken-1">
             <div class="container">
                 <div class="row social-links">
                     <div class="col s6">
@@ -55,28 +57,28 @@
                         <p class="white-text">
                         Konstantin Stepanov<br />
                         Professional software developer since 2003 from Minsk, Belarus.<br />
-                        Now works at <a href="http://www.adform.com">Adform</a>.
-                        Writes professinally in Scala, hobby language is <a href="http://rust-lang.org">Rust</a>.<br />
+                        Now works at <a class="white-text" href="http://www.adform.com">Adform</a>.
+                        Writes professinally in Scala, hobby language is <a class="white-text" href="http://rust-lang.org">Rust</a>.<br />
                         Blogs in Russian and English.<br />
-                        Email: <a href="mailto:me@kstep.me">me@kstep.me</a>.
+                        Email: <a class="white-text" href="mailto:me@kstep.me">me@kstep.me</a>.
                         </p>
                     </div>
                     <div class="col s6">
                         <h5 class="white-text">Links</h5>
                         <div class="col s3">
                         <ul>
-                            <li><a class="grey-text text-lighten-3" href="https://twitter.com/kstepme"><img src="https://twitter.com/favicon.ico" /> Twitter</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://www.linkedin.com/pub/konstantin-stepanov/54/47/450"><img src="http://www.linkedin.com/favicon.ico" /> LinkedIn</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://kstepme.moikrug.ru/"><img src="http://moikrug.ru/favicon.ico" /> Мой Круг</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://welinux.ru/user/kstep/"><img src="http://welinux.ru/favicon.ico" /> WeLinux</a></li>
+                            <li><a class="white-text" href="https://twitter.com/kstepme"><img src="https://twitter.com/favicon.ico" /> Twitter</a></li>
+                            <li><a class="white-text" href="http://www.linkedin.com/pub/konstantin-stepanov/54/47/450"><img src="http://www.linkedin.com/favicon.ico" /> LinkedIn</a></li>
+                            <li><a class="white-text" href="http://kstepme.moikrug.ru/"><img src="http://moikrug.ru/favicon.ico" /> Мой Круг</a></li>
+                            <li><a class="white-text" href="http://welinux.ru/user/kstep/"><img src="http://welinux.ru/favicon.ico" /> WeLinux</a></li>
                         </ul>
                         </div>
                         <div class="col s3">
                         <ul>
-                            <li><a class="grey-text text-lighten-3" href="https://github.com/kstep"><img src="http://github.com/favicon.ico" /> Github</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://www.ohloh.net/accounts/kstep"><img src="http://www.ohloh.net/favicon.ico" /> Ohloh</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://search.cpan.org/~kstepme/"><img src="http://search.cpan.org/favicon.ico" />CPAN</a></li>
-                            <li><a class="grey-text text-lighten-3" href="http://habrahabr.ru/users/kstep/"><img src="http://habrahabr.ru/favicon.ico" /> Habrahabr</a></li>
+                            <li><a class="white-text" href="https://github.com/kstep"><img src="http://github.com/favicon.ico" /> Github</a></li>
+                            <li><a class="white-text" href="http://www.ohloh.net/accounts/kstep"><img src="http://www.ohloh.net/favicon.ico" /> Ohloh</a></li>
+                            <li><a class="white-text" href="http://search.cpan.org/~kstepme/"><img src="http://search.cpan.org/favicon.ico" />CPAN</a></li>
+                            <li><a class="white-text" href="http://habrahabr.ru/users/kstep/"><img src="http://habrahabr.ru/favicon.ico" /> Habrahabr</a></li>
                         </ul>
                         </div>
                     </div>
