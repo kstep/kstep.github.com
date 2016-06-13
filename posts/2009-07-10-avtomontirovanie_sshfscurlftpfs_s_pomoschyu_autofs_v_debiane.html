@@ -42,11 +42,12 @@
         </nav>
         <main class="container">
 
+<a class="btn-floating btn-large waves-effect waves-light purple lighten-3 right" href="https://github.com/kstep/kstep.github.com/tree/master/src/posts/2009-07-10-avtomontirovanie_sshfscurlftpfs_s_pomoschyu_autofs_v_debiane.md" style="top: -30px; position: relative;"><i class="material-icons">code</i></a>
+
 <h2>Автомонтирование sshfs/curlftpfs с помощью autofs в Debian'е</h2>
 <div class="chip"><nobr><i class="material-icons">date_range</i> Fri&nbsp;10&nbsp;Jul&nbsp;'09</nobr></div>
 
 <div class="chip"><nobr><i class="material-icons">language</i> ru</nobr></div>
-<div class="chip"><a href="https://github.com/kstep/kstep.github.com/tree/master/src/posts/2009-07-10-avtomontirovanie_sshfscurlftpfs_s_pomoschyu_autofs_v_debiane.md"><i class="material-icons">code</i> code</a></div>
 
 <p>Решил настроить автомонтирование удалённых серверов. Начал с sshfs, с ним оказалось всё до обидного просто: буквально по третей ссылке в гугле по запросу «<a href="http://www.google.com.by/search?hl=ru&amp;safe=off&amp;client=firefox-a&amp;rls=org.mozilla%3Aen-US%3Aofficial&amp;hs=k5M&amp;q=sshfs+autofs&amp;btnG=%D0%9F%D0%BE%D0%B8%D1%81%D0%BA&amp;meta=">sshfs autofs</a>» была найдена <a href="http://www.tjansson.dk/?p=84">замечательная статья</a>, по которой всё работает. Заодно решил наладить и curlftpfs. В том же гугле была найдена <a href="http://lukaszproszek.blogspot.com/2008/05/automounting-ftpfs-using-curlftpfs-and.html">другая статья</a>, но предлагаемое решение мне категорически не понравилось: оно строиться на скриптах-обёртках вокруг curlftpfs, что очень, на мой взгляд, некузяво.</p>
 <p>Тут резко вспоминаем, что autofs может настраиваться не только статическими файлами с маппингом каталог-устройство, но и с помощью скриптов. Для этого надо сделать следующее:</p>
