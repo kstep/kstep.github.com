@@ -3,6 +3,7 @@ lang: ru
 tags: raspberry pi, rust, cross-compilation
 extends: default.liquid
 date: 13 Jun 2016 00:46:00 +0300
+comments: true
 excerpt: |
     Намедни мне наконец-то приехала Raspberry Pi 3 на замену старому гудящему ноутбуку в качестве домашнего сервера.
     Поскольку вся серверная автоматизация была мной переписана на Rust, встала задача собрать всё это чудо

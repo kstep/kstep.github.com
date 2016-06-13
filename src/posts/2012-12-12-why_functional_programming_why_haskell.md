@@ -3,6 +3,7 @@ lang: ru
 date: 12 Dec 2012 00:00:00 +0300
 title: Зачем нужно функциональное программирование? Зачем нужен Haskell?
 tags: переводы, realworldhaskell
+source: http://book.realworldhaskell.org/read/why-functional-programming-why-haskell.html
 comments: true
 ---
 
@@ -190,7 +191,3 @@ minima k xs = take k (sort xs)
 книгу информацией, которая позволит вам наверстать эти знания как можно скорее.
 
 Конечно, как и на любом пути будут встречаться сложности.
-
----
-
-Оригинал: <http://book.realworldhaskell.org/read/why-functional-programming-why-haskell.html>
