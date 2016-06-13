@@ -115,8 +115,12 @@ ensure(function () {
 <p>Если же <code>finally</code> нет, то по идее нужно вызвать <code>finish()</code> в конце, но даже если программист забудет это сделать, то сработает принцип <strong>RAII</strong>, так что в худшем случае накопненные необработанные исключения выскочат в конце функции.</p>
 <p>Кроме того с помощью этого же механизма можно передавать состояние обратки блока кода из одной функции в другую, но это уже совсем другая история.</p>
 
-<h4>Comments</h4>
-<div id="disqus"></div>
+<div class="card">
+    <div class="card-content">
+        <span class="card-title">Comments</span>
+        <div id="disqus"></div>
+    </div>
+</div>
 <script>
 window.disqus_identifier = "posts/2012-12-11-blok_tryfinally_v_PHP.html";
 window.disqus_url = "http://kstep.me/posts/2012-12-11-blok_tryfinally_v_PHP.html";
