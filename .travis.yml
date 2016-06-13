@@ -1,0 +1,18 @@
+sudo: false
+language: rust
+
+before_script:
+    - cargo install --git https://github.com/kstep/cobalt.rs --branch liquid-date
+    - export PATH="$PATH:/home/travis/.cargo/bin"
+
+script:
+    - cobalt build --config src/.cobalt.yml --source src
+
+after_success: |
+    [ $TRAVIS_BRANCH = master ] &&
+    [ $TRAVIS_PULL_REQUEST = false ] &&
+    git config user.name "Cobalt Site Deployer" &&
+    git config user.email "cobalt@kstep.me" &&
+    cobalt import --config src/.cobalt.yml --branch master &&
+    git push -fq https://${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git master
+
