@@ -48,7 +48,9 @@
 <p>В результате у меня вся почта получается через fetchmail, который отдаёт её eximу, а тот через procmail раскладывает её по папочкам. А посылается через smarthost, которым у меня назначен SMTPшник этого хостинга.</p>
 <p>Настроить exim в Дебиане на поверку оказалось до обидного просто. Я-то предвкушал долгие вечера вкуривания мануалов и экспериментов с eximом, а упёрлось всё в dpkg-reconfigure exim4 и ввод нескольких параметров в диалоговые окошки. Файлы конфигурации eximа в Дебина оккуратно разложены по папочкам: роутеры отдельно, авторизаторы отдельно, транспорты отдельно — всё как у людей, аккуратно и понятно по именам. Сам допилил только авторизацию, да и то всего-то нужно было прописать SMTPшный логинопароль в /etc/exim4/passwd.client. В общем одно расстройство, а не конфигурация, даже разбираться не в чем. Хотя конфиги eximа я таки почитал и сделал для себя выводы о его настройках.</p>
 
-</main>
+
+<script src="/static/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
         </main>
         <footer class="page-footer light-green darken-1">
             <div class="container">
@@ -91,9 +93,6 @@
                     &copy; <a href="https://github.com/kstep/kstep.github.com" class="white-text">2009&ndash;2016</a> Konstantin Stepanov
                 </div>
             </div>
-
-            <script src="/static/highlight.pack.js"></script>
-            <script>hljs.initHighlightingOnLoad();</script>
         </footer>
 
     </body>

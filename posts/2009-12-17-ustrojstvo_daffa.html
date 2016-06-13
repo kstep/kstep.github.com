@@ -52,7 +52,9 @@ register count;
 <p>Как это работает: цикл из count повторов разворачивается на n равных кусков по 8 операций в каждом, а остаток операций в n mod 8 штук выполняется через switch: при первой проходе мы попадаем на один из case'ов в зависимости от этого остатка и сразу выполняем нужное остаточное число операций, а потом цикл while() работает своим обычным образом, пропуская все куски, на которые разбит исходный цикл.</p>
 <p>За подробностями, почему так сделано и почему *to не инкрементируется — см. ссылки. Если кратко: to это не просто ссылка на адрес в памяти, а ссылка на адрес в IO-памяти, а цель всего кода — передать устройству с портом ввода-вывода по адресу to набора из count команд из памяти начиная с адреса from.</p>
 
-</main>
+
+<script src="/static/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
         </main>
         <footer class="page-footer light-green darken-1">
             <div class="container">
@@ -95,9 +97,6 @@ register count;
                     &copy; <a href="https://github.com/kstep/kstep.github.com" class="white-text">2009&ndash;2016</a> Konstantin Stepanov
                 </div>
             </div>
-
-            <script src="/static/highlight.pack.js"></script>
-            <script>hljs.initHighlightingOnLoad();</script>
         </footer>
 
     </body>
