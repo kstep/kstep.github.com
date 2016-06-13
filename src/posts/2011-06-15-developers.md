@@ -2,6 +2,7 @@ title: "Developers"
 lang: ru
 date: 15 Jun 2011 00:00:00 +0300
 extends: default.liquid
+source: http://sokol-egor.blogspot.com/
 tags: humor, translation
 ---
 Any Russian developer after reading new code for a couple of minutes will raise from his seat and yell, telling to himself: "We need to rewrite all this f**king code!" Then he will turn doubtful at the second thought of time, this rewriting can take, and he will spend the rest of day, trying to convince himself it won't take too long. Just take some time to refactor this and that and he will have nice and logically correct code.
@@ -21,8 +22,6 @@ But the win will come with a great price. All project will crash, including modu
 Brave Canadian developer will rush in, trying to fix everything, but everything will get worse (but who can tell it will?) All this hustle will make Indian developer leave his meditation, and he will give genius decision - branch the code out. According to him, company will support two versions of the product: the one working with the Bug, and the other one crashing without the Bug. As this plan is proposed, Russian developer will break his ruler over the table and swear at his wife at home, but won't say a word in opposition at the meeting.
 
 Fortunately, it doesn't bother company's profit, because the product is sold well anyway. That's why managers are so content and don't stop telling developers, they are chosen as they are the best of the best. And they have already proven this fact, as they release their product at least sometimes.
-
-Source: <http://sokol-egor.blogspot.com/>
 
 <disqus name="kstep" />
 

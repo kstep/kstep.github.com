@@ -27,7 +27,8 @@
 <div class="chip"><nobr><i class="material-icons">date_range</i> Mon&nbsp;15&nbsp;Mar&nbsp;'10</nobr></div>
 <div class="chip"><nobr><i class="material-icons">label</i> lib, debian, package, libetc, xdg, preload</nobr></div>
 <div class="chip"><nobr><i class="material-icons">language</i> ru</nobr></div>
-<div class="chip"><a href="https://github.com/kstep/kstep.github.com/tree/master/src/posts/2010-03-15-debian-paket_dlya_libetc.md"><i class="material-icons">code</i> source</a></div>
+<div class="chip"><a href="https://github.com/kstep/kstep.github.com/tree/master/src/posts/2010-03-15-debian-paket_dlya_libetc.md"><i class="material-icons">code</i> code</a></div>
+
 <p>Вот прочител про замечательную либу <a href="http://ordiluc.net/fs/libetc/">libetc</a> на <a href="http://welinux.ru/post/2534/">welinux-е</a>. Смысл её в том, что она, будучи запрелоадена внесением пути к ней в LD_PRELOAD, редиректит запросы к каталогофайлам ~/.* (где обычно конфиги) в $XDG_CONFIG_HOME/*, таким образом обеспечивая совместимость старых прог со стандартом XDG.</p>
 <p>Там не всё гладко с общесистемными демонами и статически слинкованными прогами (подробнее см. ссылки выше), но в результате всё равно подавляющее большинство конфигов оказывается в одном каталге ~/.config, что вполне впечатляет. В частности домашний каталог становится чище и облегчаются бекапы конфигов.</p>
 <p>Дебиановского пакета навскидку не нашёл, потому собрал свой. LD_PRELOAD, впрочем, придётся ставить самому, например в ~/.profile:</p>
