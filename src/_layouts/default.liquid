@@ -1,11 +1,12 @@
 {% include "_layouts/header.liquid" %}
-<a class="btn-floating btn-large waves-effect waves-light purple lighten-3 right" href="https://github.com/kstep/kstep.github.com/tree/master/src/{{ path | replace:".html",".md" }}" style="top: -30px; position: relative;"><i class="material-icons">code</i></a>
+<a class="btn-floating btn-large waves-effect waves-light purple lighten-3 right" href="https://github.com/kstep/kstep.github.com/edit/master/src/{{ path | replace:".html",".md" }}" style="top: -30px; position: relative;"><i class="material-icons">edit</i></a>
 
 <h2>{{ title }}</h2>
 <div class="chip"><nobr><i class="material-icons">date_range</i> {{ date | date:"%a&nbsp;%d&nbsp;%b&nbsp;'%y" }}</nobr></div>
 {% if tags %}<div class="chip"><nobr><i class="material-icons">label</i> {{ tags }}</nobr></div>{% endif %}
 {% if lang %}<div class="chip"><nobr><i class="material-icons">language</i> {{ lang }}</nobr></div>{% endif %}
 {% if source %}<div class="chip"><a href="{{ source }}"><i class="material-icons">link</i> source</a></div>{% endif %}
+<div class="chip"><a href="https://github.com/kstep/kstep.github.com/tree/master/src/{{ path | replace:".html",".md" }}"><i class="material-icons">code</i> code</a></div>
 {{ content }}
 {% if comments %}{% include "_layouts/disqus.liquid" %}{% endif %}
 

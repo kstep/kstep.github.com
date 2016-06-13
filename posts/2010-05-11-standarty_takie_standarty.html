@@ -42,13 +42,14 @@
         </nav>
         <main class="container">
 
-<a class="btn-floating btn-large waves-effect waves-light purple lighten-3 right" href="https://github.com/kstep/kstep.github.com/tree/master/src/posts/2010-05-11-standarty_takie_standarty.md" style="top: -30px; position: relative;"><i class="material-icons">code</i></a>
+<a class="btn-floating btn-large waves-effect waves-light purple lighten-3 right" href="https://github.com/kstep/kstep.github.com/edit/master/src/posts/2010-05-11-standarty_takie_standarty.md" style="top: -30px; position: relative;"><i class="material-icons">edit</i></a>
 
 <h2>Стандарты такие стандарты</h2>
 <div class="chip"><nobr><i class="material-icons">date_range</i> Tue&nbsp;11&nbsp;May&nbsp;'10</nobr></div>
 <div class="chip"><nobr><i class="material-icons">label</i> рабочее, стандарты, oauth</nobr></div>
 <div class="chip"><nobr><i class="material-icons">language</i> ru</nobr></div>
 
+<div class="chip"><a href="https://github.com/kstep/kstep.github.com/tree/master/src/posts/2010-05-11-standarty_takie_standarty.md"><i class="material-icons">code</i> code</a></div>
 <p>Реализую OAuth-сервер по стандарту 2.0. Стандарт кагбе ещё не утверждён, то уже есть <a href="http://github.com/theRazorBlade/draft-ietf-oauth">драфт на гитхабе</a>, который находится в работе, на него и равняюсь. Сегодня зашёл уточнить некоторые детали реализации протокола и наткнулся на такую деталь: данные от OAuth-сервера должны по стандарту быть в application/json. Всё бы ничего, но я точно помню, что буквально на прошлой неделе формат должен был быть application/x-www-form-urlencoded.</p>
 <p>Я, конечно, понимаю, что это драфт. И даже рад такому изменению, т.к. могу с чистой совестью заюзать стандартный pylons-декоратор @jsonify. Но таки когда же они наконец забетонируют хотя бы такие незыблемые вещи, как форматы данных? А то вот сделаю я по сегодняшнему OAuth 2.0 стандарту, а завтра он уже будет другим.</p>
 <p>Вот и гонись после этого за совместимостью.</p>
