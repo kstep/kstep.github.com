@@ -1,3 +1,11 @@
+@font-face {
+    font-family: emoji;
+    src: url(/static/fonts/noto/NotoColorEmoji.ttf),
+         url(/static/fonts/noto/NotoColorEmoji.woff),
+         url(/static/fonts/noto/NotoColorEmoji.svg),
+         url(/static/fonts/noto/NotoColorEmoji.eot);
+}
+
 .chip i.material-icons {
     padding-left: 0;
     padding-right: 8px;
@@ -42,4 +50,8 @@ main .card .card-content .card-title {
 
 footer a {
     text-decoration: underline;
+}
+
+.emoji {
+    font-family: emoji;
 }

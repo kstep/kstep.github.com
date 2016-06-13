@@ -6,7 +6,7 @@
             <div class="card">
                 <div class="card-content">
                     <span class="card-title">{{ post.title }}</span>
-                    {% if post.lang %}<label>{% if post.lang == "en" %}🇺🇸{% endif %}{% if post.lang == "ru" %}🇷🇺{% endif %}</label>{% endif %}
+                    {% if post.lang %}<label class="emoji">{% if post.lang == "en" %}🇺🇸{% endif %}{% if post.lang == "ru" %}🇷🇺{% endif %}</label>{% endif %}
                     <label>{{ post.date | date:"%a&nbsp;%d&nbsp;%b&nbsp;'%y" }}</label>
                     {% if post.excerpt %}<p class="black-text">{{ post.excerpt }}</p>{% else %}<br />{% endif %}
                     {% if post.tags %}<label>{{ post.tags }}</label>{% endif %}
