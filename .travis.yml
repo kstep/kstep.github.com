@@ -1,12 +1,6 @@
 sudo: false
 language: rust
 
-before_install: |
-    [ ${TRAVIS_BRANCH} = master ] &&
-    [ ${TRAVIS_PULL_REQUEST} = false ] &&
-    AUTHOR="$(git show --no-patch --format=format:%ae HEAD)" &&
-    [ ${AUTHOR} != "cobalt@kstep.me" ]
-
 script:
   - bash _deploy/deploy.sh
 

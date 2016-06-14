@@ -7,14 +7,14 @@ DEPLOY_BRANCH=master
 
 # Preconditions check
 if [ ${TRAVIS_PULL_REQUEST} != false -o ${TRAVIS_BRANCH} != ${DEPLOY_BRANCH} ]; then
-    echo "Skipping deploy..."
+    echo "Not on main branch, skipping deploy..."
     exit 0
 fi
 
-AUTHOR=$(git show --no-patch --format=format:%ae HEAD)
+AUTHOR=$(git show --no-patch --format=format:%ae HEAD _src)
 
-if [ "${AUTHOR}" = "cobalt@kstep.me" ]; then
-    echo "Cobalt commit ignored, skipping deploy..."
+if [ "${AUTHOR}" = "cobalt@kstep.me" -o "${AUTHOR}" = "" ]; then
+    echo "No changes for cobalt to process, skipping deploy..."
     exit 0
 fi
 
