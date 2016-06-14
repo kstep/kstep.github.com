@@ -2,7 +2,7 @@ title: "Developers"
 lang: en
 date: 15 Jun 2011 00:00:00 +0300
 extends: default.liquid
-source: http://sokol-egor.blogspot.com/
+source: http://sokol-egor.blogspot.com.by/2009/12/blog-post.html
 tags: humor, translation
 comments: true
 ---
