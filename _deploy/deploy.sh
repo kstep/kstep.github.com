@@ -20,8 +20,8 @@ export PATH="$PATH:/home/travis/.cargo/bin"
 cargo install --git https://github.com/kstep/cobalt.rs --branch liquid-date
 
 # Cobalt build
-cobalt build
-cobalt import --branch ${DEPLOY_BRANCH}
+cobalt build --trace
+git add . && git commit -m "cobalt site import"
 
 # Deploy key setup
 ENC_KEY_VAR="encrypted_${ENC_LABEL}_key"
