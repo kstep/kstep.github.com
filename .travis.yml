@@ -6,4 +6,4 @@ script:
 
 env:
   global:
-    - ENC_LABEL: "0a6446eb3ae3"
+    - ENC_LABEL: 962863eaefcf
