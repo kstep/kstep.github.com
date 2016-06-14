@@ -6,6 +6,11 @@
          url(/static/fonts/noto/NotoColorEmoji.eot);
 }
 
+a {
+    cursor: pointer !important;
+    cursor: hand !important;
+}
+
 .chip i.material-icons {
     padding-left: 0;
     padding-right: 8px;

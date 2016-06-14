@@ -4,17 +4,17 @@
 <h2>All posts</h2>
 <div class="row">
     {% for post in posts %}
-        <div class="col s12 m6 l4"><a href="{{ post.path }}">
-            <div class="card">
+        <div class="col s12 m6 l4">
+            <div class="post card hoverable"><a class="post-path" href="{{ post.path }}">
                 <div class="card-content">
-                    <span class="card-title">{{ post.title }}</span>
-                    {% if post.lang %}<label class="emoji">{% if post.lang == "en" %}🇺🇸{% endif %}{% if post.lang == "ru" %}🇷🇺{% endif %}</label>{% endif %}
-                    <label>{{ post.date | date:"%a&nbsp;%d&nbsp;%b&nbsp;'%y" }}</label>
-                    {% if post.excerpt %}<p class="black-text">{{ post.excerpt }}</p>{% else %}<br />{% endif %}
-                    {% if post.tags %}<label>{{ post.tags }}</label>{% endif %}
+                    <span class="post-title card-title">{{ post.title }}</span>
+                    {% if post.lang %}<label class="post-lang emoji" title="{{ post.lang }}">{% if post.lang == "en" %}🇺🇸{% else %}{% if post.lang == "ru" %}🇷🇺{% else %}{{ post.lang }}{% endif %}{% endif %}</label>{% endif %}
+                    <label class="post-date">{{ post.date | date:"%a&nbsp;%d&nbsp;%b&nbsp;'%y" }}</label>
+                    {% if post.excerpt %}<p class="post-excerpt black-text">{{ post.excerpt }}</p>{% else %}<br />{% endif %}
+                    {% if post.tags %}<label class="post-tags">{{ post.tags }}</label>{% endif %}
                 </div>
-            </div>
             </a></div>
+        </div>
     {% endfor %}
 </div>
 <script src="/static/masonry.pkgd.min.js"></script>
