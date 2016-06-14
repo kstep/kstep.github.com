@@ -1,0 +1,6 @@
+name: //kstep blog
+link: http://kstep.me/
+description: K's blog on life and development
+rss: feed.xml
+source: _src
+posts: posts
