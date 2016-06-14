@@ -42,14 +42,14 @@
         </nav>
         <main class="container">
 
-<a class="btn-floating btn-large waves-effect waves-light purple lighten-3 right" href="https://github.com/kstep/kstep.github.com/edit/master/src/posts/2009-12-17-ustrojstvo_daffa.md" style="top: -30px; position: relative;"><i class="material-icons">edit</i></a>
+<a class="btn-floating btn-large waves-effect waves-light purple lighten-3 right" href="https://github.com/kstep/kstep.github.com/edit/master/_src/posts/2009-12-17-ustrojstvo_daffa.md" style="top: -30px; position: relative;"><i class="material-icons">edit</i></a>
 
 <h2>Устройство Даффа</h2>
 <div class="chip"><nobr><i class="material-icons">date_range</i> Thu&nbsp;17&nbsp;Dec&nbsp;'09</nobr></div>
 
 <div class="chip"><nobr><i class="material-icons">language</i> ru</nobr></div>
 
-<div class="chip"><a href="https://github.com/kstep/kstep.github.com/tree/master/src/posts/2009-12-17-ustrojstvo_daffa.md"><i class="material-icons">code</i> code</a></div>
+<div class="chip"><a href="https://github.com/kstep/kstep.github.com/tree/master/_src/posts/2009-12-17-ustrojstvo_daffa.md"><i class="material-icons">code</i> code</a></div>
 <p>Последнее время занимаюсь самосовершенствованием: пытаюсь постигнуть дао монад. Получается с переменным успехом: на интуитивом уровне вроде понял, но мне этого мало, хочу понять их устройство на более глубоком уровне, чтобы не просто их использовать, но и понимать, как они работают. А пока копался в доках на вики и прочих источниках, наткнулся на ссылку о «<a href="http://ru.wikipedia.org/wiki/%D0%A3%D1%81%D1%82%D1%80%D0%BE%D0%B9%D1%81%D1%82%D0%B2%D0%BE_%D0%94%D0%B0%D1%84%D1%84%D0%B0">Duff's device</a>».</p>
 <p>Википедию прочитать, думаю, под силу каждому, но цель этого поста скорее зафиксировать полученное знание и понимание концепции мной самим, чтобы потом не забыть =)</p>
 <p>Если кратко: устройство Даффа — это обобщение оптимизации циклов путём их развёртки. Проблема развёртки цикла с неизвестным числом повторов n в том, что при заданной глубине развёртки m существует n mod m «остаточных» итераций, которые надо обработать как особый случай. Дафф нашёл очень <a href="http://www.lysator.liu.se/c/duffs-device.html">элегантное решение</a> этой задачи на C:</p>
@@ -118,6 +118,9 @@ register count;
             <div class="footer-copyright">
                 <div class="container">
                     &copy; <a href="https://github.com/kstep/kstep.github.com" class="white-text">2009&ndash;2016</a> Konstantin Stepanov
+                    <div class="right">
+                        <a href="https://travis-ci.org/kstep/kstep.github.com"><img style="vertical-align: middle;" src="https://travis-ci.org/kstep/kstep.github.com.svg?branch=master" /></a>
+                    </div>
                 </div>
             </div>
         </footer>

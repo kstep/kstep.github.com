@@ -42,14 +42,14 @@
         </nav>
         <main class="container">
 
-<a class="btn-floating btn-large waves-effect waves-light purple lighten-3 right" href="https://github.com/kstep/kstep.github.com/edit/master/src/posts/2009-12-17-monady_kak_ya_ih_ponimayu.md" style="top: -30px; position: relative;"><i class="material-icons">edit</i></a>
+<a class="btn-floating btn-large waves-effect waves-light purple lighten-3 right" href="https://github.com/kstep/kstep.github.com/edit/master/_src/posts/2009-12-17-monady_kak_ya_ih_ponimayu.md" style="top: -30px; position: relative;"><i class="material-icons">edit</i></a>
 
 <h2>Монады как я их понимаю</h2>
 <div class="chip"><nobr><i class="material-icons">date_range</i> Thu&nbsp;17&nbsp;Dec&nbsp;'09</nobr></div>
 
 <div class="chip"><nobr><i class="material-icons">language</i> ru</nobr></div>
 
-<div class="chip"><a href="https://github.com/kstep/kstep.github.com/tree/master/src/posts/2009-12-17-monady_kak_ya_ih_ponimayu.md"><i class="material-icons">code</i> code</a></div>
+<div class="chip"><a href="https://github.com/kstep/kstep.github.com/tree/master/_src/posts/2009-12-17-monady_kak_ya_ih_ponimayu.md"><i class="material-icons">code</i> code</a></div>
 <p>Проблема Хаскела (да и большинства других функциональных языков) в том, что в нём отсутствует такое понятие, как side-effect. Глобальных переменных нет как класса, а сохранять состояние между вызовами функций надо. Кроме того, будучи языком функциональным, а по сути описательным, а не императивным, функции в нём выполняются в неопределённом порядке, что поднимает ещё и задачу flow-control'а.</p>
 <p>Вот из-за этого и пришлось вводить понятие монады. Монады нужны именно для контроля хода выполнения программы с сохранением и передачей общего состояние системы между вызовами различных функций.</p>
 <p>В императивных языках большинство монадических операций (проход массива, контроль исключений, работа в потоком ввода-вывода) выполняется встроенными средствами языка и не требует введения понятия монады, но это не значит, что они совершенно бесполезны для императивного программиста. Как минимум знание монад расширяет сознание =), не говоря уже о том, что этот подход может рано или поздно пригодиться.</p>
@@ -165,6 +165,9 @@ assert n == m
             <div class="footer-copyright">
                 <div class="container">
                     &copy; <a href="https://github.com/kstep/kstep.github.com" class="white-text">2009&ndash;2016</a> Konstantin Stepanov
+                    <div class="right">
+                        <a href="https://travis-ci.org/kstep/kstep.github.com"><img style="vertical-align: middle;" src="https://travis-ci.org/kstep/kstep.github.com.svg?branch=master" /></a>
+                    </div>
                 </div>
             </div>
         </footer>
