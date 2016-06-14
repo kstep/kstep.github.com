@@ -1,8 +1,17 @@
 {% include "_layouts/header.liquid" %}
 <a class="btn-floating btn-large waves-effect waves-light purple lighten-3 right" href="https://github.com/kstep/kstep.github.com/new/master/_src/posts/" style="top: -30px; position: relative;"><i class="material-icons">add</i></a>
 
-<h2>All posts</h2>
+
 <div class="row">
+    <h2 class="col s11 m7">All posts</h2>
+    <form onsubmit="return false;" class="col s12 m4" style="margin-top: 20px;">
+        <div class="input-field">
+            <input id="search" type="search" placeholder="tags">
+            <label for="search"><i class="material-icons">search</i></label>
+        </div>
+    </form>
+</div>
+<div class="posts row">
     {% for post in posts %}
         <div class="col s12 m6 l4">
             <div class="post card hoverable"><a class="post-path" href="{{ post.path }}">
@@ -18,5 +27,6 @@
     {% endfor %}
 </div>
 <script src="/static/masonry.pkgd.min.js"></script>
-<script>var msnry = new Masonry(document.querySelector(".row"), { querySelector: ".col" });</script>
+<script>var msnry = new Masonry(document.querySelector(".posts"), { querySelector: ".col" });</script>
+<script src="/static/search.js"></script>
 {% include "_layouts/footer.liquid" %}
