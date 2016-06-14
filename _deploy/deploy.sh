@@ -11,6 +11,13 @@ if [ ${TRAVIS_PULL_REQUEST} != false -o ${TRAVIS_BRANCH} != ${DEPLOY_BRANCH} ]; 
     exit 0
 fi
 
+AUTHOR=$(git show --no-patch --format=format:%ae HEAD)
+
+if [ "${AUTHOR}" = "cobalt@kstep.me" ]; then
+    echo "Cobalt commit ignored, skipping deploy..."
+    exit 0
+fi
+
 # Repo setup
 git config user.name "Cobalt Site Deployer"
 git config user.email "cobalt@kstep.me"
