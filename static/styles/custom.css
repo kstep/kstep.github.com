@@ -30,6 +30,16 @@ a {
     float: left;
 }
 
+label i.material-icons {
+    font-size: inherit;
+    vertical-align: -2px;
+    margin-right: 5px;
+}
+
+label {
+    margin-right: 0.5em;
+}
+
 .chip a {
     color: inherit;
     text-decoration: underline;
