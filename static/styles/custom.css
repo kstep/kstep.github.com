@@ -40,6 +40,11 @@ label {
     margin-right: 0.5em;
 }
 
+.post-comments {
+    margin-top: 3px;
+    float: right;
+}
+
 .chip a {
     color: inherit;
     text-decoration: underline;
