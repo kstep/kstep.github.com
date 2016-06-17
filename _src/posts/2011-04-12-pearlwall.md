@@ -1,5 +1,5 @@
 title: "Pearlwall"
-lang: ru
+lang: perl
 date: 12 Apr 2011 00:00:00 +0300
 extends: default.liquid
 tags: perl, firewall
