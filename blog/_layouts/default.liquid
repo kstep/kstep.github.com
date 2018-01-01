@@ -1,15 +1,15 @@
-{% include "_layouts/header.liquid" %}
+{% include "header.liquid" %}
         <nav class="light-green lighten-2" role="navigation">
             <div class="nav-wrapper container">
                 <div class="col s12">
                     <a class="breadcrumb" href="/">//kstep</a>
-                    <span class="breadcrumb">{{ title }}</span>
+                    <span class="breadcrumb">{{ page.title }}</span>
                 </div>
             </div>
         </nav>
         <main class="container">
-        <h2>{{ title }}</h2>
-        <div class="chip"><nobr><i class="material-icons">date_range</i> {{ date }}</nobr></div>
-        {{ content }}
+        <h2>{{ page.title }}</h2>
+        <div class="chip"><nobr><i class="material-icons">date_range</i> {{ page.published_date }}</nobr></div>
+        {{ page.content }}
         </main>
-{% include "_layouts/footer.liquid" %}
+{% include "footer.liquid" %}
