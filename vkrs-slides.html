@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Developing VK.com web API DSL with macros</title>
+    <style>
+    small {
+        font-size: 60%;
+    }
+    body {
+        font-family: 'Droid Serif';
+    }
+    h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: 400;
+        margin-bottom: 0;
+    }
+    img {
+        text-align: center;
+        max-width: 640px;
+        max-height: 480px;
+    }
+    .inverse h1 {
+        margin-top: 0;
+    }
+    .remark-slide-content h1 { font-size: 3em; }
+    .remark-slide-content h2 { font-size: 2em; }
+    .remark-slide-content h3 { font-size: 1.6em; }
+    .footnote {
+        position: absolute;
+        bottom: 3em;
+    }
+    li p { line-height: 1.25em; }
+    .red { color: #fa0000; }
+    .large { font-size: 2em; }
+    a, a > code {
+        color: rgb(249, 38, 114);
+        text-decoration: none;
+    }
+    code {
+        background: #e7e8e2;
+        border-radius: 5px;
+    }
+    .remark-code, .remark-inline-code { font-family: 'Noto Mono', monospace; }
+    .remark-code-line-highlighted     { background-color: #373832; }
+    .pull-left {
+        float: left;
+        width: 47%;
+    }
+    .pull-right {
+        float: right;
+        width: 47%;
+    }
+    .pull-right ~ p {
+        clear: both;
+    }
+    #slideshow .slide .content code {
+        font-size: 0.8em;
+    }
+    #slideshow .slide .content pre code {
+        font-size: 0.9em;
+        padding: 15px;
+    }
+    .inverse {
+        background: #272822;
+        color: #777872;
+        text-shadow: 0 0 20px #333;
+    }
+    .inverse h1, .inverse h2 {
+        color: #f3f3f3;
+        line-height: 0.8em;
+    }
+
+    /* Slide-specific styling */
+    #slide-inverse .footnote {
+        bottom: 12px;
+        left: 20px;
+    }
+    #slide-how .slides {
+        font-size: 0.9em;
+        position: absolute;
+        top:  151px;
+        right: 140px;
+    }
+    #slide-how .slides h3 {
+        margin-top: 0.2em;
+    }
+    #slide-how .slides .first, #slide-how .slides .second {
+        padding: 1px 20px;
+        height: 90px;
+        width: 120px;
+        -moz-box-shadow: 0 0 10px #777;
+        -webkit-box-shadow: 0 0 10px #777;
+        box-shadow: 0 0 10px #777;
+    }
+    #slide-how .slides .first {
+        background: #fff;
+        position: absolute;
+        top: 20%;
+        left: 20%;
+        z-index: 1;
+    }
+    #slide-how .slides .second {
+        position: relative;
+        background: #fff;
+        z-index: 0;
+    }
+
+    /* Two-column layout */
+    .left-column {
+        color: #777;
+        width: 20%;
+        height: 92%;
+        float: left;
+    }
+    .left-column h2:last-of-type, .left-column h3:last-child {
+        color: #000;
+    }
+    .right-column {
+        width: 75%;
+        float: right;
+        padding-top: 1em;
+    }
+
+    table {
+        width: 100%;
+    }
+    </style>
+    </head>
+    <body>
+<textarea id="source">
+class: inverse, middle, center
+# Developing VK.com API DSL
+# with macros in <big>Rust</big>
+
+---
+## Who am I?
+
+- Writing code since 1991
+- Worked with ~20 languages
+- In love with Rust since 2014 (v0.9)
+- Organized first Minsk Rust Meetup in 2016 (v1.8.0)
+
+---
+## What is VK.com?
+
+- Largest Russian social network (a.k.a. “Russian Facebook”)
+- Works for more than 12 years (since 2006)
+- More than 90 million visitors **daily**
+- More than 460 million users registered (circa 2017)
+- 1 billion likes and 6.5 billions messages daily
+- 9 billions post views per day
+- 77% of mobile users of RuNet use it 
+- Has **bloated** constantly changing API (407 endpoints, excluding auth flow, and growing)
+
+???
+
+
+---
+## So I decided to develop an API...
+
+- For my own usage
+- To try out yet new version of Rust ^_^
+- To create apps/scripts around VK API
+
+---
+class: center, middle
+# And **vkrs** was born!
+
+---
+name: why-dsl
+## Why DSL?
+
+- Very large number of API endpoints
+- A lot of boilreplate code to describe each endpoint
+- Got tired of writing all this stuff...
+
+---
+template: why-dsl
+
+- Macro magic to the rescue!
+- Nightly Rust needed :( <small>(when I started API development)</small>
+
+---
+## Basic architecture
+
+### Requests processing
+- API is JSON-based, hence `serde` + `serde_json` are used to deserialize data
+- Each API object is a `#[derive(Deserialize)] struct`
+- Each API request is `struct` implementing `Request` trait (arguments are passed in query string)
+- Builder pattern is used to setup API request structs
+
+---
+## Basic architecture
+### HTTP and authorization
+
+- A `reqwest` crate used for HTTP requests (used `hyper` some time ago)
+- An `inth-oauth2` crate used for OAuth authorization support
+- API access is controlled by `struct Client`, wrapping `reqwest::Client`
+
+---
+## Basic architecture
+### Summary
+
+- So `vkrs`'s API consists of main `Client` struct, a bunch of `Request` structs
+  and some response structs.
+- An API request is described by:
+  - required API version,
+  - required permissions,
+  - method name,
+  - input parameters,
+  - output object type
+
+---
+## API call example
+
+```rust
+let api = Client::new();
+let oauth = api.auth("APP_ID", "APP_SECRET");
+let auth_uri = oauth.auth_uri(&[Permission::Video, Permission::Offline, Permission::Status]);
+
+// code flow is used: user should be provided with this URI,
+// follow it in some browser, and enter application code
+let code = ...
+
+let token = oauth.request_token(code)?;
+
+api.call(Some(token), status::Set::new().text(status))?;
+let videos = api.call(Some(token), video::Search::new()
+			.query("kittens")
+			.adult(false)
+			.filters(&[video::Filter::YouTube])
+			.count(30))?;
+```
+---
+## Response example
+
+```rust
+    Collection {
+        count: 12286,
+        items: [
+            Video {
+                id: 499999999,
+                owner_id: -31111111,
+                album_id: None,
+                user_id: None,
+                title: "Saving the newborn kitten",
+                duration: 424,
+                description: "Subscribe ...",
+                date: 1536162535,
+                views: 8841,
+                comments: 190,
+                photo_130: "https://pp.userapi.com/c8xxxxx/v8xxxxxxxx/dxxxx/2Sxxxxxxxxx.jpg",
+                photo_320: "https://pp.userapi.com/c8xxxxx/v8xxxxxxxx/dxxxx/ixxxxxxxxxx.jpg",
+                photo_640: Some("https://pp.userapi.com/c8xxxxx/v8xxxxxxxx/dxxxx/GVzzzzzzzzz.jpg"),
+                photo_800: Some("https://pp.userapi.com/c8xxxxx/v8xxxxxxxx/dxxxx/GVzzzzzzzzz.jpg"),
+                adding_date: None,
+                player: "https://www.youtube.com/embed/xxxxxxxx?__ref=vk.api",
+                can_add: 1,
+                can_edit: 0,
+		...
+```
+
+---
+## Simple request description
+
+```rust
+// file: video.rs
+request! {
+    #[derive(Eq, Copy)]
+    struct Add for ["video.add"](v => 5.44) -> Bool [Video] {
+        target_id: OwnerId = () => {},
+        video_id: Id = () => {},
+        owner_id: OwnerId = () => {},
+    }
+}
+```
+
+```html
+https://api.vk.com/method/video.add?target_id=123&video_id=567&owner_id=890
+```
+
+???
+
+- Struct name `Add`
+- Method name `video.add`
+- API version `5.44`
+- Output type `Bool`
+- Permissions required `Video`
+- List of input arguments with defaults and serialization code
+
+---
+## Problems
+
+- Reference types support with lifetimes specified
+- Generic types (`Option<T>`, `Vec<T>`) support
+- Different (but more or less standard) serialization logic
+- Generate standard API documentation
+
+---
+class: center, middle
+# Problem: reference types support with lifetimes specified
+
+---
+## Solution: other macro for reference types
+
+```rust
+request_ref! {
+    #[derive(Eq, Copy)]
+    struct GetCatalog for ["video.getCatalog"](v => 5.44, extended => 0) -> Page<CatalogBlock> {
+        sized {
+            count: usize = (10) => {},
+            items_count: usize = (10) => {},
+        }
+        unsized {
+            from: str = ("") => {=},
+            filters: str = ("") => {=},
+        }
+    }
+}
+```
+
+---
+class: center, middle
+# Problem: generic types support as well as<br />some edge cases
+
+---
+## Solution: a set of standard conversions
+
+```rust
+macro_rules! expand_value_expr {
+    ($this:ident; $param_name:ident; =) => {
+        expand_value_expr!($this; $param_name; |value| *value)
+    };
+    ($this:ident; $param_name:ident;) => {
+        expand_value_expr!($this; $param_name; ToString)
+    };
+    ($this:ident; $param_name:ident; ToString) => {
+        expand_value_expr!($this; $param_name; |value|
+                           &*value.to_string())
+    };
+    ...
+    ($this:ident; $param_name:ident; Vec) => {
+        expand_value_expr!($this; $param_name; |value|
+	   &*value.iter().map(ToString::to_string)
+	   	.collect::<Vec<_>>().join(","))
+    };
+    ($this:ident; $param_name:ident; Option) => {
+        expand_value_expr!($this; $param_name; |value|
+	   value.as_ref().map(ToString::to_string).as_ref()
+	   .map(Borrow::borrow).unwrap_or(""))
+    };
+    ...
+}
+```
+
+---
+class: center, middle
+# Problem: generate standard API documentation<br /><small>(doc-comments are not supported by macros)</small>
+
+---
+## Solution: use `#[doc]` attributes in macros directly
+
+```rust
+(
+    $(#[$attr:meta])*
+    struct $struct_name:ident for [$method_name:expr]
+    ...
+) => {
+    #[doc = "The <a href=\"https://vk.com/dev/"]
+    #[doc = $method_name]
+    #[doc = "\">"]
+    #[doc = $method_name]
+    #[doc = "</a> API request."]
+    $(#[$attr])*
+    #[derive(Debug, PartialEq, Clone)]
+    pub struct $struct_name {
+        $($param_name: $param_type,)*
+    }
+...
+```
+
+???
+
+Impossible to embed macro var into a string.
+Impossible to generate doc-comments with a macro (because they are still comments).
+But sequental `#[doc]` attributes are glued togather, and single identifier word
+can be put into attribute as is without stringification.
+
+---
+## Most common input syntax of `request!` macro
+
+```rust
+...
+$(#[$attr:meta])*
+struct $struct_name:ident for [$method_name:expr]
+($($const_param_name:ident => $const_param_value:expr),*) ->
+$response_type:ty [$($permission:ident),*]
+{
+    $($param_name:ident as ($param_alias:expr): $param_type:ty =
+	    $param_value:tt => {$($value:tt)*}),*
+    $(,)*
+}
+...
+```
+
+---
+## Most common input syntax of `request_ref!` macro
+
+```rust
+...
+$(#[$attr:meta])*
+struct $struct_name:ident for [$method_name:expr]
+($($const_param_name:ident => $const_param_value:expr),*) ->
+$response_type:ty [$($permission:ident),*]
+{
+    sized {
+	$($param_name:ident as ($param_alias:expr):
+		$param_type:ty = $param_value:tt =>
+			{$($value:tt)*}),*
+	$(,)*
+    }
+    unsized {
+	$($param_name_lt:ident as ($param_alias_lt:expr):
+		$param_type_lt:ty = $param_value_lt:tt =>
+			{$($value_lt:tt)*}),*
+	$(,)*
+    }
+}
+...
+```
+
+---
+## Result
+
+- More than 500 lines on macro definitions.
+- Macro recursion is used a lot.
+- Two main input macros (`request!` and `request_ref!`)
+- A bunch of helper macros.
+- Had to use more low-level Rust syntax in some cases to
+  work around macro limitations.
+
+---
+## Codegen? No, procedural macros!
+
+- Was:
+  - a lot of template code in `*.rs.in` files,
+  - `build.rs` file,
+  - `syntex` and `serde_codegen` dependencies,
+  - a lot of conditional `include!` macro calls,
+  - extra features for nightly vs stable Rust support.
+- Now: all gone! Just a simple Rust code left.
+
+---
+class: center, middle
+
+# That's all, folks!
+Thank you for your patience!
+
+---
+class: center, middle
+
+# Questions?
+
+
+</textarea>
+<script src="http://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create();</script>
+<script></script>
+    </body>
+</html>
+
