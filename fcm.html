@@ -1,28 +1,76 @@
 <!DOCTYPE html>
 <head>
-<script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+<style>
+div { margin-bottom: 15px; }
+</style>
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyAJs21CzR3J3LdF5WyicZ3VfdRaKXTOQJQ",
-    authDomain: "molten-enigma-329512.firebaseapp.com",
-    projectId: "molten-enigma-329512",
-    storageBucket: "molten-enigma-329512.appspot.com",
-    messagingSenderId: "170168361606",
-    appId: "1:170168361606:web:ba73af0e5c9a595d156707",
-    measurementId: "G-RMGJ7XMF3Q"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
+<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-messaging.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-analytics.js"></script>
 </head>
+
 <body>
+    <div id="token"></div>
+    <div id="msg"></div>
+    <div id="notis"></div>
+    <div id="err"></div>
+
+    <script>
+        var MsgElem = document.getElementById('msg');
+        var TokenElem = document.getElementById('token');
+        var NotisElem = document.getElementById('notis');
+        var ErrElem = document.getElementById('err');
+
+        const firebaseConfig = {
+                    apiKey: "AIzaSyAJs21CzR3J3LdF5WyicZ3VfdRaKXTOQJQ",
+                    authDomain: "molten-enigma-329512.firebaseapp.com",
+                    projectId: "molten-enigma-329512",
+                    storageBucket: "molten-enigma-329512.appspot.com",
+                    messagingSenderId: "170168361606",
+                    appId: "1:170168361606:web:ba73af0e5c9a595d156707",
+                    measurementId: "G-RMGJ7XMF3Q"
+                };
+
+        // Initialize the Firebase app in the service worker by passing in the
+        // messagingSenderId.
+        firebase.initializeApp(firebaseConfig);
+
+        // Retrieve an instance of Firebase Messaging so that it can handle background
+        // messages.
+        const messaging = firebase.messaging();
+
+        messaging
+            .requestPermission()
+            .then(function () {
+                        MsgElem.innerHTML = 'Notification permission granted.';
+                        console.log('Notification permission granted.');
+
+                        // get the token in the form of promise
+                        return messaging.getToken();
+                    })
+            .then(function (token) {
+                        TokenElem.innerHTML = 'Device token is : <br>' + token;
+                    })
+            .catch(function (err) {
+                        ErrElem.innerHTML = ErrElem.innerHTML + '; ' + err;
+                        console.log('Unable to get permission to notify.', err);
+                    });
+
+        let enableForegroundNotification = true;
+        messaging.onMessage(function (payload) {
+                    console.log('Message received. ', payload);
+                    NotisElem.innerHTML =
+                        NotisElem.innerHTML + JSON.stringify(payload);
+
+                    if (enableForegroundNotification) {
+                                let notification = payload.notification;
+                                navigator.serviceWorker
+                                    .getRegistrations()
+                                    .then((registration) => {
+                                                registration[0].showNotification(notification.title);
+                                            });
+                            }
+                });
+
+    </script>
 </body>
